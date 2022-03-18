@@ -16,12 +16,18 @@ use App\Http\Controllers\GoogleController;
 |
 */
 
-Route::get('/', function () {
+Route::get('/', function(){
+	//dd(auth()->user());
+	return view('layouts.app');
+})->name('home');
+
+/*Route::get('/', function () {
     return view('welcome');
-});
+});*/
  
 // Google URL
 Route::prefix('google')->name('google.')->group( function(){
     Route::get('login', [GoogleController::class, 'loginWithGoogle'])->name('login');
     Route::any('google-callback', [GoogleController::class, 'callbackFromGoogle'])->name('callback');
 });
+
