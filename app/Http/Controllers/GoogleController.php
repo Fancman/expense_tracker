@@ -37,7 +37,7 @@ class GoogleController extends Controller
             }
 
 
-            Auth::loginUsingId($saveUser->id);
+            Auth::loginUsingId($saveUser->id, $saveUser->getRememberLogin());
 
             return redirect()->route('home');
 
