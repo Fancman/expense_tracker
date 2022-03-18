@@ -23,5 +23,5 @@ Route::get('/', function () {
 // Google URL
 Route::prefix('google')->name('google.')->group( function(){
     Route::get('login', [GoogleController::class, 'loginWithGoogle'])->name('login');
-    Route::any('callback', [GoogleController::class, 'callbackFromGoogle'])->name('callback');
+    Route::any('google-callback', [GoogleController::class, 'callbackFromGoogle'])->name('callback');
 });
