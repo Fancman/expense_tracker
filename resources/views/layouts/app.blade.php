@@ -23,7 +23,7 @@
 					@endguest
 					@auth
 					<span>{{ auth()->user()->name  }}</span>
-					<a href="#">Logout</a>
+					<a href="{{ route('google.logout') }}">Logout</a>
 					@endauth
 				</div>
             </header>

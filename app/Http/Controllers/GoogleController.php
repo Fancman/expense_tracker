@@ -10,9 +10,16 @@ use Laravel\Socialite\Facades\Socialite;
 
 class GoogleController extends Controller
 {
-    public function loginWithGoogle()
+    public function login()
     {
         return Socialite::driver('google')->redirect();
+    }
+
+	public function logout()
+    {
+        auth()->logout();
+		
+		return redirect()->route('home');
     }
 
 	public function callbackFromGoogle()
