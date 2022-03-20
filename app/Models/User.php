@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+use App\Models\Currency;
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -22,7 +24,6 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-		'currency_id',
 		'date_type',
 		'google_id',
 		'remember_login'
@@ -36,5 +37,13 @@ class User extends Authenticatable
     protected $hidden = [
         'remember_token',
     ];
+
+	/**
+     * Get the phone associated with the user.
+     */
+    public function currency()
+    {
+        return $this->hasOne(Currency::class);
+    }
 
 }
