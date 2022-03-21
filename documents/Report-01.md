@@ -1,7 +1,9 @@
 # Report 1.
 
-Týždeň 5. (15.3 -21.3.2022)
+Týždeň 5. (15.3 - 21.3.2022)
+
 Meno: Tomáš Figura
+
 Názov projekt: Expense Tracker
 
 ### Týždenný plán
