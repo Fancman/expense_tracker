@@ -23,8 +23,8 @@ return new class extends Migration
 			$table->foreignIdFor(Currency::class);
 			$table->string('name', 50)->unique();
 			$table->unsignedInteger('quantity')->default(1);
-			$table->string('average_buy_price', 50)->decimal('value', $precision = 8, $scale = 2)->nullable();
-			$table->string('current_price', 50)->decimal('value', $precision = 8, $scale = 2)->nullable();
+			$table->decimal('average_buy_price', $precision = 8, $scale = 2)->nullable();
+			$table->decimal('current_price', $precision = 8, $scale = 2)->nullable();
         });
     }
 
