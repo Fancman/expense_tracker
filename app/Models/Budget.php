@@ -13,4 +13,9 @@ class Budget extends Model
     {
         return $this->hasOne(User::class);
     }
+
+	public function category()
+    {
+        return $this->hasOne(Category::class);
+    }
 }
