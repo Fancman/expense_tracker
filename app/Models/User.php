@@ -26,7 +26,8 @@ class User extends Authenticatable
         'email',
 		'date_type',
 		'google_id',
-		'remember_login'
+		'remember_login',
+		'currency_id',
     ];
 
     /**

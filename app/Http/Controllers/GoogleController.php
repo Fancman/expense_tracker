@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Currency;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +28,7 @@ class GoogleController extends Controller
         try {
             $user = Socialite::driver('google')->user();
 			$is_user = User::where('email', $user->getEmail())->first();
+			$currency = Currency::where('name', 'EUR')->first();
 
             if(!$is_user){
 
@@ -34,7 +36,8 @@ class GoogleController extends Controller
                     'google_id' => $user->getId(),
                 ],[
                     'name' => $user->getName(),
-                    'email' => $user->getEmail()
+                    'email' => $user->getEmail(),
+					'currency_id' => $currency->id,
                 ]);
             }else{
                 $saveUser = User::where('email',  $user->getEmail())->update([
