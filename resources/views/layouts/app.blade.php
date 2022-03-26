@@ -54,9 +54,11 @@
 				@endguest
 			</div>
 		</aside>
+
 		<div class="flex flex-col flex-1 w-full">
 			@yield('content')
 		</div>
+		
 	</div>
 	
 	<!--

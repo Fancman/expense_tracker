@@ -1,3 +1,5 @@
 <div>
-    {{-- The whole world belongs to you. --}}
+	@if ($show)
+		Category modal	
+	@endif
 </div>
