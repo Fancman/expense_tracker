@@ -17,9 +17,12 @@ use App\Http\Controllers\GoogleController;
 */
 
 Route::get('/', function(){
-	//dd(auth()->user());
 	return view('layouts.app');
 })->name('home');
+
+Route::get('/categories', function(){
+	return view('categories.index');
+})->name('categories');
 
 /*Route::get('/', function () {
     return view('welcome');

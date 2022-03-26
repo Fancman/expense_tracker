@@ -54,7 +54,11 @@
 				@endguest
 			</div>
 		</aside>
+		<div class="flex flex-col flex-1 w-full">
+			@yield('content')
+		</div>
 	</div>
+	
 	<!--
     <div class="flex h-screen bg-gray-50 dark:bg-gray-900">
         <aside class="z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0"></aside>
@@ -76,6 +80,8 @@
 	-->
 	
 	@livewireScripts
+
+	@livewire('category-modal')
 </body>
 
 </html>
