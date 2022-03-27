@@ -83,7 +83,8 @@
 	
 	@livewireScripts
 
-	@livewire('category-modal')
+	@yield('livewire-custom-scripts')
+	
 </body>
 
 </html>

@@ -54,7 +54,7 @@ return [
     |
     */
 
-    'asset_url' => 'http://localhost/expense-tracker/public',
+    'asset_url' => null,
 
     /*
     |--------------------------------------------------------------------------

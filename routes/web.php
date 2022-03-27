@@ -22,7 +22,12 @@ Route::get('/', function(){
 
 Route::get('/categories', function(){
 	return view('categories.index');
-})->name('categories');
+});
+
+Route::get('/livewire/message/category-modal', \App\Http\Livewire\CategoryModal::class);
+Route::post('/livewire/message/category-modal', \App\Http\Livewire\CategoryModal::class);
+Route::get('/livewire/message/address-modal', \App\Http\Livewire\AddressModal::class);
+Route::post('/livewire/message/address-modal', \App\Http\Livewire\AddressModal::class);
 
 /*Route::get('/', function () {
     return view('welcome');
