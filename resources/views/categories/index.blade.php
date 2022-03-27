@@ -7,5 +7,5 @@
 
 @section('livewire-custom-scripts')
 	@livewire('category-modal')
-	@livewire('address-modal')
+	@livewire('address-modal')	
 @endsection
