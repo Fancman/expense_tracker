@@ -15,6 +15,7 @@
 	<script src="{{ asset('js/app.js') }}" defer></script>
 
 	@livewireStyles
+	@powerGridStyles
 </head>
 
 <body>
@@ -82,7 +83,8 @@
 	-->
 	
 	@livewireScripts
-
+	@powerGridScripts
+	
 	@yield('livewire-custom-scripts')
 	
 </body>

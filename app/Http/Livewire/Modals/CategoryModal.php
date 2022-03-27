@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Modals;
 
-use Livewire\Component;
 use App\Http\Livewire\Modal;
 use App\Models\Category;
 

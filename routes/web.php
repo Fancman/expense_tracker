@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
@@ -24,10 +25,17 @@ Route::get('/categories', function(){
 	return view('categories.index');
 });
 
-Route::get('/livewire/message/category-modal', \App\Http\Livewire\CategoryModal::class);
-Route::post('/livewire/message/category-modal', \App\Http\Livewire\CategoryModal::class);
-Route::get('/livewire/message/address-modal', \App\Http\Livewire\AddressModal::class);
-Route::post('/livewire/message/address-modal', \App\Http\Livewire\AddressModal::class);
+Route::get('/address-book', function(){
+	return view('address-book.index');
+});
+
+Route::resource('category', CategoryController::class);
+
+Route::get('/livewire/message/category-modal', \App\Http\Livewire\Modals\CategoryModal::class);
+Route::post('/livewire/message/category-modal', \App\Http\Livewire\Modals\CategoryModal::class);
+Route::get('/livewire/message/address-modal', \App\Http\Livewire\Modals\AddressModal::class);
+Route::post('/livewire/message/address-modal', \App\Http\Livewire\Modals\AddressModal::class);
+
 
 /*Route::get('/', function () {
     return view('welcome');
