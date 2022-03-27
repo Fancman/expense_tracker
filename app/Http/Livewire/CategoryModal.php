@@ -3,20 +3,10 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
+use App\Http\Livewire\Modal;
 
-class CategoryModal extends Component
+class CategoryModal extends Modal
 {
-	public $show = false;
-
-	protected $listeners = [
-		'show' => 'show',
-	];
-	
-	public function show()
-	{
-		$this->show = true;
-	}
-
     public function render()
     {
         return view('livewire.category-modal');
