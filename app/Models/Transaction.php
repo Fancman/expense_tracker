@@ -13,6 +13,7 @@ class Transaction extends Model
         'name',
         'value',
 		'repeating',
+		'transaction_type_id',
     ];
 
 	public function currency()
@@ -30,9 +31,9 @@ class Transaction extends Model
         return $this->hasOne(Category::class);
     }
 
-	public function transactionType()
+	public function transactionTypes()
     {
-        return $this->hasOne(TransactionType::class);
+        return $this->belongsTo(TransactionType::class);
     }
 
 	public function addressBook()

@@ -4,6 +4,7 @@ module.exports = {
 	darkMode: 'class',
 	content: [
 		"./resources/**/*.blade.php",
+		'./vendor/filament/**/*.blade.php', 
 		"./resources/**/*.js",
 	],
 	theme: {

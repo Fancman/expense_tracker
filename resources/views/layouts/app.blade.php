@@ -12,13 +12,18 @@
 	<link href="https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@100;300;400;500;600;700&family=Source+Sans+Pro:wght@200;300;400;600;700&display=swap" rel="stylesheet">
 
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
-	<script src="{{ asset('js/app.js') }}" defer></script>
+	<style>[x-cloak] { display: none !important; }</style>
 
 	@livewireStyles
 	@powerGridStyles
+
+	@livewireScripts
+	<script src="{{ mix('js/app.js') }}" defer></script>
+
+    @stack('scripts')
 </head>
 
-<body>
+<body class="antialiased">
 	<div class="flex h-screen">
 		<aside class="flex flex-col items-center w-96 z-20 bg-light-blue overflow-y-auto pt-14">
 			<div class="text-4xl font-medium text-black">Expense Tracker</div>
@@ -82,7 +87,6 @@
     </div>
 	-->
 	
-	@livewireScripts
 	@powerGridScripts
 	
 	@yield('livewire-custom-scripts')
