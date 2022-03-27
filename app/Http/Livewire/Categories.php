@@ -50,7 +50,7 @@ final class Categories extends PowerGridComponent
     */
     public function datasource(): ?Builder
     {
-		return Category::query();
+		return Category::query()->orderBy('id', 'desc');
         //return Category::query()->join('users', 'categories.user_id', '=', 'users.id')->select('categories.*, users.name as user');
     }
 

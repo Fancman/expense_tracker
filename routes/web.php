@@ -25,6 +25,10 @@ Route::get('/categories', function(){
 	return view('categories.index');
 });
 
+Route::get('/transactions', function(){
+	return view('transactions.index');
+});
+
 Route::get('/address-book', function(){
 	return view('address-book.index');
 });
@@ -33,8 +37,13 @@ Route::resource('category', CategoryController::class);
 
 Route::get('/livewire/message/category-modal', \App\Http\Livewire\Modals\CategoryModal::class);
 Route::post('/livewire/message/category-modal', \App\Http\Livewire\Modals\CategoryModal::class);
+
 Route::get('/livewire/message/address-modal', \App\Http\Livewire\Modals\AddressModal::class);
 Route::post('/livewire/message/address-modal', \App\Http\Livewire\Modals\AddressModal::class);
+
+Route::get('/livewire/message/transaction-modal', \App\Http\Livewire\Modals\TransactionModal::class);
+Route::post('/livewire/message/transaction-modal', \App\Http\Livewire\Modals\TransactionModal::class);
+
 
 
 /*Route::get('/', function () {
