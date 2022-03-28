@@ -28,10 +28,11 @@ return new class extends Migration
             $table->foreignIdFor(AddressBook::class)->nullable();
             $table->foreignIdFor(Account::class, 'source_account_id')->nullable();
             $table->foreignIdFor(Account::class, 'end_account_id')->nullable();
-			$table->timestamp('transaction_time', $precision = 0);
+			$table->timestamp('transaction_time', $precision = 0)->nullable()->useCurrent();
 			$table->string('name', 50);
 			$table->decimal('value', $precision = 8, $scale = 2);
-			$table->string('repeating', 20);
+			$table->string('repeating', 20)->nullable();
+			$table->timestamps();
         });
     }
 

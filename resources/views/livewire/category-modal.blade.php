@@ -12,9 +12,11 @@
 @endif
 <div x-on:categoryStore="show = false;">
 	<x-modal wire:model="show">
+
 		<form wire:submit.prevent="submit">
 			<input type="text" placeholder="Nazov kategorie" wire:model="name">
 			@error('name') <span class="error">{{ $message }}</span> @enderror
+			
 			<button type="submit">Ulozit</button>
 		</form>		
 	</x-modal>

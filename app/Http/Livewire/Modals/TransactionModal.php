@@ -11,6 +11,7 @@ use App\Models\AddressBook;
 
 use App\Models\Transaction;
 use App\Http\Livewire\Modal;
+use App\Models\Category;
 use App\Models\TransactionType;
 use Illuminate\Contracts\View\View;
 use Filament\Forms\Components\Select;
@@ -45,6 +46,7 @@ class TransactionModal extends Modal implements HasForms
 			TextInput::make('value')->required()->label('Hodnota'),
 			DateTimePicker::make('transaction_time'),
 			Select::make('currency_id')->options(Currency::all()->pluck('name', 'id'))->label('Mena'),
+			Select::make('category_id')->options(Category::all()->pluck('name', 'id'))->label('Kategoria'),
 			Select::make('address_book_id')->options(AddressBook::all()->pluck('name', 'id'))->label('Adresar'),
 			Select::make('source_account_id')
 				->options(Account::all()->pluck('name', 'id'))
@@ -72,6 +74,36 @@ class TransactionModal extends Modal implements HasForms
     public function render(): View
     {
         return view('livewire.transaction-modal');
+    }
+
+	public function submit()
+    {
+        $this->validate();
+
+		$user_id = (auth()->user() ? auth()->user()->id : 4);
+ 
+        // Execution doesn't reach here if validation fails. 
+        Transaction::create([
+            'name' => $this->name,
+            'user_id' => $user_id,
+			'category_id' => $this->category_id,
+			'transaction_type_id' => $this->transaction_type_id,
+			'currency_id' => $this->currency_id,
+			'address_book_id' => $this->address_book_id,
+			'source_account_id' => $this->source_account_id,
+			'end_account_id' => $this->end_account_id,
+			'transaction_time' => $this->transaction_time,
+			'name' => $this->name,
+			'value' => $this->value
+        ]);
+
+		session()->flash('message', 'Transakcia bola uspesne vytvorena.');
+
+		$this->dispatchBrowserEvent('transactionStore',
+		[
+            'type' => 'success',
+            'message' => 'Transakcia bola uspesne vytvorena'
+        ]);
     }
 
 }
