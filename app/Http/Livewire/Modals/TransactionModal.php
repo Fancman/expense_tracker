@@ -4,7 +4,6 @@ namespace App\Http\Livewire\Modals;
 
 
 use Closure;
-use App\Models\Post;
 use App\Models\Account;
 use App\Models\Currency;
 use App\Models\AddressBook;
@@ -24,13 +23,7 @@ use Filament\Forms\Components\TimePicker;
 
 class TransactionModal extends Modal implements HasForms
 {
-	use InteractsWithForms; 
-
-	public $name;
-
-	public $transaction_type;
-
-	public $transaction_type_id;
+	use InteractsWithForms;
 
 	public function mount(): void 
     {

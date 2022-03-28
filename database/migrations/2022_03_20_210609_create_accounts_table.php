@@ -19,9 +19,10 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Currency::class);
 			$table->string('name', 10)->unique();
-			$table->decimal('value', $precision = 8, $scale = 2);
+			$table->decimal('value', $precision = 8, $scale = 2)->default(0);
 			$table->string('icon', 10)->nullable();
             $table->foreignIdFor(User::class);
+			$table->timestamps();
         });
     }
 

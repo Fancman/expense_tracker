@@ -33,6 +33,15 @@ Route::get('/address-book', function(){
 	return view('address-book.index');
 });
 
+Route::get('/accounts', function(){
+	return view('accounts.index');
+});
+
+Route::get('/settings', function(){
+	return view('settings.index');
+});
+
+
 Route::resource('category', CategoryController::class);
 
 Route::get('/livewire/message/category-modal', \App\Http\Livewire\Modals\CategoryModal::class);
@@ -43,6 +52,9 @@ Route::post('/livewire/message/address-modal', \App\Http\Livewire\Modals\Address
 
 Route::get('/livewire/message/transaction-modal', \App\Http\Livewire\Modals\TransactionModal::class);
 Route::post('/livewire/message/transaction-modal', \App\Http\Livewire\Modals\TransactionModal::class);
+
+Route::get('/livewire/message/account-modal', \App\Http\Livewire\Modals\AccountModal::class);
+Route::post('/livewire/message/account-modal', \App\Http\Livewire\Modals\AccountModal::class);
 
 
 
