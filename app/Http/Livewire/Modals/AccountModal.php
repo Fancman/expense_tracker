@@ -37,7 +37,7 @@ class AccountModal extends Modal implements HasForms
 
 	protected function getFormModel(): string 
     {
-        return Transaction::class;
+        return Account::class;
     } 
  
     public function render(): View

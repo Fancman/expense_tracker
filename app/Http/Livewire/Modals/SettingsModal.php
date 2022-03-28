@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Modals;
 
 
+use App\Models\User;
 use App\Models\Account;
 use App\Models\Currency;
 use App\Models\Transaction;
@@ -18,31 +19,43 @@ class SettingsModal extends Modal implements HasForms
 {
 	use InteractsWithForms;
 
-	public $timestamps = false;
+	public User $user;
 
 	public function mount(): void 
     {
-        $this->form->fill();
+		$user_settings = [];
+
+		if(auth()->user()){
+			$this->user = auth()->user();
+			$user_settings = [
+				'name' => $this->user->name,
+				'email' => $this->user->email,
+				'date_type' => $this->user->date_type,
+				'currency_id' => $this->user->currency_id,
+			];
+		}
+
+        $this->form->fill($user_settings);
     } 
 
 	protected function getFormSchema(): array 
     {
         return [            
-			TextInput::make('name')->required()->label('Nazov'),
-			TextInput::make('value')->required()->label('Hodnota'),
-			TextInput::make('icon')->required()->label('Ikona'),
-			Select::make('currency_id')->options(Currency::all()->pluck('name', 'id'))->label('Mena'),			
+			TextInput::make('name')->required()->label('Meno'),
+			TextInput::make('email')->required()->label('Email'),
+			TextInput::make('date_type')->required()->label('Preferovany format datumu'),
+			Select::make('currency_id')->options(Currency::all()->pluck('name', 'id'))->label('Preferovana mena'),			
         ];
     } 
 
 	protected function getFormModel(): string 
     {
-        return Transaction::class;
+        return User::class;
     } 
  
     public function render(): View
     {
-        return view('livewire.account-modal');
+        return view('livewire.settings-modal');
     }
 
 	public function submit()
@@ -52,20 +65,24 @@ class SettingsModal extends Modal implements HasForms
 		$user_id = (auth()->user() ? auth()->user()->id : 4);
  
         // Execution doesn't reach here if validation fails. 
-        Account::create([
-            'name' => $this->name,
-            'user_id' => $user_id,
-			'icon' => $this->icon,
-			'currency_id' => $this->currency_id,
-			'value' => $this->value
-        ]);
+        Account::updateOrCreate(
+			[
+				'user_id' => $user_id,
+			],
+			[
+				'name' => $this->name,            
+				'icon' => $this->icon,
+				'currency_id' => $this->currency_id,
+				'value' => $this->value
+			]
+			);
 
-		session()->flash('message', 'Ucet bol uspesne vytvoreny.');
+		session()->flash('message', 'Nastavenia boli ulozene.');
 
-		$this->dispatchBrowserEvent('accountStore',
+		$this->dispatchBrowserEvent('settingsStore',
 		[
             'type' => 'success',
-            'message' => 'Ucet bol uspesne vytvoreny'
+            'message' => 'Nastavenia boli ulozene'
         ]);
     }
 

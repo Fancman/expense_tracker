@@ -10,7 +10,7 @@
 		<span class="font-medium">{{ session('message') }}</span>
 	</div>
 @endif
-<div x-on:accountStore="show = false;">
+<div x-on:settingsStore="show = false;">
 	<x-modal wire:model="show">
 		<form wire:submit.prevent="submit">
 			

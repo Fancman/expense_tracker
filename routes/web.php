@@ -56,6 +56,8 @@ Route::post('/livewire/message/transaction-modal', \App\Http\Livewire\Modals\Tra
 Route::get('/livewire/message/account-modal', \App\Http\Livewire\Modals\AccountModal::class);
 Route::post('/livewire/message/account-modal', \App\Http\Livewire\Modals\AccountModal::class);
 
+Route::get('/livewire/message/settings-modal', \App\Http\Livewire\Modals\SettingsModal::class);
+Route::post('/livewire/message/settings-modal', \App\Http\Livewire\Modals\SettingsModal::class);
 
 
 /*Route::get('/', function () {
