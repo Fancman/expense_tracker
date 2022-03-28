@@ -9,6 +9,8 @@ class AddressBook extends Model
 {
     use HasFactory;
 
+	protected $table = 'address_book';
+
 	protected $fillable = [
         'name',
         'IBAN',

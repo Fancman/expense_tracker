@@ -11,16 +11,11 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@100;300;400;500;600;700&family=Source+Sans+Pro:wght@200;300;400;600;700&display=swap" rel="stylesheet">
 
-	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
 	<style>[x-cloak] { display: none !important; }</style>
 
 	@livewireStyles
 	@powerGridStyles
-
-	@livewireScripts
-	<script src="{{ mix('js/app.js') }}" defer></script>
-
-    @stack('scripts')
+	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 
 <body class="antialiased">
@@ -86,8 +81,14 @@
         </div>
     </div>
 	-->
+
+	<script src="{{ asset('js/app.js') }}" defer></script>
+
+	@stack('scripts')
 	
 	@powerGridScripts
+
+	@livewireScripts
 	
 	@yield('livewire-custom-scripts')
 	

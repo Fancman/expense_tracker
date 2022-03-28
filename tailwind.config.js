@@ -1,4 +1,6 @@
 const colors = require('tailwindcss/colors')
+const forms = require('@tailwindcss/forms');
+const typography =require('@tailwindcss/typography'); 
 
 module.exports = {
 	darkMode: 'class',
@@ -22,8 +24,13 @@ module.exports = {
 			'purple': colors.violet,
 			'yellow': colors.amber,
 			'pink': colors.fuchsia,
+			'danger': colors.rose,
+            'primary': colors.blue,
 		},
 		extend: {},
 	},
-	plugins: [],
+	plugins: [
+		forms, 
+        typography,
+	],
 }
