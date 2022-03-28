@@ -1,6 +1,6 @@
-# Report 1.
+# Report 2.
 
-Týždeň 5. (22.3 - 29.3.2022)
+Týždeň 6. (22.3 - 29.3.2022)
 
 Meno: Tomáš Figura
 
