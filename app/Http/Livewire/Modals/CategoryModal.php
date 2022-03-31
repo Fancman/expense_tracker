@@ -5,8 +5,14 @@ namespace App\Http\Livewire\Modals;
 use App\Http\Livewire\Modal;
 use App\Models\Category;
 
-class CategoryModal extends Modal
+use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Components\TextInput;
+
+class CategoryModal extends Modal implements HasForms
 {
+	use InteractsWithForms;
+
 	public $name;
 
 	protected $rules = [
@@ -16,6 +22,23 @@ class CategoryModal extends Modal
 	private function resetInputFields(){
         $this->name = '';
     }
+
+	public function mount(): void 
+    {
+        $this->form->fill();
+    } 
+
+	protected function getFormSchema(): array 
+    {
+        return [            
+			TextInput::make('name')->required()->label('Nazov')->unique(),
+        ];
+    } 
+
+	protected function getFormModel(): string 
+    {
+        return Category::class;
+    } 
 
 	public function submit()
     {
