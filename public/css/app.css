@@ -1507,6 +1507,7 @@ trix-editor .attachment__metadata .attachment__size {
 /* packages/forms/resources/css/components/file-upload.css */
 .filepond--root{
   margin-bottom: 0px;
+  overflow: hidden;
 }
 .filepond--panel-root{
   border-radius: 0.5rem;
@@ -2789,6 +2790,9 @@ select{
 .mr-0{
   margin-right: 0px;
 }
+.-mt-\[0\.6875rem\]{
+  margin-top: -0.6875rem;
+}
 .-mb-7{
   margin-bottom: -1.75rem;
 }
@@ -3043,6 +3047,10 @@ select{
 }
 .cursor-pointer{
   cursor: pointer;
+}
+.cursor-grab{
+  cursor: -webkit-grab;
+  cursor: grab;
 }
 .cursor-default{
   cursor: default;
@@ -4404,6 +4412,11 @@ body{
 .dark .dark\:focus\:text-gray-500:focus{
   --tw-text-opacity: 1;
   color: rgb(100 116 139 / var(--tw-text-opacity));
+}
+
+.dark .dark\:focus\:text-primary-600:focus{
+  --tw-text-opacity: 1;
+  color: rgb(37 99 235 / var(--tw-text-opacity));
 }
 
 .dark .dark\:focus\:text-primary-400:focus{

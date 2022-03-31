@@ -4,7 +4,7 @@
 	}"
 	x-show="show"
 	x-on:keydown.escape.window="show = false"
-	x-on:wir
+	x-cloak
 	class="fixed inset-0 overflow-y-auto px-4 py-6 md:py-24 sm:px-0 z-40"
 >
 	<div class="fixed inset-0 transform">
