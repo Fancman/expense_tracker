@@ -28,15 +28,15 @@
 				<ul class="mt-3">			
 					<li class="mb-5 flex items-center">
 						<svg class="w-8 h-8 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-						<a class="text-white font-semibold text-2xl" href="#">Transakcie</a>
+						<a class="text-white font-semibold text-2xl" href="{{ route('transactions') }}">Transakcie</a>
 					</li>
 					<li class="mb-5 flex items-center">
 						<svg class="w-8 h-8 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
-						<a class="text-white font-semibold text-2xl" href="#">Účty</a>
+						<a class="text-white font-semibold text-2xl" href="{{ route('accounts') }}">Účty</a>
 					</li>
 					<li class="mb-5 flex items-center">
 						<svg class="w-8 h-8 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path></svg>
-						<a class="text-white font-semibold text-2xl" href="#">Kategórie</a>
+						<a class="text-white font-semibold text-2xl" href="{{ route('categories') }}">Kategórie</a>
 					</li>
 					<li class="mb-5 flex items-center">
 						<svg class="w-8 h-8 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -44,11 +44,11 @@
 					</li>
 					<li class="mb-5 flex items-center">
 						<svg class="w-8 h-8 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-						<a class="text-white font-semibold text-2xl" href="#">Adresár</a>
+						<a class="text-white font-semibold text-2xl" href="{{ route('address-book') }}">Adresár</a>
 					</li>
 					<li class="mb-5 flex items-center">
 						<svg class="w-8 h-8 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
-						<a class="text-white font-semibold text-2xl" href="#">Nastavenia</a>
+						<a class="text-white font-semibold text-2xl" href="{{ route('settings') }}">Nastavenia</a>
 					</li>
 					<li class="mb-4">
 						<a class="text-white font-semibold text-2xl" href="{{ route('google.logout') }}">Odhlásiť sa</a>

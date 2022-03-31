@@ -23,23 +23,23 @@ Route::get('/', function(){
 
 Route::get('/categories', function(){
 	return view('categories.index');
-});
+})->name('categories');
 
 Route::get('/transactions', function(){
 	return view('transactions.index');
-});
+})->name('transactions');
 
 Route::get('/address-book', function(){
 	return view('address-book.index');
-});
+})->name('address-book');
 
 Route::get('/accounts', function(){
 	return view('accounts.index');
-});
+})->name('accounts');
 
 Route::get('/settings', function(){
 	return view('settings.index');
-});
+})->name('settings');
 
 
 Route::resource('category', CategoryController::class);
