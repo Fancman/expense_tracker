@@ -14,8 +14,7 @@
 	<style>[x-cloak] { display: none !important; }</style>
 
 	@livewireStyles
-	@powerGridStyles
-	
+		
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 
@@ -84,14 +83,12 @@
     </div>
 	-->
 
+	@livewireScripts
+
 	<script src="{{ asset('js/app.js') }}" defer></script>
 
 	@stack('scripts')
-	
-	@powerGridScripts
 
-	@livewireScripts
-	
 	@yield('livewire-custom-scripts')
 	
 </body>
