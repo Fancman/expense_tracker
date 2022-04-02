@@ -15,7 +15,7 @@
 		></div>
 
 		<div x-show="show" class="flex items-center justify-center h-full">
-			<div class="bg-white rounded-lg overflow-hidden transform sm:w-full sm:mx-auto max-w-lg align-middle px-7 py-5">
+			<div class="bg-white rounded-lg transform sm:w-full sm:mx-auto max-w-lg align-middle px-7 py-5 relative overflow-auto h-full">
 				{{ $slot }}
 			</div>
 		</div>

@@ -5,21 +5,22 @@ namespace App\Http\Livewire\Modals;
 
 use Closure;
 use App\Models\Account;
+use App\Models\Category;
 use App\Models\Currency;
-use App\Models\AddressBook;
 
+use App\Models\AddressBook;
 use App\Models\Transaction;
 use App\Http\Livewire\Modal;
-use App\Models\Category;
 use App\Models\TransactionType;
 use Illuminate\Contracts\View\View;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\TimePicker;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Concerns\InteractsWithForms;
 
 class TransactionModal extends Modal implements HasForms
 {
@@ -47,7 +48,8 @@ class TransactionModal extends Modal implements HasForms
 				->hidden(function (Closure $get) {
 					$transaction_type =  $get('transaction_type_id');					
 					return (!in_array($transaction_type, [2, 3, 4, 5, 6]));
-				}),
+				}
+			),
 			Select::make('end_account_id')
 				->options(Account::all()
 				->pluck('name', 'id'))
@@ -55,7 +57,27 @@ class TransactionModal extends Modal implements HasForms
 				->hidden(function (Closure $get) {
 					$transaction_type =  $get('transaction_type_id');					
 					return (!in_array($transaction_type, [1, 3, 6]));
-				}),
+				}
+			),
+			Repeater::make('transaction_items')
+			->schema([
+				TextInput::make('name')->required()->label('Nazov'),
+				TextInput::make('quantity')->numeric()->required()->label('Pocet'),
+				TextInput::make('price')->numeric()->required()->label('Cena'),
+				Select::make('currency_id')
+					->options(Currency::all()->pluck('name', 'id'))
+					->required()->label('Mena'),
+				TextInput::make('fees')->numeric()->required(),
+				Select::make('fee_currency_id')
+					->options(Currency::all()->pluck('name', 'id'))
+					->required()->label('Mena poplatku'),
+			])
+			->createItemButtonLabel('Pridat polozku')
+			->columns(3)
+			->hidden(function (Closure $get) {
+				$transaction_type =  $get('transaction_type_id');					
+				return (!in_array($transaction_type, [3, 4, 6]));
+			}),
         ];
     } 
 
