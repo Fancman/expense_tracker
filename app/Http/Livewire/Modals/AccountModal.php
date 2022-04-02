@@ -67,6 +67,8 @@ class AccountModal extends Modal implements HasForms
             'type' => 'success',
             'message' => 'Ucet bol uspesne vytvoreny'
         ]);
+
+		$this->emit('refreshParent');
     }
 
 }

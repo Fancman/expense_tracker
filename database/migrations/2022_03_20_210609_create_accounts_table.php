@@ -18,9 +18,9 @@ return new class extends Migration
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Currency::class);
-			$table->string('name', 10)->unique();
+			$table->string('name', 50)->unique();
 			$table->decimal('value', $precision = 8, $scale = 2)->default(0);
-			$table->string('icon', 10)->nullable();
+			$table->string('icon', 50)->nullable();
             $table->foreignIdFor(User::class);
 			$table->timestamps();
         });

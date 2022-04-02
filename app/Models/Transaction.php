@@ -25,37 +25,37 @@ class Transaction extends Model
 
 	public function currency()
     {
-        return $this->hasOne(Currency::class);
+        return $this->belongsTo(Currency::class);
     }
 
     public function user()
     {
-        return $this->hasOne(User::class);
+        return $this->belongsTo(User::class);
     }
 
 	public function category()
     {
-        return $this->hasOne(Category::class);
+        return $this->belongsTo(Category::class);
     }
 
-	public function transactionTypes()
+	public function transactionType()
     {
         return $this->belongsTo(TransactionType::class);
     }
 
 	public function addressBook()
     {
-        return $this->hasOne(AddressBook::class);
+        return $this->belongsTo(AddressBook::class);
     }
 
 	public function sourceAccount()
     {
-        return $this->hasOne(Account::class, 'source_account_id');
+        return $this->belongsTo(Account::class, 'source_account_id');
     }
 
 	public function endAccount()
     {
-        return $this->hasOne(Account::class, 'end_account_id');
+        return $this->belongsTo(Account::class, 'end_account_id');
     }
 	
 }

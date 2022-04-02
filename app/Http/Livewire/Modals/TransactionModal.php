@@ -74,6 +74,26 @@ class TransactionModal extends Modal implements HasForms
         $this->validate();
 
 		$user_id = (auth()->user() ? auth()->user()->id : 4);
+
+		$transaction_data = [
+            'name' => $this->name,
+            'user_id' => $user_id,
+			'category_id' => $this->category_id,
+			'transaction_type_id' => $this->transaction_type_id,
+			'currency_id' => $this->currency_id,
+			'address_book_id' => $this->address_book_id,
+			'source_account_id' => $this->source_account_id,
+			'end_account_id' => $this->end_account_id,
+			'transaction_time' => $this->transaction_time,
+			'name' => $this->name,
+			'value' => $this->value
+        ];
+
+		foreach ($transaction_data as $key => $value) {
+			if( empty($value) ){
+				unset($transaction_data[$key]);
+			}
+		}
  
         // Execution doesn't reach here if validation fails. 
         Transaction::create([

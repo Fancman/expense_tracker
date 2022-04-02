@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\TransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,11 +29,7 @@ Route::get('/categories', function(){
 	return view('categories.index', compact('title'));
 })->name('categories');
 
-Route::get('/transactions', function(){
-	$title = 'Transakcie';
-
-	return view('transactions.index', compact('title'));
-})->name('transactions');
+Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions');
 
 Route::get('/address-book', function(){
 	$title = 'Adresár';
@@ -39,11 +37,7 @@ Route::get('/address-book', function(){
 	return view('address-book.index', compact('title'));
 })->name('address-book');
 
-Route::get('/accounts', function(){
-	$title = 'Účty';
-
-	return view('accounts.index', compact('title'));
-})->name('accounts');
+Route::get('/accounts', [AccountController::class, 'index'])->name('accounts');
 
 Route::get('/settings', function(){
 	$title = 'Nastavenia';

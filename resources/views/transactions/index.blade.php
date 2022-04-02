@@ -14,39 +14,9 @@
 		<!-- Table -->
 		<div class="bg-white w-full mx-auto py-6">
 			<div class="overflow-x-auto">
-				<table class="table-auto w-full">
-					<thead class="border-t border-b">
-						<tr>
-							<th class="font-semibold uppercase text-sm text-left py-3">Nazov</th>
-							<th class="font-semibold uppercase text-sm text-left py-3">Typ transakcie</th>
-							<th class="font-semibold uppercase text-sm text-left py-3">Kategoria</th>
-							<th class="font-semibold uppercase text-sm text-left py-3">Datum transakcie</th>
-							<th class="font-semibold uppercase text-sm text-left py-3">Hodnota</th>
-						</tr>
-					</thead>
-					<tbody class="text-sm border-b">
-						<tr>
-							<td class="px-2 py-3 whitespace-nowrap">
-								<div class="text-left">Test</div>
-							</td>
-							<td class="px-2 py-3 whitespace-nowrap">
-								<div class="text-left">Prijem</div>
-							</td>
-							<td class="px-2 py-3 whitespace-nowrap">
-								<div class="text-left">Zabava</div>
-							</td>
-							<td class="px-2 py-3 whitespace-nowrap">
-								<div class="text-left">22/01/2022</div>
-							</td>
-							<td class="px-2 py-3 whitespace-nowrap">
-								<div class="text-left">20$</div>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+				@livewire('tables.transaction-table')
 			</div>
-		</div>
-	
+		</div>	
 		
 	</div>
 @endsection
