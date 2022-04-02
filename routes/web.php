@@ -22,23 +22,33 @@ Route::get('/', function(){
 })->name('home');
 
 Route::get('/categories', function(){
-	return view('categories.index');
+	$title = 'Kategórie';
+
+	return view('categories.index', compact('title'));
 })->name('categories');
 
 Route::get('/transactions', function(){
-	return view('transactions.index');
+	$title = 'Transakcie';
+
+	return view('transactions.index', compact('title'));
 })->name('transactions');
 
 Route::get('/address-book', function(){
-	return view('address-book.index');
+	$title = 'Adresár';
+
+	return view('address-book.index', compact('title'));
 })->name('address-book');
 
 Route::get('/accounts', function(){
-	return view('accounts.index');
+	$title = 'Účty';
+
+	return view('accounts.index', compact('title'));
 })->name('accounts');
 
 Route::get('/settings', function(){
-	return view('settings.index');
+	$title = 'Nastavenia';
+
+	return view('settings.index', compact('title'));
 })->name('settings');
 
 

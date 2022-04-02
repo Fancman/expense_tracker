@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Document</title>
+    <title>Expense Tracker</title>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@100;300;400;500;600;700&family=Source+Sans+Pro:wght@200;300;400;600;700&display=swap" rel="stylesheet">
@@ -27,7 +27,9 @@
 				<ul class="mt-3">			
 					<li class="mb-5 flex items-center">
 						<svg class="w-8 h-8 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-						<a class="text-white font-semibold text-2xl" href="{{ route('transactions') }}">Transakcie</a>
+						<a class="font-semibold text-2xl
+						{{ (request()->is('transactions')) ? 'text-white' : 'text-white' }}
+						" href="{{ route('transactions') }}">Transakcie</a>
 					</li>
 					<li class="mb-5 flex items-center">
 						<svg class="w-8 h-8 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
@@ -58,7 +60,17 @@
 		</aside>
 
 		<div class="flex flex-col flex-1 w-full">
-			@yield('content')
+			<header class="px-8 border-b">
+				<div class="flex items-center justify-between h-16">
+					<h1 class="text-4xl font-semibold">{{ $title }}</h1>
+					<div lang="flex items-center">
+						<span>Tomas Figura</span>
+					</div>
+				</div>
+			</header>
+			<div class="container mx-auto px-8 py-8">
+				@yield('content')
+			</div>			
 		</div>
 		
 	</div>
