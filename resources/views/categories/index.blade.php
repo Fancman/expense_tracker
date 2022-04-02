@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-	<button x-data="{}" x-on:click="window.livewire.emitTo('modals.category-modal', 'show')" class="text-indigo-500">Show Category modal</button>
+	<button x-data="{}" x-on:click="window.livewire.emitTo('modals.category-modal', 'show')" class="bg-navy-blue text-white">Show Category modal</button>
 
 	<div class="flex items-center justify-center">
 		
