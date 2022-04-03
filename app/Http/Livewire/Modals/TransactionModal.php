@@ -221,7 +221,7 @@ class TransactionModal extends Modal implements HasForms
 	
 					TransactionItem::create($transaction_item_data);
 	
-					$price_sum += floatval($transaction_item['fees']) + (floatval($transaction_item['quantity']) * floatval($transaction_item['price']));
+					$transaction_price = floatval($transaction_item['fees']) + (floatval($transaction_item['quantity']) * floatval($transaction_item['price']));
 	
 					$account_item = AccountItem::where('account_id', $transaction->end_account_id)
 					->where('name', $transaction_item['name'])
@@ -248,7 +248,44 @@ class TransactionModal extends Modal implements HasForms
 
 						$account_item->save();
 					}
+
 					
+
+					// Buy
+					if( $this->transaction_type_id == 3){
+						$finance_items = AccountItem::where('account_id', $transaction->end_account_id)
+						->where('item_type_id', 3)
+						->get();
+
+						foreach ($finance_items as $finance_item) {
+							if($finance_item->currency_id == $transaction_item['currency_id']){
+								$finance_item->quantity = (floatval($finance_item->quantity) - $transaction_price);
+								$finance_item->save();
+							}
+						}
+					}
+
+					// Sell
+					if( $this->transaction_type_id == 4){
+						$finance_item = AccountItem::firstOrNew(
+							[
+								'account_id' => $transaction->end_account_id,
+								'item_type_id' => 3,
+								'currency_id' => intval($transaction_item['currency_id'])
+							],
+							[
+								'name' => 'Peniaze',
+								'item_type_id' => 3,
+								'quantity' => $transaction_price,
+								'average_buy_price' => 1,
+								'current_price' => 1,
+							]
+						);
+						
+						$finance_item->save();
+					}
+
+					$price_sum += $transaction_price;	
 				}
 	
 				if( $price_sum > 0 ){
