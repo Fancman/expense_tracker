@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Tables;
 
 use App\Models\Category;
 use App\Models\Transaction;
+use App\Models\TransactionType;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -15,6 +16,7 @@ class TransactionTable extends Component
 	public $filterCategory;
 	public $fromDate;
 	public $toDate;
+	public $filterTransactionType;
 
 	public function render()
     {
@@ -38,8 +40,13 @@ class TransactionTable extends Component
 						$sub_query->whereDate('transaction_time', '<=' , $this->toDate);
 					}
 
+					if( !is_null($this->filterTransactionType) ){
+						$sub_query->where('transaction_type_id', '=' , $this->filterTransactionType);
+					}
+
 				})->paginate(10),
 			'categories' => Category::where('user_id', $user_id)->get(),
+			'transaction_types' => TransactionType::all(),
 		]);
     }
 }

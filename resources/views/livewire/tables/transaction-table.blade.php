@@ -23,6 +23,28 @@
 				@endforeach
 			</select>
 		</div>
+		<div class="ml-5 mb-3 xl:w-96">
+			<select class="form-select appearance-none
+			block
+			w-full
+			px-3
+			py-1.5
+			text-base
+			font-normal
+			text-gray-700
+			bg-white bg-clip-padding bg-no-repeat
+			border border-solid border-gray-300
+			rounded
+			transition
+			ease-in-out
+			m-0
+			focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" aria-label="Default select example" wire:model="filterTransactionType" >
+				<option selected>Filtruj podla typu transakcie</option>
+				@foreach($transaction_types as $transaction_type)
+					<option value="{{ $transaction_type->id }}">{{ $transaction_type->name }}</option>
+				@endforeach
+			</select>
+		</div>
 		<div
 			x-data=""			
 			x-init="new Pikaday({ field: $refs.fromDate, 'format': 'YYYY-MM-DD', firstDay: 1, });"
