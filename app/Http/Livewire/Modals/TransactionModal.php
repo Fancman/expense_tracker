@@ -4,17 +4,19 @@ namespace App\Http\Livewire\Modals;
 
 
 use Closure;
+use Livewire\Component as Livewire;
 use App\Models\Account;
 use App\Models\Category;
-use App\Models\Currency;
 
+use App\Models\Currency;
+use App\Models\ItemType;
+use App\Models\AccountItem;
 use App\Models\AddressBook;
 use App\Models\Transaction;
 use App\Http\Livewire\Modal;
-use App\Models\AccountItem;
-use App\Models\ItemType;
 use App\Models\TransactionItem;
 use App\Models\TransactionType;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\View\View;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Contracts\HasForms;
@@ -62,7 +64,7 @@ class TransactionModal extends Modal implements HasForms
 					$transaction_type =  $get('transaction_type_id');					
 					return (!in_array($transaction_type, [2, 3, 4, 5, 6]));
 				}
-			),
+			)->reactive(),
 			Select::make('end_account_id')
 				->options(Account::all()
 				->pluck('name', 'id'))
@@ -94,6 +96,49 @@ class TransactionModal extends Modal implements HasForms
 					$transaction_type =  $get('transaction_type_id');					
 					return (!in_array($transaction_type, [3, 4, 6]));
 				}),
+			/*Repeater::make('transaction_sell_items')
+				->schema([
+					Select::make('item_type_id')
+						->options(ItemType::all()->pluck('name', 'id'))
+						->required()->label('Typ polozky'),
+					Select::make('transaction_item_name')->options(
+						function (Livewire $livewire, Closure $get) {
+							$source_account_id = $get('source_account_id');
+							
+							$options = AccountItem::where('account_id', $source_account_id)->orderBy('name', 'asc')->get()->pluck('name', 'id');
+
+							return $options;
+						}
+					)->label('Nazov')->reactive(),
+					TextInput::make('quantity')->numeric()->required()->label('Pocet')
+					->default(function (Closure $get){
+						$name = $get('transaction_item_name');
+						$source_account_id = intval($get('source_account_id'));
+
+						//dd($name, $source_account_id);
+						
+						$quantity = DB::table('account_items')
+						->where('account_id', $source_account_id)
+						->where('name', $name)
+						->sum('quantity');
+
+						return $quantity;
+					}),
+					TextInput::make('price')->numeric()->required()->label('Cena'),
+					Select::make('currency_id')
+						->options(Currency::all()->pluck('name', 'id'))
+						->required()->label('Mena'),
+					TextInput::make('fees')->numeric()->required(),
+					Select::make('fees_currency_id')
+						->options(Currency::all()->pluck('name', 'id'))
+						->required()->label('Mena poplatku'),
+				])
+				->createItemButtonLabel('Pridat polozku')
+				->columns(3)
+				->hidden(function (Closure $get) {
+					$transaction_type =  $get('transaction_type_id');					
+					return (!in_array($transaction_type, [3, 4, 6]));
+				}),*/
         ];
     } 
 
@@ -140,6 +185,10 @@ class TransactionModal extends Modal implements HasForms
  
         // Execution doesn't reach here if validation fails. 
         $transaction = Transaction::create($transaction_data);
+
+		if( in_array(intval($this->transaction_type_id), [2]) ){
+
+		}
 
 		// Nakup a predaj akcii/kryptomien
 		if( in_array(intval($this->transaction_type_id), [3, 4]) ){
@@ -196,9 +245,10 @@ class TransactionModal extends Modal implements HasForms
 								'current_price' => $transaction_item['price'],
 							]
 						);
-					}
 
-					$account_item->save();
+						$account_item->save();
+					}
+					
 				}
 	
 				if( $price_sum > 0 ){
