@@ -1,4 +1,8 @@
 <div>
+	<div>
+		<input type="text"  class="mb-5" placeholder="Hladat v nazve" wire:model="searchTerm" />
+	</div>
+
 	<table class="table-auto w-full mb-6">
 		<thead class="border-t border-b">
 			<tr>

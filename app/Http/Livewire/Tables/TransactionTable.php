@@ -10,10 +10,16 @@ class TransactionTable extends Component
 {
 	use WithPagination;
 
+	public $searchTerm;
+
 	public function render()
     {
+		$query = '%'.$this->searchTerm.'%';
+
         return view('livewire.tables.transaction-table', [
-			'transactions' => Transaction::paginate(10)
+			'transactions' => Transaction::where(function($sub_query){
+				$sub_query->where('name', 'like', '%'.$this->searchTerm.'%');
+			})->paginate(10)
 		]);
     }
 }
