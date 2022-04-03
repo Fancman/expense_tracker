@@ -11,9 +11,13 @@ class TransactionItem extends Model
 
 	protected $fillable = [
         'name',
+		'item_type_id',
         'quantity',
         'price',
+		'currency_id',
         'fees',
+		'fees_currency_id',
+		'transaction_id'
     ];
 
 	public function transaction()

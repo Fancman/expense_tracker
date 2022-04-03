@@ -11,6 +11,9 @@ class AccountItem extends Model
 
 	protected $fillable = [
         'name',
+		'account_id',
+		'item_type_id',
+		'currency_id',
         'quantity',
         'average_buy_price',
         'current_price',
