@@ -186,8 +186,58 @@ class TransactionModal extends Modal implements HasForms
         // Execution doesn't reach here if validation fails. 
         $transaction = Transaction::create($transaction_data);
 
+		// Prijem
+		if( in_array(intval($this->transaction_type_id), [1]) ){
+			$finance_item = AccountItem::where('account_id', $transaction->end_account_id)
+			->where('item_type_id', 3)
+			->where('currency_id', intval($transaction_data['currency_id']))
+			->latest()->first();
+
+			if ( !isset($finance_item) ){
+				$finance_item = AccountItem::firstOrNew(
+					[
+						'account_id' => $transaction->end_account_id,
+						'item_type_id' => 3,
+						'currency_id' => intval($transaction_data['currency_id'])
+					],
+					[
+						'name' => 'Peniaze',
+						'item_type_id' => 3,
+						'quantity' => floatval($transaction_data['value']),
+						'average_buy_price' => 1,
+						'current_price' => 1,
+					]
+				);
+
+				$finance_item->save();
+			}else{
+				$finance_item->quantity = (floatval($finance_item->quantity) + floatval($transaction_data['value']));
+
+				$finance_item->save();
+			}
+
+			$account = Account::where('id', $transaction->end_account_id)->latest()->first();;
+			$account->value = (floatval($account->value) + floatval($transaction_data['value']));
+			$account->save();
+		}
+
+		// Vydaj
 		if( in_array(intval($this->transaction_type_id), [2]) ){
 
+			$finance_items = AccountItem::where('account_id', $transaction->end_account_id)
+			->where('item_type_id', 3)
+			->get();			
+
+			foreach ($finance_items as $finance_item) {
+				if($finance_item->currency_id == $transaction_data['currency_id']){
+					$finance_item->quantity = (floatval($finance_item->quantity) - floatval($transaction_data['value']));
+					$finance_item->save();
+				}
+			}
+
+			$account = Account::where('id', $transaction->end_account_id)->latest()->first();
+			$account->value = (floatval($account->value) - floatval($transaction_data['value']));
+			$account->save();
 		}
 
 		// Nakup a predaj akcii/kryptomien
@@ -247,9 +297,7 @@ class TransactionModal extends Modal implements HasForms
 						);
 
 						$account_item->save();
-					}
-
-					
+					}					
 
 					// Buy
 					if( $this->transaction_type_id == 3){
@@ -267,22 +315,33 @@ class TransactionModal extends Modal implements HasForms
 
 					// Sell
 					if( $this->transaction_type_id == 4){
-						$finance_item = AccountItem::firstOrNew(
-							[
-								'account_id' => $transaction->end_account_id,
-								'item_type_id' => 3,
-								'currency_id' => intval($transaction_item['currency_id'])
-							],
-							[
-								'name' => 'Peniaze',
-								'item_type_id' => 3,
-								'quantity' => $transaction_price,
-								'average_buy_price' => 1,
-								'current_price' => 1,
-							]
-						);
+
+						$finance_item = AccountItem::where('account_id', $transaction->end_account_id)
+						->where('item_type_id', 3)
+						->where('currency_id', intval($transaction_item['currency_id']))
+						->latest()->first();
+
+						if ( !isset($finance_item) ){
+							$finance_item = AccountItem::firstOrNew(
+								[
+									'account_id' => $transaction->end_account_id,
+									'item_type_id' => 3,
+									'currency_id' => intval($transaction_item['currency_id'])
+								],
+								[
+									'name' => 'Peniaze',
+									'item_type_id' => 3,
+									'quantity' => $transaction_price,
+									'average_buy_price' => 1,
+									'current_price' => 1,
+								]
+							);
+	
+							$finance_item->save();
+						}else{
+							$finance_item->quantity = (floatval($finance_item->quantity) + floatval($transaction_data['value']));
+						}
 						
-						$finance_item->save();
 					}
 
 					$price_sum += $transaction_price;	
@@ -294,9 +353,7 @@ class TransactionModal extends Modal implements HasForms
 				}
 				
 			}
-		}
-
-		
+		}		
 
 		session()->flash('message', 'Transakcia bola uspesne vytvorena.');
 
