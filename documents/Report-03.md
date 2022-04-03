@@ -7,11 +7,12 @@ Meno: Tomáš Figura
 Názov projekt: Expense Tracker
 
 ### Týždenný plán
-- Implementácia typov položiek Akcia, Kryptomena - 4 h
-- Implementácia typov transakcií Výdaj, Prijem, Prevod, Nákup, Dlžoba - 6 h
-- Frontend na pridávanie položiek k účtom a transakciám - 2h
-- Stránka so štatistikami - 3h
-- Filtrovanie transakcií - 1h
+- Implementácia typov položiek Akcia, Kryptomena - (Nebolo potrebné)
+- Implementácia typov transakcií Výdaj, Prijem, Prevod, Nákup, Dlžoba - 3 h
+- Frontend na pridávanie položiek k účtom a transakciám - 1h
+- Stránka so štatistikami - (Odkladám na ďalší týždeň, namiesto toho som implementoval ukladanie položiek)
+- Filtrovanie transakcií - 1h 30min
+- Ukladanie položiek pri Účte a Transakciách - 3h
 
 ### Týždenné zhotovenie
 - Vytvoril som tabuľku pre vypisovanie transakcií a Účtov, kedže balíček Powergrid nepracoval podľa mojích predstáv 304ad8e34e4d805dd93740c40547bf8c4ccf65f2.
@@ -31,9 +32,13 @@ Názov projekt: Expense Tracker
 + Stránka so štatistikami - 2h
 
 ### Zhrnutie
-Neimplementoval som typ transakcie dlžoba lebo tento task bude možný využívať až po funkcionalite úpravy transakcie any sa dala dlžoba ukončiť ako vybavená. Spravil som frontend pre pridávanie položiek k účtom a transakciam. Dokončil som úlohu ktorú som mal robiť tento týžden a to ukladanie položiek do databázy. Namiesto nej budem robiť štatistiku a chýbajuce dve typy transakcií.
+Neimplementoval som typ transakcie dlžoba lebo tento task bude možný využívať až po funkcionalite úpravy transakcie any sa dala dlžoba ukončiť ako vybavená. Spravil som frontend pre pridávanie položiek k účtom a transakciam. Dokončil som úlohu ktorú som mal robiť ďalší týžden a to ukladanie položiek do databázy. Namiesto nej budem robiť štatistiku a chýbajuce dva typy transakcií.
 
-Implementoval som odlišné úkladanie údajov pri Príjme, Výdaji, Nákupe a Predaji. Prerobil som zobrazovanie záznamov transakcií a nastavil pagináciu spolu s filtrovaním. Pri vytváraní účtu som nastavil možnosť pridávania peňazí ako položky. Polia formulára pri vytváraní transakcie sa dynamicky menia podľa vybraneho typu transakcie (možnosť pridania položiek sa zobrazí iba pre Predaj a Nákup).
+Implementoval som odlišné úkladanie údajov pri Príjme, Výdaji, Nákupe a Predaji. Prerobil som zobrazovanie záznamov transakcií a nastavil pagináciu spolu s filtrovaním. Pri vytváraní účtu som nastavil možnosť pridávania peňazí ako položiek. Polia formulára pri vytváraní transakcie sa dynamicky menia podľa vybraného typu transakcie (možnosť pridania položiek sa zobrazí iba pre Predaj a Nákup).
+
+Nespravil som úlohu "Implementácia typov položiek Akcia, Kryptomena" kedže oba typy položky majú aj tak rovnaké polia a správanie.
+
+Na projekte som stravil tento týždeň 8 hodín a 30 minút.
 
 Narazil som na viaceré problémy:
 + Pri nastavovaní aby sa po nastavení typu transakcie na predaj a vybratia účtu načítali všetky položky ktoré má používateľ nakupené a množstvo sa nastavilo na počet položiek ktoré má nakúpené, nefunguje prepojenie medzi repeaterom a poliami formulára nad ním.
