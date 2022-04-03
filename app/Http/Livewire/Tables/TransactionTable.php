@@ -13,9 +13,7 @@ class TransactionTable extends Component
 	public function render()
     {
         return view('livewire.tables.transaction-table', [
-			'transactions' => Transaction::latest()
-			//->join('categories', 'categories.id', '=', 'transactions.category_id')
-			->paginate(10)
+			'transactions' => Transaction::paginate(10)
 		]);
     }
 }
