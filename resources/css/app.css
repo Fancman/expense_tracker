@@ -4,6 +4,9 @@
 @tailwind components;
 @tailwind utilities;
 
+@import '../../node_modules/pikaday/css/pikaday.css';
+
 body{
 	font-family: 'Source Sans Pro', sans-serif;
 }
+

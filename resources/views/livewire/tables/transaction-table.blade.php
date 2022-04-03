@@ -1,6 +1,53 @@
 <div>
-	<div>
-		<input type="text"  class="mb-5" placeholder="Hladat v nazve" wire:model="searchTerm" />
+	<div class="flex">
+		<input type="text"  class="mb-5 mr-5" placeholder="Hladat v nazve" wire:model="searchTerm" />
+		<div class="ml-5 mb-3 xl:w-96">
+			<select class="form-select appearance-none
+			block
+			w-full
+			px-3
+			py-1.5
+			text-base
+			font-normal
+			text-gray-700
+			bg-white bg-clip-padding bg-no-repeat
+			border border-solid border-gray-300
+			rounded
+			transition
+			ease-in-out
+			m-0
+			focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" aria-label="Default select example" wire:model="filterCategory" >
+				<option selected>Filtruj podla kategorie</option>
+				@foreach($categories as $category)
+					<option value="{{ $category->id }}">{{ $category->name }}</option>
+				@endforeach
+			</select>
+		</div>
+		<div
+			x-data=""			
+			x-init="new Pikaday({ field: $refs.fromDate, 'format': 'YYYY-MM-DD', firstDay: 1, });"
+			class="w-50 ml-10">
+			
+			<input
+				wire:model.lazy="fromDate"
+				x-ref="fromDate"
+				type="text"
+				class="w-full pl-4 pr-10 py-2 leading-none rounded-lg shadow-sm focus:outline-none border-gray-300 text-gray-600 font-medium focus:ring focus:ring-blue-600 focus:ring-opacity-50" placeholder="Datum od"
+			/>
+
+		</div>
+		<div
+			x-data=""			
+			x-init="new Pikaday({ field: $refs.toDate, 'format': 'YYYY-MM-DD', firstDay: 1, });"
+			class="w-50 ml-10">			
+			<input
+				wire:model.lazy="toDate"
+				x-ref="toDate"
+				type="text"
+				class="w-full pl-4 pr-10 py-2 leading-none rounded-lg shadow-sm focus:outline-none border-gray-300 text-gray-600 font-medium focus:ring focus:ring-blue-600 focus:ring-opacity-50" placeholder="Datum do"
+			/>
+
+		</div>
 	</div>
 
 	<table class="table-auto w-full mb-6">
