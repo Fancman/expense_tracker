@@ -14,5 +14,6 @@ class AddressBook extends Model
 	protected $fillable = [
         'name',
         'IBAN',
+		'user_id'
     ];
 }

@@ -12,6 +12,8 @@ class TransactionTable extends Component
 {
 	use WithPagination;
 
+	protected $listeners = ['refreshParent' => 'render'];
+
 	public $searchTerm;
 	public $filterCategory;
 	public $fromDate;

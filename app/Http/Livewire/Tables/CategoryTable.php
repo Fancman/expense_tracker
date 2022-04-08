@@ -2,11 +2,11 @@
 
 namespace App\Http\Livewire\Tables;
 
-use App\Models\Account;
+use App\Models\Category;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class AccountTable extends Component
+class CategoryTable extends Component
 {
 	use WithPagination;
 
@@ -16,8 +16,8 @@ class AccountTable extends Component
     {
 		$user_id = (auth()->user() ? auth()->user()->id : 4);
 
-        return view('livewire.tables.account-table', [
-			'accounts' => Account::where('user_id', $user_id)->latest()->paginate(10)
+        return view('livewire.tables.category-table', [
+			'categories' => Category::where('user_id', $user_id)->orderBy('id', 'DESC')->paginate(10)
 		]);
     }
 }

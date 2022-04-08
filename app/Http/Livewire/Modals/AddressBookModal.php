@@ -56,6 +56,8 @@ class AddressBookModal extends Modal implements HasForms
             'type' => 'success',
             'message' => 'Zaznam bol uspesne vytvoreny'
         ]);
+
+		$this->emit('refreshParent');
     }
 
     public function render()

@@ -1,9 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
-	<button x-data="{}" x-on:click="window.livewire.emitTo('modals.address-book-modal', 'show')" class="text-indigo-500">Create address book record</button>
 
-	<div class="flex items-center justify-center">
+	<div class="flex items-center">
+
+		<button x-data="{}" x-on:click="window.livewire.emitTo('modals.address-book-modal', 'show')" class="bg-navy-blue text-white px-3 py-2 rounded">Zapisat zaznam do adresara</button>
+		
+	</div>
+
+	<div class="flex items-center">
+
+		<!-- Table -->
+		<div class="bg-white w-full mx-auto py-6">
+			<div class="overflow-x-auto">
+				@livewire('tables.address-book-table')
+			</div>
+		</div>	
 		
 	</div>
 @endsection

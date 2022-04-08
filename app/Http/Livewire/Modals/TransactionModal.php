@@ -405,6 +405,8 @@ class TransactionModal extends Modal implements HasForms
             'type' => 'success',
             'message' => 'Transakcia bola uspesne vytvorena'
         ]);
+
+		$this->emit('refreshParent');
     }
 
 }

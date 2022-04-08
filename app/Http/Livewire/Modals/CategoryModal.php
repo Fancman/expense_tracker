@@ -61,6 +61,8 @@ class CategoryModal extends Modal implements HasForms
             'type' => 'success',
             'message' => 'Kategoria bola uspesne vytvorena'
         ]);
+
+		$this->emit('refreshParent');
     }
 
     public function render()
