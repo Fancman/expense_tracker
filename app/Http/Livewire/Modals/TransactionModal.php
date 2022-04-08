@@ -26,6 +26,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Components\Component;
 
 class TransactionModal extends Modal implements HasForms
 {
@@ -94,26 +95,44 @@ class TransactionModal extends Modal implements HasForms
 				->columns(3)
 				->hidden(function (Closure $get) {
 					$transaction_type =  $get('transaction_type_id');					
-					return (!in_array($transaction_type, [3, 4, 6]));
+					return (!in_array($transaction_type, [3, 6]));
 				}),
-			/*Repeater::make('transaction_sell_items')
+			Repeater::make('transaction_sell_items')
 				->schema([
 					Select::make('item_type_id')
 						->options(ItemType::all()->pluck('name', 'id'))
-						->required()->label('Typ polozky'),
+						->required()->label('Typ polozky')->reactive(),
 					Select::make('transaction_item_name')->options(
-						function (Livewire $livewire, Closure $get) {
-							$source_account_id = $get('source_account_id');
-							
-							$options = AccountItem::where('account_id', $source_account_id)->orderBy('name', 'asc')->get()->pluck('name', 'id');
+						function (Livewire $livewire, Closure $get, Component $component) {
+							$source_account_id = $livewire->source_account_id;
+							$item_type_id = $get('item_type_id');
+
+							$account_items = AccountItem::where('account_id', $source_account_id)
+							->when($item_type_id, function($query, $item_type_id) {
+								return $query->where('item_type_id', $item_type_id);
+							})
+							->orderBy('name', 'asc')->get();
+
+							$options = [];
+
+							foreach ($account_items as $account_item) {
+								$quantity = DB::table('account_items')
+								->where('account_id', $source_account_id)
+								->when($item_type_id, function($query, $item_type_id) {
+									return $query->where('item_type_id', $item_type_id);
+								})
+								->sum('quantity');
+
+								$options[$account_item->id] = $account_item->name . " - " . $quantity;
+							}
 
 							return $options;
 						}
 					)->label('Nazov')->reactive(),
 					TextInput::make('quantity')->numeric()->required()->label('Pocet')
-					->default(function (Closure $get){
+					->default(function (Livewire $livewire, Closure $get){
 						$name = $get('transaction_item_name');
-						$source_account_id = intval($get('source_account_id'));
+						$source_account_id = $livewire->source_account_id;
 
 						//dd($name, $source_account_id);
 						
@@ -123,7 +142,7 @@ class TransactionModal extends Modal implements HasForms
 						->sum('quantity');
 
 						return $quantity;
-					}),
+					})->reactive(),
 					TextInput::make('price')->numeric()->required()->label('Cena'),
 					Select::make('currency_id')
 						->options(Currency::all()->pluck('name', 'id'))
@@ -137,8 +156,8 @@ class TransactionModal extends Modal implements HasForms
 				->columns(3)
 				->hidden(function (Closure $get) {
 					$transaction_type =  $get('transaction_type_id');					
-					return (!in_array($transaction_type, [3, 4, 6]));
-				}),*/
+					return (!in_array($transaction_type, [4]));
+				}),
         ];
     } 
 
