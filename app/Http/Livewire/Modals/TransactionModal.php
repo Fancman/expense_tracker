@@ -42,22 +42,22 @@ class TransactionModal extends Modal implements HasForms
 		//dd(BelongsToSelect::make('transaction_type_id'));
         return [            
 			Select::make('transaction_type_id')->options(TransactionType::all()->pluck('name', 'id'))->label('Typ transakcie')->required()->reactive(),
-			TextInput::make('name')->required()->label('Nazov'),
+			TextInput::make('name')->nullable()->label('Nazov'),
 			TextInput::make('value')->required()->label('Suma')
 				->hidden(function (Closure $get) {
 					$transaction_type =  $get('transaction_type_id');					
 					return (!in_array($transaction_type, [1, 2]));
 				}
-			),
-			DateTimePicker::make('transaction_time'),
-			Select::make('currency_id')->options(Currency::all()->pluck('name', 'id'))->label('Mena'),
-			Select::make('category_id')->options(Category::all()->pluck('name', 'id'))->label('Kategoria'),
+			)->gt(0),
+			DateTimePicker::make('transaction_time')->nullable(),
+			Select::make('currency_id')->options(Currency::all()->pluck('name', 'id'))->label('Mena')->nullable(),
+			Select::make('category_id')->options(Category::all()->pluck('name', 'id'))->label('Kategoria')->nullable(),
 			Select::make('address_book_id')->options(AddressBook::all()->pluck('name', 'id'))->label('Adresar')
 				->hidden(function (Closure $get) {
 					$transaction_type =  $get('transaction_type_id');					
 					return (!in_array($transaction_type, [1, 2, 5]));
 				}
-			),
+			)->nullable(),
 			Select::make('source_account_id')
 				->options(Account::all()->pluck('name', 'id'))
 				->label('Zdrojovy ucet')
@@ -65,7 +65,7 @@ class TransactionModal extends Modal implements HasForms
 					$transaction_type =  $get('transaction_type_id');					
 					return (!in_array($transaction_type, [2, 3, 4, 5, 6]));
 				}
-			)->reactive(),
+			)->reactive()->required(),
 			Select::make('end_account_id')
 				->options(Account::all()
 				->pluck('name', 'id'))
@@ -74,22 +74,22 @@ class TransactionModal extends Modal implements HasForms
 					$transaction_type =  $get('transaction_type_id');					
 					return (!in_array($transaction_type, [6]));
 				}
-			),
+			)->required(),
 			Repeater::make('transaction_items')
 				->schema([
 					Select::make('item_type_id')
 						->options(ItemType::all()->pluck('name', 'id'))
 						->required()->label('Typ polozky'),
 					TextInput::make('name')->required()->label('Nazov'),
-					TextInput::make('quantity')->numeric()->required()->label('Pocet'),
-					TextInput::make('price')->numeric()->required()->label('Cena'),
+					TextInput::make('quantity')->numeric()->required()->label('Pocet')->gt(0),
+					TextInput::make('price')->numeric()->required()->label('Cena')->gt(0),
 					Select::make('currency_id')
 						->options(Currency::all()->pluck('name', 'id'))
-						->required()->label('Mena'),
-					TextInput::make('fees')->numeric()->required(),
+						->nullable()->label('Mena'),
+					TextInput::make('fees')->numeric()->nullable()->default(0),
 					Select::make('fees_currency_id')
 						->options(Currency::all()->pluck('name', 'id'))
-						->required()->label('Mena poplatku'),
+						->nullable()->label('Mena poplatku'),
 				])
 				->createItemButtonLabel('Pridat polozku')
 				->columns(3)
@@ -123,34 +123,35 @@ class TransactionModal extends Modal implements HasForms
 								})
 								->sum('quantity');
 
-								$options[$account_item->id] = $account_item->name . " - " . $quantity;
+								$options[$account_item->name] = $account_item->name . " - " . $quantity;
 							}
 
 							return $options;
 						}
-					)->label('Nazov')->reactive(),
+					)->label('Nazov')->required()->reactive(),
 					TextInput::make('quantity')->numeric()->required()->label('Pocet')
-					->default(function (Livewire $livewire, Closure $get){
-						$name = $get('transaction_item_name');
-						$source_account_id = $livewire->source_account_id;
+						->default(function (Livewire $livewire, Closure $get){
+							$name = $get('transaction_item_name');
+							$source_account_id = $livewire->source_account_id;
 
-						//dd($name, $source_account_id);
-						
-						$quantity = DB::table('account_items')
-						->where('account_id', $source_account_id)
-						->where('name', $name)
-						->sum('quantity');
+							//dd($name, $source_account_id);
+							
+							$quantity = DB::table('account_items')
+							->where('account_id', $source_account_id)
+							->where('name', $name)
+							->sum('quantity');
 
-						return $quantity;
-					})->reactive(),
-					TextInput::make('price')->numeric()->required()->label('Cena'),
+							return $quantity;
+						}
+					)->gt(0)->reactive(),
+					TextInput::make('price')->numeric()->required()->label('Cena')->gt(0),
 					Select::make('currency_id')
 						->options(Currency::all()->pluck('name', 'id'))
-						->required()->label('Mena'),
-					TextInput::make('fees')->numeric()->required(),
+						->nullable()->label('Mena'),
+					TextInput::make('fees')->numeric()->nullable()->default(0),
 					Select::make('fees_currency_id')
 						->options(Currency::all()->pluck('name', 'id'))
-						->required()->label('Mena poplatku'),
+						->nullable()->label('Mena poplatku'),
 				])
 				->createItemButtonLabel('Pridat polozku')
 				->columns(3)
@@ -176,6 +177,7 @@ class TransactionModal extends Modal implements HasForms
         $this->validate();
 
 		$user_id = (auth()->user() ? auth()->user()->id : 4);
+		$default_currency = (auth()->user() ? auth()->user()->currency_id : 1);
 
 		$transaction_data = [
             'name' => $this->name,
@@ -196,9 +198,18 @@ class TransactionModal extends Modal implements HasForms
 			}
 		}
 
+		if( !isset($transaction_data['name']) ){
+			$transaction_type = TransactionType::find($transaction_data['transaction_type_id']);
+			$transaction_data['name'] = $transaction_type->name;
+		}
+
+		if( !isset($transaction_data['currency_id']) ){
+			$transaction_data['currency_id'] = $default_currency;
+		}
+
 		$transaction_data['value'] = $this->value ? $this->value : 0;
 
-		if(is_null($this->end_account_id)){
+		if( is_null($this->end_account_id) ){
 			$transaction_data['end_account_id'] = $transaction_data['source_account_id'];
 		}
  
@@ -262,12 +273,15 @@ class TransactionModal extends Modal implements HasForms
 		// Nakup a predaj akcii/kryptomien
 		if( in_array(intval($this->transaction_type_id), [3, 4]) ){
 			if( isset($transaction) && isset($this->transaction_items) ){	
+
+				$transaction_items = ($transaction_data['transaction_type_id'] == 4 ?  $this->transaction_sell_items : $this->transaction_items );
 			
 				$price_sum = 0;
-	
-				foreach ($this->transaction_items as $transaction_item) {
+
+				// Create transaction
+				foreach ($transaction_items as $transaction_item) {
 					$transaction_item_data = [
-						'name' => $transaction_item['name'],
+						'name' => ($this->transaction_type_id == 4 ? $transaction_item['transaction_item_name'] : $transaction_item['name']),
 						'item_type_id' => $transaction_item['item_type_id'],
 						'quantity' => $transaction_item['quantity'],
 						'price' => $transaction_item['price'],
@@ -276,10 +290,20 @@ class TransactionModal extends Modal implements HasForms
 						'fees_currency_id' => $transaction_item['fees_currency_id'],
 					];
 	
+					// Remove null values
 					foreach ($transaction_item_data as $key => $value) {
 						if( empty($value) ){
 							unset($transaction_item_data[$key]);
 						}
+					}
+
+					if( !isset($transaction_item_data['currency_id']) ){
+						$transaction_item_data['currency_id'] = $default_currency;
+					}
+	
+
+					if( !isset($transaction_item_data['fees_currency_id']) ){
+						$transaction_item_data['fees_currency_id'] = $default_currency;
 					}
 	
 					if ( count($transaction_item_data) == 0 ){
@@ -293,7 +317,7 @@ class TransactionModal extends Modal implements HasForms
 					$transaction_price = floatval($transaction_item['fees']) + (floatval($transaction_item['quantity']) * floatval($transaction_item['price']));
 	
 					$account_item = AccountItem::where('account_id', $transaction->end_account_id)
-					->where('name', $transaction_item['name'])
+					->where('name', $transaction_item_data['name'])
 					->firstOr(function () {
 						return null;
 					});
@@ -308,7 +332,7 @@ class TransactionModal extends Modal implements HasForms
 								'account_id' => $transaction->end_account_id,
 								'item_type_id' => $transaction_item['item_type_id'],
 								'currency_id' => $transaction_item['currency_id'],
-								'name' => $transaction_item['name'],
+								'name' => $transaction_item_data['name'],
 								'quantity' => $transaction_item['quantity'],
 								'average_buy_price' => $transaction_item['price'],
 								'current_price' => $transaction_item['price'],

@@ -89,10 +89,10 @@
 					<div class="text-left">{{ $transaction->name }}</div>
 				</td>
 				<td class="px-2 py-3 whitespace-nowrap">
-					<div class="text-left">{{ $transaction->transactionType->name }}</div>
+					<div class="text-left">{{  $transaction->transactionType ? $transaction->transactionType->name : 'NULL' }}</div>
 				</td>
 				<td class="px-2 py-3 whitespace-nowrap">
-					<div class="text-left">{{ $transaction->category->name }}</div>
+					<div class="text-left">{{ $transaction->category ? $transaction->category->name : 'NULL' }}</div>
 				</td>
 				<td class="px-2 py-3 whitespace-nowrap">
 					<div class="text-left">{{ $transaction->transaction_time }}</div>
