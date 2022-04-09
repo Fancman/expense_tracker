@@ -80,6 +80,7 @@
 				<th class="font-semibold uppercase text-sm text-left py-3">Kategoria</th>
 				<th class="font-semibold uppercase text-sm text-left py-3">Datum transakcie</th>
 				<th class="font-semibold uppercase text-sm text-left py-3">Hodnota</th>
+				<th class="font-semibold uppercase text-sm text-left py-3">Akcie</th>
 			</tr>
 		</thead>
 		<tbody class="text-sm border-b">
@@ -99,6 +100,9 @@
 				</td>			
 				<td class="px-2 py-3 whitespace-nowrap">
 					<div class="text-left">{{ $transaction->value }}</div>
+				</td>
+				<td class="px-2 py-3 whitespace-nowrap">
+					<button x-data="{}" x-on:click="window.livewire.emitTo('modals.transaction-modal', 'edit', {{ $transaction->id }})">Upravit</button>
 				</td>
 			</tr>
 			@endforeach

@@ -7,9 +7,11 @@ use Livewire\Component;
 class Modal extends Component
 {
     public $show = false;
+	
 
 	protected $listeners = [
 		'show' => 'show',
+		'edit' => 'edit'
 	];
 	
 	public function show()

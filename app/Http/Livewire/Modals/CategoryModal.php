@@ -13,15 +13,18 @@ class CategoryModal extends Modal implements HasForms
 {
 	use InteractsWithForms;
 
-	public $name;
+	public $name = '';
+	public $icon = '';
+
+	//public Category $category;
 
 	protected $rules = [
         'name' => 'required|min:2',
     ];
 
-	private function resetInputFields(){
+	/*private function resetInputFields(){
         $this->name = '';
-    }
+    }*/
 
 	public function mount(): void 
     {
@@ -35,10 +38,10 @@ class CategoryModal extends Modal implements HasForms
         ];
     } 
 
-	protected function getFormModel(): string 
+	/*protected function getFormModel(): string 
     {
-        return Category::class;
-    } 
+        return $this->category;
+    } */
 
 	public function submit()
     {
@@ -54,7 +57,7 @@ class CategoryModal extends Modal implements HasForms
 
 		session()->flash('message', 'Kategoria bola uspesne vytvorena.');
 
-        $this->resetInputFields();
+        //$this->resetInputFields();
 
 		$this->dispatchBrowserEvent('categoryStore',
 		[
