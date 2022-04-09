@@ -57,5 +57,10 @@ class Transaction extends Model
     {
         return $this->belongsTo(Account::class, 'end_account_id');
     }
+
+	public function transactionItems()
+    {
+        return $this->hasMany(TransactionItem::class);
+    }
 	
 }
