@@ -32,7 +32,21 @@ class TransactionModal extends Modal implements HasForms
 {
 	use InteractsWithForms;
 
-	public Transaction $transaction;
+	public ?Transaction $transaction = null;
+
+	public $transaction_type_id = '';
+	public $name = '';
+	public $value = '';
+	public $transaction_time = '';
+	public $currency_id = '';
+	public $category_id = '';
+	public $address_book_id = '';
+	public $source_account_id = '';
+	public $end_account_id = '';
+	public $transaction_items = [];
+	public $transaction_sell_items = [];
+
+	public $showMessage = false;
 
 	public function mount(): void 
     {
@@ -41,6 +55,7 @@ class TransactionModal extends Modal implements HasForms
 
 	public function edit($id){
 		$this->transaction = Transaction::find($id);
+
 		$transaction_items = TransactionItem::where('transaction_id', $id)->get();
 
 		$transaction_items_form = [];
@@ -48,8 +63,12 @@ class TransactionModal extends Modal implements HasForms
 		foreach ($transaction_items as $transaction_item) {
 			$transaction_items_form[] = [
 				'item_type_id' => $transaction_item->item_type_id,
-				'transaction_item_name' => $transaction_item->name,
+				'name' => $transaction_item->name,
 				'quantity' => $transaction_item->quantity,
+				'price' => $transaction_item->price,
+				'currency_id' => $transaction_item->currency_id,
+				'fees' => ($transaction_item->fees ?? 0),
+				'fees_currency_id' => $transaction_item->fees_currency_id,
 			];
 		}
 
@@ -64,7 +83,7 @@ class TransactionModal extends Modal implements HasForms
 				'address_book_id' => $this->transaction->address_book_id,
 				'source_account_id' => $this->transaction->source_account_id,
 				'end_account_id' => $this->transaction->source_account_id,
-				'transaction_sell_items' => $transaction_items_form
+				'transaction_items' => $transaction_items_form
 			]
 		);
 		$this->show = true;
@@ -137,7 +156,7 @@ class TransactionModal extends Modal implements HasForms
 				->columns(3)
 				->hidden(function (Closure $get) {
 					$transaction_type =  $get('transaction_type_id');					
-					return (!in_array($transaction_type, [3, 6]));
+					return !(in_array($transaction_type, [3, 6]) || $this->transaction);
 				}),
 			Repeater::make('transaction_sell_items')
 				->schema([
@@ -169,6 +188,16 @@ class TransactionModal extends Modal implements HasForms
 									return $query->where('name', $account_item_name);
 								})
 								->sum('quantity');
+
+								if( isset($this->transaction) ){
+									$transaction_items = $this->transaction->transactionItems();
+
+									foreach ($transaction_items as $transaction_item) {
+										if($account_item->name == $transaction_item->name){
+											$quantity = $transaction_item->quantity;
+										}
+									}
+								}
 
 								$options[$account_item->name] = $account_item->name . " - " . $quantity;
 							}
@@ -211,7 +240,7 @@ class TransactionModal extends Modal implements HasForms
 				->columns(3)
 				->hidden(function (Closure $get) {
 					$transaction_type =  $get('transaction_type_id');					
-					return (!in_array($transaction_type, [4]));
+					return !(in_array($transaction_type, [4]) || $this->transaction);
 				}),
         ];
     } 
@@ -464,7 +493,7 @@ class TransactionModal extends Modal implements HasForms
 			}
 		}		
 
-		session()->flash('message', 'Transakcia bola uspesne vytvorena.');
+		$this->reset();
 
 		$this->dispatchBrowserEvent('transactionStore',
 		[
@@ -473,6 +502,8 @@ class TransactionModal extends Modal implements HasForms
         ]);
 
 		$this->emit('refreshParent');
+
+		session()->flash('message', 'Transakcia bola uspesne vytvorena.');	
     }
 
 }
