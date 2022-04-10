@@ -24,7 +24,8 @@ use App\Http\Controllers\SettingsController;
 Route::get('/', function(){
 	$title = 'Home';
 
-	return view('layouts.app');
+	return redirect()->route('transactions');
+	//return view('layouts.app');
 })->name('home');
 
 Route::get('/categories', function(){

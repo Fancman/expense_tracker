@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Currency;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -15,7 +16,8 @@ class SettingsController extends Controller
 
         return view('settings.index', [
 			'title' => $this->title,
-			'user' => $user
+			'user' => $user,
+			'currencies' => Currency::get(),
 		]);
     }
 }

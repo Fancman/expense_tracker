@@ -12,6 +12,7 @@ use App\Http\Livewire\Modal;
 use Illuminate\Contracts\View\View;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 
@@ -19,21 +20,26 @@ class SettingsModal extends Modal implements HasForms
 {
 	use InteractsWithForms;
 
-	public User $user;
+	public ?User $user = null;
+
+	public $name = '';
+	public $email = '';
+	public $date_type = '';
+	public $currency_id = '';
 
 	public function mount(): void 
     {
 		$user_settings = [];
 
-		if(auth()->user()){
-			$this->user = auth()->user();
-			$user_settings = [
-				'name' => $this->user->name,
-				'email' => $this->user->email,
-				'date_type' => $this->user->date_type,
-				'currency_id' => $this->user->currency_id,
-			];
-		}
+		$this->user = auth()->user() ?? User::find(4);
+			
+		$user_settings = [
+			'name' => $this->user->name,
+			'email' => $this->user->email,
+			'date_type' => $this->user->date_type,
+			'currency_id' => $this->user->currency_id,
+			'remember_login' => $this->user->remember_login,
+		];
 
         $this->form->fill($user_settings);
     } 
@@ -45,6 +51,7 @@ class SettingsModal extends Modal implements HasForms
 			TextInput::make('email')->required()->label('Email'),
 			TextInput::make('date_type')->required()->label('Preferovany format datumu'),
 			Select::make('currency_id')->options(Currency::all()->pluck('name', 'id'))->label('Preferovana mena'),			
+			Checkbox::make('remember_login')->label('Zapamatat prihlasenie'),			
         ];
     } 
 

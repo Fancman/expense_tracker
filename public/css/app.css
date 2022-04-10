@@ -3226,6 +3226,9 @@ select{
 .w-1\/4{
   width: 25%;
 }
+.w-60{
+  width: 15rem;
+}
 .min-w-full{
   min-width: 100%;
 }
