@@ -92,6 +92,21 @@ class Transaction extends Model
 		}
 	}
 
+	public function createTransactionItems($type, $default_currency, $transaction_sell_items, $transaction_items){
+		if($type === 'NAKUP'){
+			$this->createAccountItemsNakup($transaction_items, $default_currency);
+		}
+		else if ($type === 'PREDAJ'){
+			$this->createAccountItemsPredaj($transaction_sell_items, $default_currency);
+		}
+		else if($type === 'PRIJEM'){
+			$this->createAccountItemsPrijem();
+		}
+		else if($type === 'VYDAJ'){
+			$this->createAccountItemsVydaj();
+		}
+	}
+
 	public function deleteTransactionItems(){
 		$transaction_items = $this->transactionItems();
 
@@ -108,7 +123,7 @@ class Transaction extends Model
 		->where('currency_id', intval($currency_id))
 		->latest()->first();
 
-		if( isset($finance_item) ){
+		if( !isset($finance_item) ){
 
 			$finance_item = AccountItem::firstOrNew(
 				[
@@ -141,7 +156,7 @@ class Transaction extends Model
 		->where('currency_id', intval($currency_id))
 		->latest()->first();
 
-		if( isset($finance_item) ){
+		if( !isset($finance_item) ){
 
 			$finance_item = AccountItem::firstOrNew(
 				[
@@ -163,6 +178,213 @@ class Transaction extends Model
 			$finance_item->quantity = (floatval($finance_item->quantity) - floatval($total_cash));
 
 			$finance_item->save();
+		}
+	}
+
+	public function createAccountItemsVydaj(){
+		$finance_items = AccountItem::where('account_id', $this->sourceAccount->id)
+		->where('item_type_id', 3)
+		->get();			
+
+		foreach ($finance_items as $finance_item) {
+			if($finance_item->currency_id == $this->currency->id){
+				$finance_item->quantity = (floatval($finance_item->quantity) - floatval($this->value));
+				$finance_item->save();
+			}
+		}
+
+		$account = Account::where('id', $this->sourceAccount->id)->latest()->first();
+		$account->value = (floatval($account->value) - floatval($this->value));
+		$account->save();
+	}
+
+	public function createAccountItemsPrijem(){
+		$finance_item = AccountItem::where('account_id', $this->endAccount->id)
+		->where('item_type_id', 3)
+		->where('currency_id', intval($this->currency->id))
+		->latest()->first();
+
+		if ( !isset($finance_item) ){
+			$finance_item = AccountItem::firstOrNew(
+				[
+					'account_id' => $this->endAccount->id,
+					'item_type_id' => 3,
+					'currency_id' => intval($this->currency->id)
+				],
+				[
+					'name' => 'Peniaze',
+					'item_type_id' => 3,
+					'quantity' => floatval($this->value),
+					'average_buy_price' => 1,
+					'current_price' => 1,
+				]
+			);
+
+			$finance_item->save();
+		}else{
+			$finance_item->quantity = (floatval($finance_item->quantity) + floatval($this->value));
+
+			$finance_item->save();
+		}
+
+		$account = Account::where('id', $this->endAccount->id)->latest()->first();;
+		$account->value = (floatval($account->value) + floatval($this->value));
+		$account->save();
+	}
+
+	public function processTransactionItemData($transaction_item, $type, $default_currency){
+		$transaction_item_name_field = '';
+
+		if($type === 'NAKUP'){
+			$transaction_item_name_field = 'name';
+		} else if($type === 'PREDAJ'){
+			$transaction_item_name_field = 'transaction_item_name';
+		}
+		
+		$transaction_item_data = [
+			'name' => $transaction_item[$transaction_item_name_field],
+			'item_type_id' => $transaction_item['item_type_id'],
+			'quantity' => $transaction_item['quantity'],
+			'price' => $transaction_item['price'],
+			'currency_id' => $transaction_item['currency_id'],
+			'fees' => $transaction_item['fees'],
+			'fees_currency_id' => $transaction_item['fees_currency_id'],
+		];
+
+		// Remove null values
+		foreach ($transaction_item_data as $key => $value) {
+			if( empty($value) ){
+				unset($transaction_item_data[$key]);
+			}
+		}
+
+		if( !isset($transaction_item_data['currency_id']) ){
+			$transaction_item_data['currency_id'] = $default_currency;
+		}
+
+
+		if( !isset($transaction_item_data['fees_currency_id']) ){
+			$transaction_item_data['fees_currency_id'] = $default_currency;
+		}
+
+		return $transaction_item_data;
+	}
+
+	public function createAccountItemsPredaj($transaction_items, $default_currency){
+		$price_sum = 0;
+
+		foreach ($transaction_items as $transaction_item) {
+			$transaction_item_data = $this->processTransactionItemData($transaction_item, 'PREDAJ', $default_currency);
+			
+			if ( count($transaction_item_data) == 0 ){
+				break;
+			}
+
+			$transaction_item_data['transaction_id'] = $this->id;
+
+			TransactionItem::create($transaction_item_data);
+
+			$transaction_item_price = floatval($transaction_item['fees']) + (floatval($transaction_item['quantity']) * floatval($transaction_item['price']));
+	
+			$account_item = AccountItem::where('account_id', $this->sourceAccount->id)
+			->where('name', $transaction_item_data['name'])
+			->firstOr(function () {
+				return null;
+			});
+
+			if( $account_item ){
+				$account_item->quantity = (floatval($account_item->quantity) - floatval($transaction_item['quantity']));
+				$account_item->average_buy_price = (floatval($account_item->average_buy_price) + floatval($transaction_item['price'])) / 2;
+				$account_item->current_price = floatval($transaction_item['price']);
+
+				$account_item->save();
+			} else {
+				$account_item = AccountItem::create(
+					[
+						'account_id' => $this->sourceAccount->id,
+						'item_type_id' => $transaction_item['item_type_id'],
+						'currency_id' => $transaction_item['currency_id'],
+						'name' => $transaction_item_data['name'],
+						'quantity' => $transaction_item['quantity'],
+						'average_buy_price' => $transaction_item['price'],
+						'current_price' => $transaction_item['price'],
+					]
+				);
+
+				$account_item->save();
+			}	
+			
+			// Increase cash on account
+			$source_account = $this->sourceAccount;
+			
+			$this->increaseCash($source_account, $this->currency->id, $transaction_item_price, 1);		
+
+			$price_sum += $transaction_item_price;	
+		}
+		
+		if( $price_sum > 0 ){
+			$this->value = $price_sum;				
+			$this->save();
+		}
+	}
+
+	public function createAccountItemsNakup($transaction_items, $default_currency){
+		$price_sum = 0;
+
+		// Vytvorit transaction polozky
+		foreach ($transaction_items as $transaction_item) {
+					
+			$transaction_item_data = $this->processTransactionItemData($transaction_item, 'NAKUP', $default_currency);
+
+			if ( count($transaction_item_data) == 0 ){
+				break;
+			}
+
+			$transaction_item_data['transaction_id'] = $this->id;
+
+			TransactionItem::create($transaction_item_data);
+
+			// Calculate transaction item price after saving it
+			$transaction_item_price = floatval($transaction_item['fees']) + (floatval($transaction_item['quantity']) * floatval($transaction_item['price']));
+
+			// Create account items
+			$account_item = AccountItem::where('account_id', $this->endAccount->id)
+			->where('name', $transaction_item_data['name'])
+			->latest()->first();
+			
+			if( isset( $account_item ) ){
+				$account_item->quantity = ( floatval($account_item->quantity) + floatval($transaction_item['quantity']) );
+				$account_item->average_buy_price = ( floatval($account_item->average_buy_price) + floatval($transaction_item['price'])) / 2;
+				$account_item->current_price = floatval($transaction_item['price']);
+
+				$account_item->save();
+			}else{
+				$account_item = AccountItem::create(
+					[
+						'account_id' => $this->endAccount->id,
+						'item_type_id' => $transaction_item['item_type_id'],
+						'currency_id' => $transaction_item['currency_id'],
+						'name' => $transaction_item_data['name'],
+						'quantity' => $transaction_item['quantity'],
+						'average_buy_price' => $transaction_item['price'],
+						'current_price' => $transaction_item['price'],
+					]
+				);
+
+				$account_item->save();
+			}
+
+			// Decrease cash
+			$source_account = $this->endAccount;
+			
+			$this->decreaseCash($source_account, $this->currency->id, $transaction_item_price, 1);	
+
+			$price_sum += $transaction_item_price;		
+		}
+
+		if( $price_sum > 0 ){
+			$this->value = $price_sum;				
+			$this->save();
 		}
 	}
 
@@ -200,7 +422,7 @@ class Transaction extends Model
 				$account_item = AccountItem::where('name', $name)
 				->where('account_id', $this->sourceAccount->id)->latest()->first();
 
-				if( $account_item->count() == 0 ){
+				if( !isset($account_item) ){
 					$account_item = AccountItem::create(
 					[
 						'account_id' => $this->sourceAccount->id,
