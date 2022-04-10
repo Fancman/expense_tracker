@@ -3028,29 +3028,35 @@ select{
 .mb-4{
   margin-bottom: 1rem;
 }
+.mt-16{
+  margin-top: 4rem;
+}
 .mt-5{
   margin-top: 1.25rem;
 }
-.mr-5{
-  margin-right: 1.25rem;
+.mb-3{
+  margin-bottom: 0.75rem;
 }
 .ml-5{
   margin-left: 1.25rem;
 }
-.mb-3{
-  margin-bottom: 0.75rem;
+.mr-4{
+  margin-right: 1rem;
+}
+.mt-1{
+  margin-top: 0.25rem;
+}
+.mr-1{
+  margin-right: 0.25rem;
+}
+.mr-5{
+  margin-right: 1.25rem;
 }
 .ml-10{
   margin-left: 2.5rem;
 }
 .mb-6{
   margin-bottom: 1.5rem;
-}
-.mr-1{
-  margin-right: 0.25rem;
-}
-.mt-1{
-  margin-top: 0.25rem;
 }
 .mb-2{
   margin-bottom: 0.5rem;
@@ -3081,12 +3087,6 @@ select{
 }
 .-ml-1{
   margin-left: -0.25rem;
-}
-.mr-4{
-  margin-right: 1rem;
-}
-.mt-16{
-  margin-top: 4rem;
 }
 .block{
   display: block;
@@ -3178,11 +3178,17 @@ select{
 .w-96{
   width: 24rem;
 }
+.w-\[calc\(100\%-32rem\)\]{
+  width: calc(100% - 32rem);
+}
 .w-64{
   width: 16rem;
 }
 .w-2\/4{
   width: 50%;
+}
+.w-1\/4{
+  width: 25%;
 }
 .w-4{
   width: 1rem;
@@ -3226,11 +3232,11 @@ select{
 .w-52{
   width: 13rem;
 }
-.w-1\/4{
-  width: 25%;
+.w-56{
+  width: 14rem;
 }
-.w-60{
-  width: 15rem;
+.w-\[calc\(100\%-14rem\)\]{
+  width: calc(100% - 14rem);
 }
 .min-w-full{
   min-width: 100%;
@@ -3419,9 +3425,6 @@ select{
 .items-start{
   align-items: flex-start;
 }
-.items-end{
-  align-items: flex-end;
-}
 .items-center{
   align-items: center;
 }
@@ -3537,14 +3540,18 @@ select{
 .rounded-md{
   border-radius: 0.375rem;
 }
-.rounded-full{
-  border-radius: 9999px;
-}
 .rounded-sm{
   border-radius: 0.125rem;
 }
+.rounded-full{
+  border-radius: 9999px;
+}
 .rounded-xl{
   border-radius: 0.75rem;
+}
+.rounded-l{
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
 }
 .rounded-t{
   border-top-left-radius: 0.25rem;
@@ -3554,21 +3561,17 @@ select{
   border-top-left-radius: 0.75rem;
   border-top-right-radius: 0.75rem;
 }
-.rounded-l{
-  border-top-left-radius: 0.25rem;
-  border-bottom-left-radius: 0.25rem;
-}
 .rounded-bl-lg{
   border-bottom-left-radius: 0.5rem;
 }
 .rounded-tr-lg{
   border-top-right-radius: 0.5rem;
 }
-.border{
-  border-width: 1px;
-}
 .border-2{
   border-width: 2px;
+}
+.border{
+  border-width: 1px;
 }
 .border-0{
   border-width: 0px;
@@ -3649,6 +3652,10 @@ select{
   --tw-bg-opacity: 1;
   background-color: rgb(25 25 25 / var(--tw-bg-opacity));
 }
+.bg-blue{
+  --tw-bg-opacity: 1;
+  background-color: rgb(29 78 216 / var(--tw-bg-opacity));
+}
 .bg-gray-50{
   --tw-bg-opacity: 1;
   background-color: rgb(248 250 252 / var(--tw-bg-opacity));
@@ -3656,10 +3663,6 @@ select{
 .bg-green-100{
   --tw-bg-opacity: 1;
   background-color: rgb(209 250 229 / var(--tw-bg-opacity));
-}
-.bg-blue{
-  --tw-bg-opacity: 1;
-  background-color: rgb(29 78 216 / var(--tw-bg-opacity));
 }
 .bg-purple{
   --tw-bg-opacity: 1;
@@ -3698,10 +3701,6 @@ select{
 .bg-primary-600{
   --tw-bg-opacity: 1;
   background-color: rgb(37 99 235 / var(--tw-bg-opacity));
-}
-.bg-gray-300{
-  --tw-bg-opacity: 1;
-  background-color: rgb(203 213 225 / var(--tw-bg-opacity));
 }
 .bg-contain{
   background-size: contain;
@@ -3787,14 +3786,6 @@ select{
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
-.py-3{
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-}
-.px-2{
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-}
 .py-1\.5{
   padding-top: 0.375rem;
   padding-bottom: 0.375rem;
@@ -3802,6 +3793,14 @@ select{
 .py-1{
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
+}
+.py-3{
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+.px-2{
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 .px-1{
   padding-left: 0.25rem;
@@ -5342,16 +5341,16 @@ body{
     grid-column: 1 / -1;
   }
 
+  .xl\:w-64{
+    width: 16rem;
+  }
+
   .xl\:w-96{
     width: 24rem;
   }
 
-  .xl\:w-48{
-    width: 12rem;
-  }
-
-  .xl\:w-64{
-    width: 16rem;
+  .xl\:w-full{
+    width: 100%;
   }
 
   .xl\:grid-cols-1{
@@ -5455,6 +5454,14 @@ body{
 
   .\32xl\:col-span-full{
     grid-column: 1 / -1;
+  }
+
+  .\32xl\:w-96{
+    width: 24rem;
+  }
+
+  .\32xl\:w-full{
+    width: 100%;
   }
 
   .\32xl\:grid-cols-1{

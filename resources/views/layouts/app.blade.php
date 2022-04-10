@@ -22,8 +22,8 @@
 
 <body class="antialiased">
 	<div class="flex h-screen">
-		<aside class="flex flex-col items-center w-96 z-20 bg-cod-grey overflow-y-auto pt-14">
-			<div class="text-4xl font-medium text-white">Expense Tracker</div>
+		<aside class="flex flex-col items-center w-56 2xl:w-96 z-20 bg-cod-grey overflow-y-auto pt-14">
+			<div class="text-4xl font-medium text-white text-center">Expense Tracker</div>
 			<div class="py-10 px-5">
 				@auth
 				<ul class="mt-3">			
@@ -66,7 +66,7 @@
 			</div>
 		</aside>
 
-		<div class="flex flex-col flex-1 w-full">
+		<div class="flex flex-col flex-1 w-[calc(100%-14rem)] 2xl:w-full">
 			<header class="px-8 border-b">
 				<div class="flex items-center justify-between h-16">
 					@auth
