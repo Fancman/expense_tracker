@@ -76,9 +76,14 @@ class Transaction extends Model
 			$this->deleteAccountItemsPredaj();
 			$this->deleteTransactionItems();
 			$this->delete();
-		}else if($type === 'NAKUP'){
+		}
+		else if($type === 'NAKUP'){
 			$this->deleteAccountItemsNakup();
 			$this->deleteTransactionItems();
+			$this->delete();
+		}
+		else if($type === 'PRIJEM'){
+			$this->deleteTransactionPrijem();
 			$this->delete();
 		}
 	}
@@ -91,10 +96,10 @@ class Transaction extends Model
 		}
 	}
 
-	public function increaseCash($currency_id, $quantity, $price){
+	public function increaseCash($account, $currency_id, $quantity, $price){
 		$total_cash = floatval($quantity) * floatval($price);
 
-		$finance_item = AccountItem::where('account_id', $this->sourceAccount->id)
+		$finance_item = AccountItem::where('account_id', $account->id)
 		->where('item_type_id', 3)
 		->where('currency_id', intval($currency_id))
 		->latest()->first();
@@ -103,7 +108,7 @@ class Transaction extends Model
 
 			$finance_item = AccountItem::firstOrNew(
 				[
-					'account_id' => $this->sourceAccount->id,
+					'account_id' => $account->id,
 					'item_type_id' => 3,
 					'currency_id' => intval($currency_id)
 				],
@@ -124,10 +129,10 @@ class Transaction extends Model
 		}
 	}
 
-	public function decreaseCash($currency_id, $quantity, $price){
+	public function decreaseCash($account, $currency_id, $quantity, $price){
 		$total_cash = floatval($quantity) * floatval($price);
 
-		$finance_item = AccountItem::where('account_id', $this->sourceAccount->id)
+		$finance_item = AccountItem::where('account_id', $account->id)
 		->where('item_type_id', 3)
 		->where('currency_id', intval($currency_id))
 		->latest()->first();
@@ -136,7 +141,7 @@ class Transaction extends Model
 
 			$finance_item = AccountItem::firstOrNew(
 				[
-					'account_id' => $this->sourceAccount->id,
+					'account_id' => $account->id,
 					'item_type_id' => 3,
 					'currency_id' => intval($currency_id)
 				],
@@ -155,6 +160,15 @@ class Transaction extends Model
 
 			$finance_item->save();
 		}
+	}
+
+	public function deleteTransactionPrijem(){
+		$end_account = $this->endAccount;
+
+		$this->decreaseCash($end_account, $this->currency->id, $this->value, 1);		
+
+		$end_account->value = floatval($end_account->value) - (floatval($this->value));
+		$end_account->save();
 	}
 
 	public function deleteAccountItemsPredaj(){
@@ -198,7 +212,7 @@ class Transaction extends Model
 					$account_item->save();	
 				}
 
-				$this->decreaseCash($currency_id, $quantity, $price);	
+				$this->decreaseCash($this->sourceAccount, $currency_id, $quantity, $price);	
 			}
 		}
 	}
@@ -238,7 +252,7 @@ class Transaction extends Model
 					$source_account->save();
 				}
 
-				$this->increaseCash($currency_id, $quantity, $price);	
+				$this->increaseCash($this->sourceAccount, $currency_id, $quantity, $price);	
 			}
 		}
 	}
