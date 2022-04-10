@@ -50,6 +50,11 @@ class Transaction extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+	public function file()
+    {
+        return $this->hasOne(File::class, 'transaction_id', 'id');
+    }
+
 	public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');

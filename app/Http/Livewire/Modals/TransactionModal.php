@@ -7,6 +7,7 @@ use Closure;
 use App\Models\Account;
 use App\Models\Category;
 use App\Models\Currency;
+use App\Models\File;
 
 use App\Models\ItemType;
 use App\Models\AccountItem;
@@ -46,6 +47,7 @@ class TransactionModal extends Modal implements HasForms
 	public $end_account_id = '';
 	public $transaction_items = [];
 	public $transaction_sell_items = [];
+	public $attachments = [];
 
 	public $showMessage = false;
 
@@ -115,6 +117,12 @@ class TransactionModal extends Modal implements HasForms
 			'source_account_id' => $this->transaction->source_account_id,
 			'end_account_id' => $this->transaction->end_account_id,		
 		];
+
+		//dd($this->transaction->file);
+
+		if(isset($this->transaction->file->filename)){
+			$transaction_data['attachments'] = storage_path('app/'. $this->transaction->file->filename);
+		}
 
 		if( count($transaction_items_form) ){
 			$transaction_data = array_merge($transaction_data, [
@@ -306,7 +314,7 @@ class TransactionModal extends Modal implements HasForms
 					$transaction_type =  $get('transaction_type_id');		
 					return !(in_array($transaction_type, [4])) || ($this->transaction && !in_array($this->transaction->transactionType->id, [4]));
 				}),
-				FileUpload::make('attachment'),
+				FileUpload::make('attachments')->label('Priloha'),
         ];
     } 
 
@@ -322,7 +330,7 @@ class TransactionModal extends Modal implements HasForms
 
 	public function submit()
     {
-		$updating = false;
+		$updating = false;	
 
         $this->validate();
 
@@ -379,6 +387,21 @@ class TransactionModal extends Modal implements HasForms
  
         // Execution doesn't reach here if validation fails. 
         $transaction = Transaction::create($transaction_data);
+
+		$attachments = $this->attachments;
+
+		if(count($attachments)){
+			foreach ($attachments as $attachment) {
+				$filename = $attachment->store('files');
+
+				$file = new File;
+
+				$file->filename = $filename;
+				$file->transaction_id = $transaction->id;
+
+				$file->save();
+			}
+		}
 
 		// Prijem
 		// Vydaj
