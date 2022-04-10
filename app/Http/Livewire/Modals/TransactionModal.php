@@ -98,7 +98,7 @@ class TransactionModal extends Modal implements HasForms
 				'category_id' => $this->transaction->category_id,
 				'address_book_id' => $this->transaction->address_book_id,
 				'source_account_id' => $this->transaction->source_account_id,
-				'end_account_id' => $this->transaction->source_account_id,
+				'end_account_id' => $this->transaction->end_account_id,
 				'transaction_items' => $transaction_items_form
 			]
 		);
@@ -191,8 +191,8 @@ class TransactionModal extends Modal implements HasForms
 				->defaultItems(0)
 				->columns(3)
 				->hidden(function (Closure $get) {
-					$transaction_type =  $get('transaction_type_id');					
-					return !(in_array($transaction_type, [3, 6]) || $this->transaction);
+					$transaction_type =  $get('transaction_type_id');
+					return !(in_array($transaction_type, [3])) || ($this->transaction && !in_array($this->transaction->transactionType->id, [3]));
 				}),
 			Repeater::make('transaction_sell_items')
 				->schema([
@@ -273,8 +273,8 @@ class TransactionModal extends Modal implements HasForms
 				->createItemButtonLabel('Pridat polozku')
 				->columns(3)
 				->hidden(function (Closure $get) {
-					$transaction_type =  $get('transaction_type_id');					
-					return !(in_array($transaction_type, [4]) || $this->transaction);
+					$transaction_type =  $get('transaction_type_id');		
+					return !(in_array($transaction_type, [4])) || ($this->transaction && !in_array($this->transaction->transactionType->id, [4]));
 				}),
         ];
     } 

@@ -454,7 +454,9 @@ class Transaction extends Model
 
 		$this->decreaseCash($end_account, $this->currency->id, $this->value, 1);		
 
-		$end_account->value = floatval($end_account->value) - (floatval($this->value));
+		$converted_price = $this->convertCurrency($this->value, $end_account->currency->name, $this->currency->name);
+
+		$end_account->value = floatval($end_account->value) - $converted_price;
 		$end_account->save();
 	}
 
@@ -463,7 +465,9 @@ class Transaction extends Model
 
 		$this->increaseCash($source_account, $this->currency->id, $this->value, 1);		
 
-		$source_account->value = floatval($source_account->value) + (floatval($this->value));
+		$converted_price = $this->convertCurrency($this->value, $source_account->currency->name, $this->currency->name);
+
+		$source_account->value = floatval($source_account->value) + $converted_price;
 		$source_account->save();
 	}
 
@@ -481,7 +485,9 @@ class Transaction extends Model
 				$id = $transaction_item->id;
 
 				$account_item = AccountItem::where('name', $name)
-				->where('account_id', $this->sourceAccount->id)->latest()->first();
+				->where('account_id', $this->sourceAccount->id)
+				->where('currency_id', intval($currency_id))
+				->latest()->first();
 
 				if( !isset($account_item) ){
 					$account_item = AccountItem::create(
@@ -494,9 +500,6 @@ class Transaction extends Model
 						'average_buy_price' => $transaction_item['price'],
 						'current_price' => $transaction_item['price'],
 					]);
-
-					$source_account->value = floatval($source_account->value) + (floatval($price) * floatval($quantity));
-					$source_account->save();
 				}
 				else if ($quantity < $account_item->quantity)
 				{
@@ -505,8 +508,14 @@ class Transaction extends Model
 					$account_item->average_buy_price = (floatval($account_item->average_buy_price) + floatval($price)) / 2;
 					$account_item->quantity = (floatval($account_item->quantity) + floatval($quantity));
 					$account_item->current_price = $latest_transaction->price;
+					
 					$account_item->save();	
 				}
+
+				$converted_price = $this->convertCurrency($price, $source_account->currency->name, $account_item->account->currency->name);
+
+				$source_account->value = floatval($source_account->value) + ($converted_price * floatval($quantity));
+				$source_account->save();
 
 				$this->decreaseCash($this->sourceAccount, $currency_id, $quantity, $price);	
 			}
@@ -527,7 +536,9 @@ class Transaction extends Model
 				$id = $transaction_item->id;
 
 				$account_item = AccountItem::where('name', $name)
-				->where('account_id', $this->sourceAccount->id)->latest()->first();
+				->where('account_id', $this->sourceAccount->id)
+				->where('currency_id', intval($currency_id))
+				->latest()->first();
 
 				if($account_item){
 					if($quantity == $account_item->quantity)
@@ -544,7 +555,9 @@ class Transaction extends Model
 						$account_item->save();	
 					}
 
-					$source_account->value = floatval($source_account->value) - (floatval($price) * floatval($quantity));
+					$converted_price = $this->convertCurrency($price, $source_account->currency->name, $account_item->account->currency->name);
+
+					$source_account->value = floatval($source_account->value) - ($converted_price * floatval($quantity));
 					$source_account->save();
 				}
 
