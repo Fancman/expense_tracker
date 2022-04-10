@@ -4,11 +4,10 @@ namespace App\Http\Livewire\Modals;
 
 
 use Closure;
-use Livewire\Component as Livewire;
 use App\Models\Account;
 use App\Models\Category;
-
 use App\Models\Currency;
+
 use App\Models\ItemType;
 use App\Models\AccountItem;
 use App\Models\AddressBook;
@@ -18,15 +17,17 @@ use App\Models\TransactionItem;
 use App\Models\TransactionType;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\View\View;
+use Livewire\Component as Livewire;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Component;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Components\Component;
 
 class TransactionModal extends Modal implements HasForms
 {
@@ -148,7 +149,7 @@ class TransactionModal extends Modal implements HasForms
 						return (!in_array($transaction_type, [1, 2]));
 					}
 				)->label('Suma')->required()->gt(0),
-			DateTimePicker::make('transaction_time')->nullable(),
+			DateTimePicker::make('transaction_time')->nullable(),			
 			Select::make('currency_id')
 				->options(Currency::all()->pluck('name', 'id'))				
 				->default(function(){
@@ -305,6 +306,7 @@ class TransactionModal extends Modal implements HasForms
 					$transaction_type =  $get('transaction_type_id');		
 					return !(in_array($transaction_type, [4])) || ($this->transaction && !in_array($this->transaction->transactionType->id, [4]));
 				}),
+				FileUpload::make('attachment'),
         ];
     } 
 
