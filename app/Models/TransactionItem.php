@@ -22,21 +22,21 @@ class TransactionItem extends Model
 
 	public function transaction()
     {
-        return $this->hasOne(Transaction::class);
+		return $this->belongsTo(Transaction::class, 'transaction_id');
     }
 
 	public function itemType()
     {
-        return $this->hasOne(ItemType::class);
+		return $this->belongsTo(ItemType::class, 'item_type_id');
     }
 
 	public function currency()
     {
-        return $this->hasOne(Currency::class);
+		return $this->belongsTo(Currency::class, 'currency_id');
     }
 
 	public function feesCurrency()
     {
-        return $this->hasOne(Transaction::class);
+		return $this->belongsTo(Currency::class, 'fees_currency_id');
     }
 }

@@ -21,16 +21,16 @@ class AccountItem extends Model
 
 	public function account()
     {
-        return $this->hasOne(Account::class);
+        return $this->belongsTo(Account::class, 'account_id');
     }
 
 	public function itemType()
     {
-        return $this->hasOne(ItemType::class);
+        return $this->belongsTo(ItemType::class, 'item_type_id');
     }
 
 	public function currency()
     {
-        return $this->hasOne(Currency::class);
+        return $this->belongsTo(Currency::class, 'currency_id');
     }
 }
