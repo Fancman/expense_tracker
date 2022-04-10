@@ -102,8 +102,8 @@
 					<div class="text-left">{{ $transaction->value }}</div>
 				</td>
 				<td class="px-2 py-3 whitespace-nowrap">
-					<button x-data="{}" x-on:click="window.livewire.emitTo('modals.transaction-modal', 'edit', {{ $transaction->id }})">Upravit</button>
-					<button x-data="{}" x-on:click="window.livewire.emitTo('modals.transaction-modal', 'delete', {{ $transaction->id }})">Vymazat</button>
+					<button x-data="{}" x-on:click="window.livewire.emitTo('modals.transaction-modal', 'edit', {{ $transaction->id }})" class="bg-purple text-white mr-1 px-3 py-2 rounded">Upravit</button>
+					<button x-data="{}" x-on:click="window.livewire.emitTo('modals.transaction-modal', 'delete', {{ $transaction->id }})" class="bg-red text-white mr-1 px-3 py-2 rounded">Vymazat</button>
 				</td>
 			</tr>
 			@endforeach

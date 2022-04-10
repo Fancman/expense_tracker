@@ -320,12 +320,16 @@ class TransactionModal extends Modal implements HasForms
 
 	public function submit()
     {
+		$updating = false;
+
         $this->validate();
 
 		if( isset($this->transaction) ){
 			$transaction_type = $this->transaction->transactionType;
 			
 			$this->transaction->deleteTransaction($transaction_type->code);
+
+			$updating = true;
 		}
 
 		$user_id = (auth()->user() ? auth()->user()->id : 4);
@@ -382,17 +386,19 @@ class TransactionModal extends Modal implements HasForms
 		
 		$this->reset();
 
+		$message = ($updating ? 'Transakcia bola uspesne upravena' : 'Transakcia bola uspesne vytvorena');
+
 		$this->dispatchBrowserEvent('transactionStore',
 		[
             'type' => 'success',
-            'message' => 'Transakcia bola uspesne vytvorena'
+            'message' => $message
         ]);
 
 		$this->emit('refreshParent');
 
 		$this->emit('showMessage');
 
-		session()->flash('message', 'Transakcia bola uspesne vytvorena.');	
+		session()->flash('message', $message);	
     }
 
 }
