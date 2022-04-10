@@ -7,6 +7,7 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\StatisticsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,8 @@ use App\Http\Controllers\TransactionController;
 */
 
 Route::get('/', function(){
+	$title = 'Home';
+
 	return view('layouts.app');
 })->name('home');
 
@@ -38,6 +41,8 @@ Route::get('/address-book', function(){
 })->name('address-book');
 
 Route::get('/accounts', [AccountController::class, 'index'])->name('accounts');
+
+Route::get('/statistics', [StatisticsController::class, 'index'])->name('statistics');
 
 Route::get('/settings', function(){
 	$title = 'Nastavenia';

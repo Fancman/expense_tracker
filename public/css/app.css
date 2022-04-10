@@ -3192,6 +3192,9 @@ select{
 .w-52{
   width: 13rem;
 }
+.w-2\/4{
+  width: 50%;
+}
 .min-w-full{
   min-width: 100%;
 }
@@ -3670,6 +3673,9 @@ select{
 }
 .p-3{
   padding: 0.75rem;
+}
+.p-5{
+  padding: 1.25rem;
 }
 .py-4{
   padding-top: 1rem;
