@@ -13,6 +13,7 @@ module.exports = {
 		colors: {
 			'light-blue': '#42b3e52b',
 			'navy-blue': '#4551e5',
+			'red': '#EA4335',
 			'blue': '#1D4ED8',
 			'light-blue': '#0075DD',
 			'white': '#ffff',
@@ -22,7 +23,7 @@ module.exports = {
 			'white': colors.white,
 			'gray': colors.slate,
 			'green': colors.emerald,
-			'purple': colors.violet,
+			'purple': '#6366F1',
 			'yellow': colors.amber,
 			'pink': colors.fuchsia,
 			'danger': colors.rose,
