@@ -169,8 +169,6 @@ class AccountModal extends Modal implements HasForms
 			$account->save();
 		}
 
-		session()->flash('message', 'Ucet bol uspesne vytvoreny.');
-
 		$this->dispatchBrowserEvent('accountStore',
 		[
             'type' => 'success',
@@ -178,6 +176,10 @@ class AccountModal extends Modal implements HasForms
         ]);
 
 		$this->emit('refreshParent');
+
+		$this->emit('showMessage');
+
+		session()->flash('message', 'Ucet bol uspesne vytvoreny.');
     }
 
 }

@@ -75,7 +75,9 @@ class SettingsModal extends Modal implements HasForms
 				'currency_id' => $this->currency_id,
 				'value' => $this->value
 			]
-			);
+		);
+
+		$this->emit('showMessage');
 
 		session()->flash('message', 'Nastavenia boli ulozene.');
 

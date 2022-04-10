@@ -65,6 +65,8 @@ class CategoryModal extends Modal implements HasForms
 
 		$this->emit('refreshParent');
 
+		$this->emit('showMessage');
+
 		session()->flash('message', 'Kategoria bola uspesne vytvorena.');
     }
 

@@ -58,6 +58,8 @@ class AddressBookModal extends Modal implements HasForms
         ]);
 
 		$this->emit('refreshParent');
+
+		$this->emit('showMessage');
     }
 
     public function render()

@@ -64,8 +64,9 @@ class TransactionModal extends Modal implements HasForms
 
 		$this->emit('refreshParent');
 
+		$this->emit('showMessage');
+
 		session()->flash('message', 'Transakcia bola uspesne vymazana.');	
-		
 	}
 
 	public function edit($id){
@@ -521,6 +522,8 @@ class TransactionModal extends Modal implements HasForms
         ]);
 
 		$this->emit('refreshParent');
+
+		$this->emit('showMessage');
 
 		session()->flash('message', 'Transakcia bola uspesne vytvorena.');	
     }
