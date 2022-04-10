@@ -25,7 +25,7 @@
 		<aside class="flex flex-col items-center w-96 z-20 bg-cod-grey overflow-y-auto pt-14">
 			<div class="text-4xl font-medium text-white">Expense Tracker</div>
 			<div class="py-10 px-5">
-				@guest
+				@auth
 				<ul class="mt-3">			
 					<li class="mb-5 flex items-center">
 						<svg class="w-8 h-8 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
@@ -57,6 +57,11 @@
 						<a class="text-white font-semibold text-2xl" href="{{ route('google.logout') }}">Odhlásiť sa</a>
 					</li>					
 				</ul>
+				@endauth
+				@guest
+					<a href="{{ route('google.login') }}" type="button" class="text-center mt-16 px-6 py-4 bg-blue font-semibold text-2xl rounded-md text-white">
+						Prihlásiť sa pomocou Google
+					</a>
 				@endguest
 			</div>
 		</aside>
@@ -64,14 +69,20 @@
 		<div class="flex flex-col flex-1 w-full">
 			<header class="px-8 border-b">
 				<div class="flex items-center justify-between h-16">
-					<h1 class="text-4xl font-semibold">{{ $title }}</h1>
+					@auth
+						<h1 class="text-4xl font-semibold">{{ $title }}</h1>
+					@endauth
+					@auth
 					<div lang="flex items-center">
-						<span>Tomas Figura</span>
+						<span>{{ Auth::user()->name }}</span>
 					</div>
+					@endauth
 				</div>
 			</header>
 			<div class="container mx-auto px-8 py-8">
-				@yield('content')
+				@auth
+					@yield('content')
+				@endauth
 			</div>			
 		</div>
 		
