@@ -4,10 +4,10 @@ namespace App\Http\Livewire\Modals;
 
 
 use Closure;
+use App\Models\File;
 use App\Models\Account;
 use App\Models\Category;
 use App\Models\Currency;
-use App\Models\File;
 
 use App\Models\ItemType;
 use App\Models\AccountItem;
@@ -22,6 +22,7 @@ use Livewire\Component as Livewire;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Components\Repeater;
+use Illuminate\Support\Facades\Storage;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
@@ -120,9 +121,9 @@ class TransactionModal extends Modal implements HasForms
 
 		//dd($this->transaction->file);
 
-		if(isset($this->transaction->file->filename)){
-			$transaction_data['attachments'] = storage_path('app/'. $this->transaction->file->filename);
-		}
+		/*if(isset($this->transaction->file->filename)){
+			$transaction_data['attachments'] = Storage::path($this->transaction->file->filename);
+		}*/
 
 		if( count($transaction_items_form) ){
 			$transaction_data = array_merge($transaction_data, [

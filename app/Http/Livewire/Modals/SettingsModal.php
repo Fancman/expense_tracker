@@ -78,9 +78,10 @@ class SettingsModal extends Modal implements HasForms
 			],
 			[
 				'name' => $this->name,            
-				'icon' => $this->icon,
+				'email' => $this->icon,
+				'date_type' => $this->date_type,
 				'currency_id' => $this->currency_id,
-				'value' => $this->value
+				'remember_login' => $this->remember_login
 			]
 		);
 
