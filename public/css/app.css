@@ -2467,6 +2467,28 @@ select{
   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   border-color: #2563eb;
 }
+.form-input::-moz-placeholder, .form-textarea::-moz-placeholder{
+  color: #64748b;
+  opacity: 1;
+}
+.form-input:-ms-input-placeholder, .form-textarea:-ms-input-placeholder{
+  color: #64748b;
+  opacity: 1;
+}
+.form-input::placeholder,.form-textarea::placeholder{
+  color: #64748b;
+  opacity: 1;
+}
+.form-input::-webkit-datetime-edit-fields-wrapper{
+  padding: 0;
+}
+.form-input::-webkit-date-and-time-value{
+  min-height: 1.5em;
+}
+.form-input::-webkit-datetime-edit,.form-input::-webkit-datetime-edit-year-field,.form-input::-webkit-datetime-edit-month-field,.form-input::-webkit-datetime-edit-day-field,.form-input::-webkit-datetime-edit-hour-field,.form-input::-webkit-datetime-edit-minute-field,.form-input::-webkit-datetime-edit-second-field,.form-input::-webkit-datetime-edit-millisecond-field,.form-input::-webkit-datetime-edit-meridiem-field{
+  padding-top: 0;
+  padding-bottom: 0;
+}
 .form-select{
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
   background-position: right 0.5rem center;
@@ -2931,6 +2953,9 @@ select{
 .float-right{
   float: right;
 }
+.float-left{
+  float: left;
+}
 .m-0{
   margin: 0px;
 }
@@ -3056,6 +3081,9 @@ select{
 }
 .-ml-1{
   margin-left: -0.25rem;
+}
+.mr-4{
+  margin-right: 1rem;
 }
 .block{
   display: block;
@@ -3385,6 +3413,9 @@ select{
 .items-start{
   align-items: flex-start;
 }
+.items-end{
+  align-items: flex-end;
+}
 .items-center{
   align-items: center;
 }
@@ -3516,6 +3547,10 @@ select{
 .rounded-t-xl{
   border-top-left-radius: 0.75rem;
   border-top-right-radius: 0.75rem;
+}
+.rounded-l{
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
 }
 .rounded-bl-lg{
   border-bottom-left-radius: 0.5rem;
@@ -3658,8 +3693,18 @@ select{
   --tw-bg-opacity: 1;
   background-color: rgb(37 99 235 / var(--tw-bg-opacity));
 }
+.bg-gray-300{
+  --tw-bg-opacity: 1;
+  background-color: rgb(203 213 225 / var(--tw-bg-opacity));
+}
+.bg-contain{
+  background-size: contain;
+}
 .bg-clip-padding{
   background-clip: padding-box;
+}
+.bg-center{
+  background-position: center;
 }
 .bg-no-repeat{
   background-repeat: no-repeat;
@@ -3835,6 +3880,9 @@ select{
 }
 .text-right{
   text-align: right;
+}
+.align-top{
+  vertical-align: top;
 }
 .align-middle{
   vertical-align: middle;
@@ -5290,6 +5338,14 @@ body{
 
   .xl\:w-96{
     width: 24rem;
+  }
+
+  .xl\:w-48{
+    width: 12rem;
+  }
+
+  .xl\:w-64{
+    width: 16rem;
   }
 
   .xl\:grid-cols-1{

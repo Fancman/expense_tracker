@@ -8,6 +8,7 @@ use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\StatisticsController;
+use App\Http\Controllers\SettingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,11 +45,7 @@ Route::get('/accounts', [AccountController::class, 'index'])->name('accounts');
 
 Route::get('/statistics', [StatisticsController::class, 'index'])->name('statistics');
 
-Route::get('/settings', function(){
-	$title = 'Nastavenia';
-
-	return view('settings.index', compact('title'));
-})->name('settings');
+Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
 
 
 Route::resource('category', CategoryController::class);
