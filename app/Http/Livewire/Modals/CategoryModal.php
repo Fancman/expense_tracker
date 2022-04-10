@@ -55,9 +55,7 @@ class CategoryModal extends Modal implements HasForms
             'user_id' => $user_id,
         ]);
 
-		session()->flash('message', 'Kategoria bola uspesne vytvorena.');
-
-        //$this->resetInputFields();
+        $this->reset();
 
 		$this->dispatchBrowserEvent('categoryStore',
 		[
@@ -66,6 +64,8 @@ class CategoryModal extends Modal implements HasForms
         ]);
 
 		$this->emit('refreshParent');
+
+		session()->flash('message', 'Kategoria bola uspesne vytvorena.');
     }
 
     public function render()

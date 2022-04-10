@@ -53,6 +53,25 @@ class TransactionModal extends Modal implements HasForms
         $this->form->fill();
     } 
 
+	public function delete($id){
+		$this->transaction = Transaction::find($id);
+
+		$this->transaction->delete();
+
+		$this->reset();
+
+		$this->dispatchBrowserEvent('transactionStore',
+		[
+            'type' => 'success',
+            'message' => 'Transakcia bola uspesne vytvorena'
+        ]);
+
+		$this->emit('refreshParent');
+
+		session()->flash('message', 'Transakcia bola uspesne vytvorena.');	
+		
+	}
+
 	public function edit($id){
 		$this->transaction = Transaction::find($id);
 
@@ -92,43 +111,49 @@ class TransactionModal extends Modal implements HasForms
 	protected function getFormSchema(): array 
     {
         return [
-			Select::make('transaction_type_id')->options(TransactionType::all()->pluck('name', 'id'))->label('Typ transakcie')->required()->reactive(),
-			TextInput::make('name')->nullable()->label('Nazov'),
-			TextInput::make('value')->required()->label('Suma')
+			Select::make('transaction_type_id')
+				->options(TransactionType::all()->pluck('name', 'id'))->label('Typ transakcie')->required()->reactive(),
+			TextInput::make('name')
+				->label('Nazov')->nullable(),
+			TextInput::make('value')
 				->hidden(function (Closure $get) {
-					$transaction_type =  $get('transaction_type_id');					
-					return (!in_array($transaction_type, [1, 2]));
-				}
-			)->gt(0),
+						$transaction_type =  $get('transaction_type_id');					
+						return (!in_array($transaction_type, [1, 2]));
+					}
+				)->label('Suma')->required()->gt(0),
 			DateTimePicker::make('transaction_time')->nullable(),
-			Select::make('currency_id')->options(Currency::all()->pluck('name', 'id'))->label('Mena')->default(function(){
-				$default_currency = (auth()->user() ? auth()->user()->currency_id : 1);
-				return $default_currency;
-			})->nullable(),
-			Select::make('category_id')->options(Category::all()->pluck('name', 'id'))->label('Kategoria')->nullable(),
-			Select::make('address_book_id')->options(AddressBook::all()->pluck('name', 'id'))->label('Adresar')
+			Select::make('currency_id')
+				->options(Currency::all()->pluck('name', 'id'))				
+				->default(function(){
+					$default_currency = (auth()->user() ? auth()->user()->currency_id : 1);
+					return $default_currency;
+				})->label('Mena')->nullable(),
+			Select::make('category_id')
+				->options(Category::all()->pluck('name', 'id'))
+				->label('Kategoria')->nullable(),
+			Select::make('address_book_id')
+				->options(AddressBook::all()->pluck('name', 'id'))
 				->hidden(function (Closure $get) {
-					$transaction_type =  $get('transaction_type_id');					
-					return (!in_array($transaction_type, [1, 2, 5]));
-				}
-			)->nullable(),
+						$transaction_type =  $get('transaction_type_id');					
+						return (!in_array($transaction_type, [1, 2, 5]));
+					}
+				)->label('Adresar')->nullable(),
 			Select::make('source_account_id')
-				->options(Account::all()->pluck('name', 'id'))
-				->label('Zdrojovy ucet')
+				->options(Account::all()->pluck('name', 'id'))				
 				->hidden(function (Closure $get) {
-					$transaction_type =  $get('transaction_type_id');					
-					return (!in_array($transaction_type, [2, 3, 4, 5, 6]));
-				}
-			)->reactive()->required(),
+						$transaction_type =  $get('transaction_type_id');					
+						return (!in_array($transaction_type, [2, 3, 4, 5, 6]));
+					}
+				)->label('Zdrojovy ucet')->reactive()->required(),
 			Select::make('end_account_id')
 				->options(Account::all()
 				->pluck('name', 'id'))
 				->label('Cielovy ucet')
 				->hidden(function (Closure $get) {
-					$transaction_type =  $get('transaction_type_id');					
-					return (!in_array($transaction_type, [1, 6]));
-				}
-			)->required(),
+						$transaction_type =  $get('transaction_type_id');					
+						return (!in_array($transaction_type, [1, 6]));
+					}
+				)->required(),
 			Repeater::make('transaction_items')
 				->schema([
 					Select::make('item_type_id')
@@ -209,8 +234,6 @@ class TransactionModal extends Modal implements HasForms
 						->default(function (Livewire $livewire, Closure $get){
 							$name = $get('transaction_item_name');
 							$source_account_id = $livewire->source_account_id;
-
-							//dd($name, $source_account_id);
 							
 							$quantity = DB::table('account_items')
 							->where('account_id', $source_account_id)

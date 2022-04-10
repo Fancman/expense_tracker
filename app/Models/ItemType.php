@@ -11,5 +11,6 @@ class ItemType extends Model
 
 	protected $fillable = [
         'name',
+		'code'
     ];
 }
