@@ -114,7 +114,8 @@ class TransactionModal extends Modal implements HasForms
 				->label('Nazov')->nullable(),
 			TextInput::make('value')
 				->hidden(function (Closure $get) {
-						$transaction_type =  $get('transaction_type_id');					
+						$transaction_type =  $get('transaction_type_id');	
+						// Hide unless Prijem, Vydaj				
 						return (!in_array($transaction_type, [1, 2]));
 					}
 				)->label('Suma')->required()->gt(0),
@@ -123,22 +124,31 @@ class TransactionModal extends Modal implements HasForms
 				->options(Currency::all()->pluck('name', 'id'))				
 				->default(function(){
 					$default_currency = (auth()->user() ? auth()->user()->currency_id : 1);
+
 					return $default_currency;
-				})->label('Mena')->nullable(),
+				})
+				->hidden(function (Closure $get) {
+						$transaction_type =  $get('transaction_type_id');	
+						// Hide for Prijem			
+						return (!in_array($transaction_type, [1, 2, 5, 6]));
+					}
+				)->label('Mena')->nullable(),
 			Select::make('category_id')
 				->options(Category::all()->pluck('name', 'id'))
 				->label('Kategoria')->nullable(),
 			Select::make('address_book_id')
 				->options(AddressBook::all()->pluck('name', 'id'))
 				->hidden(function (Closure $get) {
-						$transaction_type =  $get('transaction_type_id');					
+						$transaction_type =  $get('transaction_type_id');	
+						// Hide unless Prijem, Vydaj, Dlzoba				
 						return (!in_array($transaction_type, [1, 2, 5]));
 					}
 				)->label('Adresar')->nullable(),
 			Select::make('source_account_id')
 				->options(Account::all()->pluck('name', 'id'))				
 				->hidden(function (Closure $get) {
-						$transaction_type =  $get('transaction_type_id');					
+						$transaction_type =  $get('transaction_type_id');	
+						// Hide for Prijem			
 						return (!in_array($transaction_type, [2, 3, 4, 5, 6]));
 					}
 				)->label('Zdrojovy ucet')->reactive()->required(),
@@ -147,7 +157,9 @@ class TransactionModal extends Modal implements HasForms
 				->pluck('name', 'id'))
 				->label('Cielovy ucet')
 				->hidden(function (Closure $get) {
-						$transaction_type =  $get('transaction_type_id');					
+						$transaction_type =  $get('transaction_type_id');	
+
+						// Hide unless Prijem, Transfer	
 						return (!in_array($transaction_type, [1, 6]));
 					}
 				)->required(),
@@ -163,6 +175,7 @@ class TransactionModal extends Modal implements HasForms
 						->options(Currency::all()->pluck('name', 'id'))
 						->nullable()->label('Mena')->default(function(){
 							$default_currency = (auth()->user() ? auth()->user()->currency_id : 1);
+
 							return $default_currency;
 						}),
 					TextInput::make('fees')->numeric()->nullable()->default(0),
@@ -170,6 +183,7 @@ class TransactionModal extends Modal implements HasForms
 						->options(Currency::all()->pluck('name', 'id'))
 						->nullable()->label('Mena poplatku')->default(function(){
 							$default_currency = (auth()->user() ? auth()->user()->currency_id : 1);
+
 							return $default_currency;
 						}),
 				])
@@ -314,11 +328,11 @@ class TransactionModal extends Modal implements HasForms
 
 		$transaction_data['value'] = $this->value ? $this->value : 0;
 
-		if( is_null($this->end_account_id) && !is_null($transaction_data['source_account_id']) ){
+		if( empty($this->end_account_id) && !empty($transaction_data['source_account_id']) ){
 			$transaction_data['end_account_id'] = $transaction_data['source_account_id'];
 		}
 
-		if( is_null($this->source_account_id) && !is_null($transaction_data['end_account_id']) ){
+		if( empty($this->source_account_id) && !empty($transaction_data['end_account_id']) ){
 			$transaction_data['source_account_id'] = $transaction_data['end_account_id'];
 		}
  
