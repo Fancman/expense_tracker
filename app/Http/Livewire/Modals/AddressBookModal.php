@@ -49,8 +49,6 @@ class AddressBookModal extends Modal implements HasForms
             'IBAN' => $this->IBAN,
         ]);
 
-		session()->flash('message', 'Zaznam bol uspesne vytvoreny.');
-
 		$this->dispatchBrowserEvent('addressBookStore',
 		[
             'type' => 'success',
@@ -60,6 +58,8 @@ class AddressBookModal extends Modal implements HasForms
 		$this->emit('refreshParent');
 
 		$this->emit('showMessage');
+
+		session()->flash('message', 'Zaznam bol uspesne vytvoreny.');
     }
 
     public function render()
