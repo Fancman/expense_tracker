@@ -75,33 +75,62 @@ class TransactionModal extends Modal implements HasForms
 		$transaction_items = TransactionItem::where('transaction_id', $id)->get();
 
 		$transaction_items_form = [];
+		$transaction_sell_items_form = [];
 
 		foreach ($transaction_items as $transaction_item) {
-			$transaction_items_form[] = [
-				'item_type_id' => $transaction_item->item_type_id,
-				'name' => $transaction_item->name,
-				'quantity' => $transaction_item->quantity,
-				'price' => $transaction_item->price,
-				'currency_id' => $transaction_item->currency_id,
-				'fees' => ($transaction_item->fees ?? 0),
-				'fees_currency_id' => $transaction_item->fees_currency_id,
-			];
+
+			if($this->transaction_type_id == 4){
+
+				$transaction_sell_items_form[] = [
+					'item_type_id' => $transaction_item->item_type_id,
+					'transaction_item_name' => $transaction_item->name,
+					'quantity' => $transaction_item->quantity,
+					'price' => $transaction_item->price,
+					'currency_id' => $transaction_item->currency_id,
+					'fees' => ($transaction_item->fees ?? 0),
+					'fees_currency_id' => $transaction_item->fees_currency_id,
+				];
+			}else{
+				$transaction_items_form[] = [
+					'item_type_id' => $transaction_item->item_type_id,
+					'name' => $transaction_item->name,
+					'quantity' => $transaction_item->quantity,
+					'price' => $transaction_item->price,
+					'currency_id' => $transaction_item->currency_id,
+					'fees' => ($transaction_item->fees ?? 0),
+					'fees_currency_id' => $transaction_item->fees_currency_id,
+				];
+			}			
+		}
+
+		$transaction_data = [
+			'transaction_type_id' => $this->transaction->transaction_type_id,
+			'name' => $this->transaction->name,
+			'value' => $this->transaction->value,
+			'transaction_time' => $this->transaction->transaction_time,
+			'currency_id' => $this->transaction->currency_id,
+			'category_id' => $this->transaction->category_id,
+			'address_book_id' => $this->transaction->address_book_id,
+			'source_account_id' => $this->transaction->source_account_id,
+			'end_account_id' => $this->transaction->end_account_id,		
+		];
+
+		if( count($transaction_items_form) ){
+			$transaction_data = array_merge($transaction_data, [
+				'transaction_items' => $transaction_items_form
+			]);
+		}
+
+		if( count($transaction_sell_items_form) ){
+			$transaction_data = array_merge($transaction_data, [
+				'transaction_sell_items' => $transaction_sell_items_form
+			]);
 		}
 
 		$this->form->fill(
-			[
-				'transaction_type_id' => $this->transaction->transaction_type_id,
-				'name' => $this->transaction->name,
-				'value' => $this->transaction->value,
-				'transaction_time' => $this->transaction->transaction_time,
-				'currency_id' => $this->transaction->currency_id,
-				'category_id' => $this->transaction->category_id,
-				'address_book_id' => $this->transaction->address_book_id,
-				'source_account_id' => $this->transaction->source_account_id,
-				'end_account_id' => $this->transaction->end_account_id,
-				'transaction_items' => $transaction_items_form
-			]
+			$transaction_data
 		);
+
 		$this->show = true;
 	}
 
@@ -292,6 +321,12 @@ class TransactionModal extends Modal implements HasForms
 	public function submit()
     {
         $this->validate();
+
+		if( isset($this->transaction) ){
+			$transaction_type = $this->transaction->transactionType;
+			
+			$this->transaction->deleteTransaction($transaction_type->code);
+		}
 
 		$user_id = (auth()->user() ? auth()->user()->id : 4);
 		$default_currency = (auth()->user() ? auth()->user()->currency_id : 1);
