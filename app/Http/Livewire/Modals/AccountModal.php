@@ -51,6 +51,7 @@ class AccountModal extends Modal implements HasForms
 				])
 				->createItemButtonLabel('Pridat Akciu alebo Kryptomenu')
 				->columns(3)
+				->defaultItems(0)
 				->hidden(function (Closure $get) {
 					//$transaction_type =  $get('transaction_type_id');					
 					//return (!in_array($transaction_type, [3, 4, 6]));
@@ -66,6 +67,7 @@ class AccountModal extends Modal implements HasForms
 			])
 			->createItemButtonLabel('Pridat menu')
 			->columns(3)
+			->defaultItems(0)
 			->hidden(function (Closure $get) {
 					//$transaction_type =  $get('transaction_type_id');					
 					//return (!in_array($transaction_type, [3, 4, 6]));
@@ -88,13 +90,14 @@ class AccountModal extends Modal implements HasForms
         $this->validate();
 
 		$user_id = (auth()->user() ? auth()->user()->id : 4);
+		$default_currency = (auth()->user() ? auth()->user()->currency_id : 1);
  
         // Execution doesn't reach here if validation fails. 
         $account = Account::create([
             'name' => $this->name,
             'user_id' => $user_id,
 			'icon' => $this->icon,
-			'currency_id' => $this->currency_id,
+			'currency_id' => isset($this->currency_id) ? $this->currency_id : $default_currency,
 			'value' => 0
         ]);
 
