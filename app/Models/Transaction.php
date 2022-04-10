@@ -86,6 +86,10 @@ class Transaction extends Model
 			$this->deleteTransactionPrijem();
 			$this->delete();
 		}
+		else if($type === 'VYDAJ'){
+			$this->deleteTransactionVydaj();
+			$this->delete();
+		}
 	}
 
 	public function deleteTransactionItems(){
@@ -169,6 +173,15 @@ class Transaction extends Model
 
 		$end_account->value = floatval($end_account->value) - (floatval($this->value));
 		$end_account->save();
+	}
+
+	public function deleteTransactionVydaj(){
+		$source_account = $this->sourceAccount;
+
+		$this->increaseCash($source_account, $this->currency->id, $this->value, 1);		
+
+		$source_account->value = floatval($source_account->value) + (floatval($this->value));
+		$source_account->save();
 	}
 
 	public function deleteAccountItemsPredaj(){
