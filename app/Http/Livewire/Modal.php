@@ -12,7 +12,8 @@ class Modal extends Component
 
 	protected $listeners = [
 		'show' => 'show',
-		'edit' => 'edit'
+		'edit' => 'edit',
+		'delete' => 'delete',
 	];
 	
 	public function show()

@@ -103,6 +103,7 @@
 				</td>
 				<td class="px-2 py-3 whitespace-nowrap">
 					<button x-data="{}" x-on:click="window.livewire.emitTo('modals.transaction-modal', 'edit', {{ $transaction->id }})">Upravit</button>
+					<button x-data="{}" x-on:click="window.livewire.emitTo('modals.transaction-modal', 'delete', {{ $transaction->id }})">Vymazat</button>
 				</td>
 			</tr>
 			@endforeach

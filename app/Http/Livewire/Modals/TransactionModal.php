@@ -56,19 +56,15 @@ class TransactionModal extends Modal implements HasForms
 	public function delete($id){
 		$this->transaction = Transaction::find($id);
 
-		$this->transaction->delete();
+		$transaction_type = $this->transaction->transactionType;
+
+		$this->transaction->deleteTransaction($transaction_type->code);
 
 		$this->reset();
 
-		$this->dispatchBrowserEvent('transactionStore',
-		[
-            'type' => 'success',
-            'message' => 'Transakcia bola uspesne vytvorena'
-        ]);
-
 		$this->emit('refreshParent');
 
-		session()->flash('message', 'Transakcia bola uspesne vytvorena.');	
+		session()->flash('message', 'Transakcia bola uspesne vymazana.');	
 		
 	}
 

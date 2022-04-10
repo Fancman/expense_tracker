@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Transaction extends Model
 {
@@ -32,27 +33,27 @@ class Transaction extends Model
 
 	public function currency()
     {
-        return $this->belongsTo(Currency::class);
+        return $this->belongsTo(Currency::class, 'currency_id');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
 	public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
 	public function transactionType()
     {
-        return $this->belongsTo(TransactionType::class);
+        return $this->belongsTo(TransactionType::class, 'transaction_type_id');
     }
 
 	public function addressBook()
     {
-        return $this->belongsTo(AddressBook::class);
+        return $this->belongsTo(AddressBook::class, 'address_book_id');
     }
 
 	public function sourceAccount()
@@ -74,9 +75,11 @@ class Transaction extends Model
 		if($type === 'PREDAJ'){
 			$this->deleteAccountItemsPredaj();
 			$this->deleteTransactionItems();
+			$this->delete();
 		}else if($type === 'NAKUP'){
 			$this->deleteAccountItemsNakup();
 			$this->deleteTransactionItems();
+			$this->delete();
 		}
 	}
 
@@ -91,7 +94,7 @@ class Transaction extends Model
 	public function increaseCash($currency_id, $quantity, $price){
 		$total_cash = floatval($quantity) * floatval($price);
 
-		$finance_item = AccountItem::where('account_id', $this->sourceAccount()->id)
+		$finance_item = AccountItem::where('account_id', $this->sourceAccount->id)
 		->where('item_type_id', 3)
 		->where('currency_id', intval($currency_id))
 		->latest()->first();
@@ -100,7 +103,7 @@ class Transaction extends Model
 
 			$finance_item = AccountItem::firstOrNew(
 				[
-					'account_id' => $this->sourceAccount()->id,
+					'account_id' => $this->sourceAccount->id,
 					'item_type_id' => 3,
 					'currency_id' => intval($currency_id)
 				],
@@ -124,7 +127,7 @@ class Transaction extends Model
 	public function decreaseCash($currency_id, $quantity, $price){
 		$total_cash = floatval($quantity) * floatval($price);
 
-		$finance_item = AccountItem::where('account_id', $this->sourceAccount()->id)
+		$finance_item = AccountItem::where('account_id', $this->sourceAccount->id)
 		->where('item_type_id', 3)
 		->where('currency_id', intval($currency_id))
 		->latest()->first();
@@ -133,7 +136,7 @@ class Transaction extends Model
 
 			$finance_item = AccountItem::firstOrNew(
 				[
-					'account_id' => $this->sourceAccount()->id,
+					'account_id' => $this->sourceAccount->id,
 					'item_type_id' => 3,
 					'currency_id' => intval($currency_id)
 				],
@@ -155,8 +158,8 @@ class Transaction extends Model
 	}
 
 	public function deleteAccountItemsPredaj(){
-		$transaction_items = $this->transactionItems();
-		$source_account = $this->sourceAccount();
+		$transaction_items = $this->transactionItems;
+		$source_account = $this->sourceAccount;
 		
 		if( $transaction_items ){
 
@@ -167,12 +170,13 @@ class Transaction extends Model
 				$currency_id = $transaction_item->currency->id;
 				$id = $transaction_item->id;
 
-				$account_item = AccountItem::where('name', $name)->where('user_id', $this->user_id)->latest()->first();
+				$account_item = AccountItem::where('name', $name)
+				->where('account_id', $this->sourceAccount->id)->latest()->first();
 
 				if( $account_item->count() == 0 ){
 					$account_item = AccountItem::create(
 					[
-						'account_id' => $this->sourceAccount()->id,
+						'account_id' => $this->sourceAccount->id,
 						'item_type_id' => $transaction_item['item_type_id'],
 						'currency_id' => $transaction_item['currency_id'],
 						'name' => $transaction_item['name'],
@@ -186,10 +190,7 @@ class Transaction extends Model
 				}
 				else if ($quantity < $account_item->quantity)
 				{
-					$latest_transaction = TransactionItem::where('name', $name)
-					->where('user_id', $this->user_id)
-					->where('id', '!=' , $id)
-					->latest()->first();
+					$latest_transaction = $this->getLatestPrice($id);
 
 					$account_item->average_buy_price = (floatval($account_item->average_buy_price) + floatval($price)) / 2;
 					$account_item->quantity = (floatval($account_item->quantity) + floatval($quantity));
@@ -203,8 +204,8 @@ class Transaction extends Model
 	}
 
 	public function deleteAccountItemsNakup(){
-		$transaction_items = $this->transactionItems();
-		$source_account = $this->sourceAccount();
+		$transaction_items = $this->transactionItems;
+		$source_account = $this->sourceAccount;
 		
 		if( $transaction_items ){
 
@@ -215,7 +216,8 @@ class Transaction extends Model
 				$currency_id = $transaction_item->currency->id;
 				$id = $transaction_item->id;
 
-				$account_item = AccountItem::where('name', $name)->where('user_id', $this->user_id);
+				$account_item = AccountItem::where('name', $name)
+				->where('account_id', $this->sourceAccount->id)->latest()->first();
 
 				if($account_item){
 					if($quantity == $account_item->quantity)
@@ -224,10 +226,7 @@ class Transaction extends Model
 					}
 					else if ($quantity < $account_item->quantity)
 					{
-						$latest_transaction = TransactionItem::where('name', $name)
-						->where('user_id', $this->user_id)
-						->where('id', '!=' , $id)
-						->latest();
+						$latest_transaction = $this->getLatestPrice($id);
 
 						$account_item->average_buy_price = (floatval($account_item->average_buy_price) + floatval($price)) / 2;
 						$account_item->quantity = (floatval($account_item->quantity) - floatval($quantity));
@@ -242,6 +241,15 @@ class Transaction extends Model
 				$this->increaseCash($currency_id, $quantity, $price);	
 			}
 		}
+	}
+
+	public function getLatestPrice($id){
+		return DB::table('transaction_items')
+		->join('transactions', 'transaction_items.transaction_id', '=', 'transactions.id')
+		->where('transactions.user_id', $this->user_id)
+		->where('transaction_items.id', '!=' , $id)
+		->select('transaction_items.price')
+		->latest('transaction_items.created_at')->first();
 	}
 	
 }
