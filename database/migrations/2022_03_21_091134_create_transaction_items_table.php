@@ -24,7 +24,7 @@ return new class extends Migration
 			$table->foreignIdFor(Currency::class);
 			$table->foreignIdFor(Currency::class, 'fees_currency_id');
 			$table->string('name', 50);
-			$table->unsignedInteger('quantity')->default(1);
+			$table->integer('quantity')->default(1);
 			$table->decimal('price', $precision = 8, $scale = 2)->nullable();
 			$table->decimal('fees', $precision = 8, $scale = 2)->nullable();
 			$table->timestamps();
