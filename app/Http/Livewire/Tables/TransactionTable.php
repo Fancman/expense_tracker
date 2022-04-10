@@ -46,7 +46,7 @@ class TransactionTable extends Component
 						$sub_query->where('transaction_type_id', '=' , $this->filterTransactionType);
 					}
 
-				})->paginate(10),
+				})->orderBy('created_at', 'desc')->paginate(10),
 			'categories' => Category::where('user_id', $user_id)->get(),
 			'transaction_types' => TransactionType::all(),
 		]);
