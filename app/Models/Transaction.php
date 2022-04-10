@@ -12,6 +12,15 @@ class Transaction extends Model
 
 	private $user_id;
 
+	private $currency_rates = [
+		'EUR' => [
+			'USD' => 1.09,
+		],
+		'USD' => [
+			'EUR' => 0.92,
+		]
+	];
+
 	protected $fillable = [
         'name',
 		'user_id',
@@ -92,17 +101,38 @@ class Transaction extends Model
 		}
 	}
 
+	public function getAccountDefaultCurrency($account){
+		if( isset($account) ){
+			return $account->currency->id;
+		}
+
+		return null;
+	}
+
 	public function createTransactionItems($type, $default_currency, $transaction_sell_items, $transaction_items){
+		
 		if($type === 'NAKUP'){
+			/*$account_default_currency = $this->getAccountDefaultCurrency($this->endAccount);
+			$default_currency = ( is_null($account_default_currency) ? $default_currency : $account_default_currency );*/
+			
 			$this->createAccountItemsNakup($transaction_items, $default_currency);
 		}
 		else if ($type === 'PREDAJ'){
+			/*$account_default_currency = $this->getAccountDefaultCurrency($this->endAccount);
+			$default_currency = ( is_null($account_default_currency) ? $default_currency : $account_default_currency );*/
+
 			$this->createAccountItemsPredaj($transaction_sell_items, $default_currency);
 		}
 		else if($type === 'PRIJEM'){
+			/*$account_default_currency = $this->getAccountDefaultCurrency($this->endAccount);
+			$default_currency = ( is_null($account_default_currency) ? $default_currency : $account_default_currency );*/
+
 			$this->createAccountItemsPrijem();
 		}
 		else if($type === 'VYDAJ'){
+			/*$account_default_currency = $this->getAccountDefaultCurrency($this->endAccount);
+			$default_currency = ( is_null($account_default_currency) ? $default_currency : $account_default_currency );*/
+			
 			$this->createAccountItemsVydaj();
 		}
 	}
@@ -182,20 +212,22 @@ class Transaction extends Model
 	}
 
 	public function createAccountItemsVydaj(){
-		$finance_items = AccountItem::where('account_id', $this->sourceAccount->id)
+		$finance_item = AccountItem::where('account_id', $this->sourceAccount->id)
 		->where('item_type_id', 3)
-		->get();			
+		->where('currency_id', $this->currency->id)
+		->latest()->first();
+				
 
-		foreach ($finance_items as $finance_item) {
-			if($finance_item->currency_id == $this->currency->id){
-				$finance_item->quantity = (floatval($finance_item->quantity) - floatval($this->value));
-				$finance_item->save();
-			}
+		if( isset($finance_item) ){
+			$finance_item->quantity = (floatval($finance_item->quantity) - floatval($this->value));
+			$finance_item->save();
+
+			$transaction_value_converted = $this->convertCurrency($this->value, $this->currency->name, $finance_item->account->currency->name);
+
+			$account = Account::where('id', $this->sourceAccount->id)->latest()->first();
+			$account->value = (floatval($account->value) - $transaction_value_converted);
+			$account->save();
 		}
-
-		$account = Account::where('id', $this->sourceAccount->id)->latest()->first();
-		$account->value = (floatval($account->value) - floatval($this->value));
-		$account->save();
 	}
 
 	public function createAccountItemsPrijem(){
@@ -203,6 +235,8 @@ class Transaction extends Model
 		->where('item_type_id', 3)
 		->where('currency_id', intval($this->currency->id))
 		->latest()->first();
+
+		$transaction_value_converted = $this->convertCurrency($this->value, $this->currency->name, $finance_item->account->currency->name);
 
 		if ( !isset($finance_item) ){
 			$finance_item = AccountItem::firstOrNew(
@@ -227,8 +261,8 @@ class Transaction extends Model
 			$finance_item->save();
 		}
 
-		$account = Account::where('id', $this->endAccount->id)->latest()->first();;
-		$account->value = (floatval($account->value) + floatval($this->value));
+		$account = Account::where('id', $this->endAccount->id)->latest()->first();
+		$account->value = (floatval($account->value) + $transaction_value_converted);
 		$account->save();
 	}
 
@@ -270,6 +304,15 @@ class Transaction extends Model
 		return $transaction_item_data;
 	}
 
+	public function convertCurrency($amout, $from, $to){
+		if( $from != $to ){
+			if( isset($this->currency_rates[$to][$from]) ){
+				$amout = $this->currency_rates[$to][$from] * floatval($amout);
+			}
+		}
+
+		return $amout;
+	}
 	public function createAccountItemsPredaj($transaction_items, $default_currency){
 		$price_sum = 0;
 
@@ -282,15 +325,27 @@ class Transaction extends Model
 
 			$transaction_item_data['transaction_id'] = $this->id;
 
-			TransactionItem::create($transaction_item_data);
+			$transaction_item_obj = TransactionItem::create($transaction_item_data);
 
-			$transaction_item_price = floatval($transaction_item['fees']) + (floatval($transaction_item['quantity']) * floatval($transaction_item['price']));
+			// Convert fee to transaction currency
+			$fees_currency = $transaction_item_obj->feesCurrency;
+			$currency = $transaction_item_obj->currency;
+
+			$transaction_fee = $this->convertCurrency($transaction_item['fees'], $fees_currency->name, $currency->name);
+
+			$transaction_item_price = floatval($transaction_fee) + (floatval($transaction_item['quantity']) * floatval($transaction_item['price']));
 	
 			$account_item = AccountItem::where('account_id', $this->sourceAccount->id)
 			->where('name', $transaction_item_data['name'])
+			->where('currency_id', $currency->id)
 			->firstOr(function () {
 				return null;
 			});
+
+			/*$account_currency = $account_item->account->currency->name;
+			$account_item_currency = $account_item->currency->name;
+
+			$transaction_item_converted_price = $this->convertCurrency($transaction_item['price'], $from, $account_currency);*/
 
 			if( $account_item ){
 				$account_item->quantity = (floatval($account_item->quantity) - floatval($transaction_item['quantity']));
@@ -319,7 +374,7 @@ class Transaction extends Model
 			
 			$this->increaseCash($source_account, $this->currency->id, $transaction_item_price, 1);		
 
-			$price_sum += $transaction_item_price;	
+			$price_sum += $this->convertCurrency($transaction_item_price, $currency->name, $account_item->account->currency->name);
 		}
 		
 		if( $price_sum > 0 ){
@@ -340,12 +395,18 @@ class Transaction extends Model
 				break;
 			}
 
-			$transaction_item_data['transaction_id'] = $this->id;
+			$transaction_item_data['transaction_id'] = $this->id;		
 
-			TransactionItem::create($transaction_item_data);
+			$transaction_item_obj = TransactionItem::create($transaction_item_data);
+
+			// Convert fee to transaction currency
+			$fees_currency = $transaction_item_obj->feesCurrency;
+			$currency = $transaction_item_obj->currency;
+
+			$transaction_fee = $this->convertCurrency($transaction_item['fees'], $fees_currency->name, $currency->name);
 
 			// Calculate transaction item price after saving it
-			$transaction_item_price = floatval($transaction_item['fees']) + (floatval($transaction_item['quantity']) * floatval($transaction_item['price']));
+			$transaction_item_price = floatval($transaction_fee) + (floatval($transaction_item['quantity']) * floatval($transaction_item['price']));
 
 			// Create account items
 			$account_item = AccountItem::where('account_id', $this->endAccount->id)
@@ -379,7 +440,7 @@ class Transaction extends Model
 			
 			$this->decreaseCash($source_account, $this->currency->id, $transaction_item_price, 1);	
 
-			$price_sum += $transaction_item_price;		
+			$price_sum += $this->convertCurrency($transaction_item_price, $currency->name, $account_item->account->currency->name);
 		}
 
 		if( $price_sum > 0 ){
