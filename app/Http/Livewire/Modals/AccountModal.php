@@ -28,6 +28,10 @@ class AccountModal extends Modal implements HasForms
         $this->form->fill();
     } 
 
+	public $name = '';
+	public $icon = '';
+	public $account_items = [];
+	public $finance_items = [];
 	protected function getFormSchema(): array 
     {
         return [            
@@ -171,6 +175,8 @@ class AccountModal extends Modal implements HasForms
 			$account->value = $price_sum;				
 			$account->save();
 		}
+
+		$this->reset();
 
 		$this->dispatchBrowserEvent('accountStore',
 		[
