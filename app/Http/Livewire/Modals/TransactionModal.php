@@ -420,9 +420,13 @@ class TransactionModal extends Modal implements HasForms
 		}
  
         // Execution doesn't reach here if validation fails. 
-		if( !in_array($transaction_data['transaction_type_id'], [5]) || (!$dept_paid && !$this->paid) ){
+		if($transaction_data['transaction_type_id'] == 5){
+			if ( !$dept_paid && !$this->paid){
+				$this->transaction = Transaction::create($transaction_data);
+			} 
+		}else{
 			$this->transaction = Transaction::create($transaction_data);
-		}        
+		}
 
 		$attachments = $this->attachments;
 

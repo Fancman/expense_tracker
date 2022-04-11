@@ -107,6 +107,9 @@ class Transaction extends Model
 		else if($type == 'DLZOBA'){
 			$this->deleteTransactionDlzoba();
 		}
+		else if($type == 'TRANSFER'){
+			$this->deleteTransactionTransfer();
+		}
 	}
 
 	public function getAccountDefaultCurrency($account){
@@ -144,36 +147,60 @@ class Transaction extends Model
 			$this->createAccountItemsVydaj();
 		}
 		else if($type === 'TRANSFER'){
-			$this->decreaseCash($this->sourceAccount, $this->currency->id, $this->value, 1);	
-			$this->increaseCash($this->endAccount, $this->currency->id, $this->value, 1);	
+			$this->createTransactionTransfer();
 		}
 		else if($type === 'DLZOBA'){
-			if( $dept_paid && !$this->paid ){
+			if( $dept_paid && !$this->paid )
+			{
 				$this->createTransactionDlzoba();
 			}
 		}
 		
 	}
 
+	public function increaseAccountValue($account_id, $amout){
+		$account = Account::where('id', $account_id)->latest()->first();
+		$account->value = (floatval($account->value) + floatval($amout));
+		$account->save();
+	}
+
+	public function decreaseAccountValue($account_id, $amout){
+		$account = Account::where('id', $account_id)->latest()->first();
+		$account->value = (floatval($account->value) - floatval($amout));
+		$account->save();
+	}
+
 	public function deleteTransactionDlzoba(){
 		$this->increaseCash($this->sourceAccount, $this->currency->id, $this->value, 1);
-
-		$account = Account::where('id', $this->sourceAccount->id)->latest()->first();
-		$account->value = (floatval($account->value) + floatval($this->value));
-		$account->save();
+		$this->increaseAccountValue($this->sourceAccount->id, $this->value);
 
 		$this->delete();
 	}
 
 	public function createTransactionDlzoba(){
 		$this->decreaseCash($this->sourceAccount, $this->currency->id, $this->value, 1);
-
-		$account = Account::where('id', $this->sourceAccount->id)->latest()->first();
-		$account->value = (floatval($account->value) - floatval($this->value));
-		$account->save();
+		$this->decreaseAccountValue($this->sourceAccount->id, $this->value);
 
 		$this->paid = true;
 		$this->save();
+	}
+
+	public function createTransactionTransfer(){
+		$this->decreaseCash($this->sourceAccount, $this->currency->id, $this->value, 1);	
+		$this->increaseCash($this->endAccount, $this->currency->id, $this->value, 1);	
+
+		$this->decreaseAccountValue($this->sourceAccount->id, $this->value);
+		$this->increaseAccountValue($this->endAccount->id, $this->value);
+	}
+
+	public function deleteTransactionTransfer(){
+		$this->increaseCash($this->sourceAccount, $this->currency->id, $this->value, 1);	
+		$this->decreaseCash($this->endAccount, $this->currency->id, $this->value, 1);
+		
+		$this->increaseAccountValue($this->sourceAccount->id, $this->value);
+		$this->decreaseAccountValue($this->endAccount->id, $this->value);
+
+		$this->delete();
 	}
 
 	public function deleteTransactionItems(){

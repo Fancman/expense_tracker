@@ -61,7 +61,7 @@ class CategoryModal extends Modal implements HasForms
     {
         return [            
 			TextInput::make('name')->required()->label('Nazov')->unique(),
-			TextInput::make('icon')->nullable()->label('Ikona'),
+			//TextInput::make('icon')->nullable()->label('Ikona'),
         ];
     } 
 

@@ -38,7 +38,7 @@ class AccountModal extends Modal implements HasForms
         return [            
 			TextInput::make('name')->required()->label('Nazov'),
 			//TextInput::make('value')->required()->label('Hodnota'),
-			TextInput::make('icon')->nullable()->label('Ikona'),
+			//TextInput::make('icon')->nullable()->label('Ikona'),
 			Select::make('currency_id')->options(Currency::all()->pluck('name', 'id'))->label('Mena'),
 
 			Repeater::make('account_items')
