@@ -408,6 +408,8 @@ class TransactionModal extends Modal implements HasForms
 		// Vydaj
 		// Nakup a predaj akcii/kryptomien
 
+		$transaction_type = $transaction->transactionType;
+
 		$transaction->createTransactionItems($transaction_type->code, $default_currency, $this->transaction_sell_items, $this->transaction_items);
 		
 		$this->reset();
