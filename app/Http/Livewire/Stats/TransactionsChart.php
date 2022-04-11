@@ -31,6 +31,7 @@ class TransactionsChart extends Component
 		$expenses = Transaction::get();
 
 		$pieChartModel = $expenses
+		->where('user_id',  (auth()->user() ? auth()->user()->id : 4))
 		->groupBy('transactionType')
 		->reduce(function ($pieChartModel, $data) {
 			$transaction_type_code = $data->first()->transactionType->code;
@@ -52,7 +53,8 @@ class TransactionsChart extends Component
 		);
 
 		$lineChartModel = $expenses
-		//->where('transactionType.code', 'VYDAJ')
+		->where('user_id',  (auth()->user() ? auth()->user()->id : 4))
+		->whereIn('transactionType.code', ['VYDAJ', 'NAKUP', "DLZOBA"])
 		->reduce(function ($lineChartModel, $data) use ($expenses) {
 			$index = $expenses->search($data);
 
