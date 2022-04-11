@@ -184,7 +184,7 @@ class TransactionModal extends Modal implements HasForms
 					}
 				)->label('Adresar')->nullable(),
 			Select::make('source_account_id')
-				->options(Account::all()->pluck('name', 'id'))				
+				->options(Account::where('user_id', (auth()->user() ? auth()->user()->id : 4))->pluck('name', 'id'))				
 				->hidden(function (Closure $get) {
 						$transaction_type =  $get('transaction_type_id');	
 						// Hide for Prijem			
@@ -192,7 +192,7 @@ class TransactionModal extends Modal implements HasForms
 					}
 				)->label('Zdrojovy ucet')->reactive()->required(),
 			Select::make('end_account_id')
-				->options(Account::all()
+				->options(Account::where('user_id', (auth()->user() ? auth()->user()->id : 4))
 				->pluck('name', 'id'))
 				->label('Cielovy ucet')
 				->hidden(function (Closure $get) {
