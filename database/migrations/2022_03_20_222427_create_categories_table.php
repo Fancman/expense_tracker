@@ -18,7 +18,7 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
 			$table->foreignIdFor(User::class);
-            $table->string('name', 50)->unique();
+            $table->string('name', 50);
             $table->string('icon', 50)->nullable();
         });
     }
