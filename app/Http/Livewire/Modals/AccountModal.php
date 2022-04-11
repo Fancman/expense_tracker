@@ -30,6 +30,7 @@ class AccountModal extends Modal implements HasForms
 
 	public $name = '';
 	public $icon = '';
+	public $currency_id = '';
 	public $account_items = [];
 	public $finance_items = [];
 	protected function getFormSchema(): array 
@@ -37,7 +38,7 @@ class AccountModal extends Modal implements HasForms
         return [            
 			TextInput::make('name')->required()->label('Nazov'),
 			//TextInput::make('value')->required()->label('Hodnota'),
-			TextInput::make('icon')->required()->label('Ikona'),
+			TextInput::make('icon')->nullable()->label('Ikona'),
 			Select::make('currency_id')->options(Currency::all()->pluck('name', 'id'))->label('Mena'),
 
 			Repeater::make('account_items')
