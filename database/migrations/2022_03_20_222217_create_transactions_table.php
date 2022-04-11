@@ -32,6 +32,7 @@ return new class extends Migration
 			$table->string('name', 50);
 			$table->decimal('value', $precision = 8, $scale = 2);
 			$table->string('repeating', 20)->nullable();
+			$table->boolean('paid')->default(false)->nullable();
 			$table->timestamps();
         });
     }

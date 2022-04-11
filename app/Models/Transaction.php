@@ -104,6 +104,9 @@ class Transaction extends Model
 			$this->deleteTransactionVydaj();
 			$this->delete();
 		}
+		else if($type == 'DLZOBA'){
+			$this->deleteTransactionDlzoba();
+		}
 	}
 
 	public function getAccountDefaultCurrency($account){
@@ -114,7 +117,7 @@ class Transaction extends Model
 		return null;
 	}
 
-	public function createTransactionItems($type, $default_currency, $transaction_sell_items, $transaction_items){
+	public function createTransactionItems($type, $default_currency, $transaction_sell_items, $transaction_items, $dept_paid){
 		
 		if($type === 'NAKUP'){
 			/*$account_default_currency = $this->getAccountDefaultCurrency($this->endAccount);
@@ -140,6 +143,37 @@ class Transaction extends Model
 			
 			$this->createAccountItemsVydaj();
 		}
+		else if($type === 'TRANSFER'){
+			$this->decreaseCash($this->sourceAccount, $this->currency->id, $this->value, 1);	
+			$this->increaseCash($this->endAccount, $this->currency->id, $this->value, 1);	
+		}
+		else if($type === 'DLZOBA'){
+			if( $dept_paid && !$this->paid ){
+				$this->createTransactionDlzoba();
+			}
+		}
+		
+	}
+
+	public function deleteTransactionDlzoba(){
+		$this->increaseCash($this->sourceAccount, $this->currency->id, $this->value, 1);
+
+		$account = Account::where('id', $this->sourceAccount->id)->latest()->first();
+		$account->value = (floatval($account->value) + floatval($this->value));
+		$account->save();
+
+		$this->delete();
+	}
+
+	public function createTransactionDlzoba(){
+		$this->decreaseCash($this->sourceAccount, $this->currency->id, $this->value, 1);
+
+		$account = Account::where('id', $this->sourceAccount->id)->latest()->first();
+		$account->value = (floatval($account->value) - floatval($this->value));
+		$account->save();
+
+		$this->paid = true;
+		$this->save();
 	}
 
 	public function deleteTransactionItems(){

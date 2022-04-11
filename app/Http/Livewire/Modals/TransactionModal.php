@@ -21,6 +21,7 @@ use Illuminate\Contracts\View\View;
 use Livewire\Component as Livewire;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Repeater;
 use Illuminate\Support\Facades\Storage;
 use Filament\Forms\Components\Component;
@@ -49,8 +50,9 @@ class TransactionModal extends Modal implements HasForms
 	public $transaction_items = [];
 	public $transaction_sell_items = [];
 	public $attachments = [];
+	public $paid = false;
 
-	public $showMessage = false;
+	//public $showMessage = false;
 
 	public function mount(): void 
     {
@@ -116,7 +118,8 @@ class TransactionModal extends Modal implements HasForms
 			'category_id' => $this->transaction->category_id,
 			'address_book_id' => $this->transaction->address_book_id,
 			'source_account_id' => $this->transaction->source_account_id,
-			'end_account_id' => $this->transaction->end_account_id,		
+			'end_account_id' => $this->transaction->end_account_id,	
+			'paid' => $this->transaction->paid,	
 		];
 
 		//dd($this->transaction->file);
@@ -151,14 +154,37 @@ class TransactionModal extends Modal implements HasForms
 				->options(TransactionType::all()->pluck('name', 'id'))->label('Typ transakcie')->required()->reactive(),
 			TextInput::make('name')
 				->label('Nazov')->nullable(),
+			Checkbox::make('paid')->label('Zaplatene')
+				->hidden(function (Closure $get) {
+						$transaction_type =  $get('transaction_type_id');	
+
+						// Hide unless Dlzoba	
+						return (!in_array($transaction_type, [5]));
+					}
+				)->disabled(
+					function () {
+						if( is_null($this->transaction) ){
+							return true;
+						}
+						// Disable if paid
+						return $this->transaction->paid;
+					}
+				),			
 			TextInput::make('value')
 				->hidden(function (Closure $get) {
 						$transaction_type =  $get('transaction_type_id');	
 						// Hide unless Prijem, Vydaj				
-						return (!in_array($transaction_type, [1, 2]));
+						return (!in_array($transaction_type, [1, 2, 5, 6]));
 					}
 				)->label('Suma')->required()->gt(0),
-			DateTimePicker::make('transaction_time')->nullable(),			
+			DateTimePicker::make('transaction_time')->nullable()
+				->hidden(function (Closure $get) {
+						$transaction_type =  $get('transaction_type_id');	
+
+						// Hide unless Dlzoba	
+						return (in_array($transaction_type, [5]));
+					}
+				),			
 			Select::make('currency_id')
 				->options(Currency::all()->pluck('name', 'id'))				
 				->default(function(){
@@ -332,13 +358,16 @@ class TransactionModal extends Modal implements HasForms
 	public function submit()
     {
 		$updating = false;	
+		$dept_paid = false;
 
         $this->validate();
 
 		if( isset($this->transaction) ){
 			$transaction_type = $this->transaction->transactionType;
-			
-			$this->transaction->deleteTransaction($transaction_type->code);
+
+			if( !in_array($this->transaction->transactionType->id, [5])){
+				$this->transaction->deleteTransaction($transaction_type->code);
+			}
 
 			$updating = true;
 		}
@@ -358,6 +387,10 @@ class TransactionModal extends Modal implements HasForms
 			'transaction_time' => $this->transaction_time,
 			'name' => $this->name,			
         ];
+
+		if( $this->paid && !$this->transaction->paid ){
+			$dept_paid = true;
+		}
 
 		foreach ($transaction_data as $key => $value) {
 			if( empty($value) ){
@@ -387,7 +420,9 @@ class TransactionModal extends Modal implements HasForms
 		}
  
         // Execution doesn't reach here if validation fails. 
-        $transaction = Transaction::create($transaction_data);
+		if( !in_array($transaction_data['transaction_type_id'], [5]) || (!$dept_paid && !$this->paid) ){
+			$this->transaction = Transaction::create($transaction_data);
+		}        
 
 		$attachments = $this->attachments;
 
@@ -398,7 +433,7 @@ class TransactionModal extends Modal implements HasForms
 				$file = new File;
 
 				$file->filename = $filename;
-				$file->transaction_id = $transaction->id;
+				$file->transaction_id = $this->transaction->id;
 
 				$file->save();
 			}
@@ -408,9 +443,9 @@ class TransactionModal extends Modal implements HasForms
 		// Vydaj
 		// Nakup a predaj akcii/kryptomien
 
-		$transaction_type = $transaction->transactionType;
+		$transaction_type = $this->transaction->transactionType;
 
-		$transaction->createTransactionItems($transaction_type->code, $default_currency, $this->transaction_sell_items, $this->transaction_items);
+		$this->transaction->createTransactionItems($transaction_type->code, $default_currency, $this->transaction_sell_items, $this->transaction_items, $dept_paid);
 		
 		$this->reset();
 
