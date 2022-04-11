@@ -12,7 +12,6 @@
 @endif
 <div x-on:categoryStore="show = false;">
 	<x-modal wire:model="show">
-
 		<form wire:submit.prevent="submit">
 			
 			{{ $this->form }}

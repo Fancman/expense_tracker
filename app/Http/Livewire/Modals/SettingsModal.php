@@ -20,13 +20,17 @@ class SettingsModal extends Modal implements HasForms
 {
 	use InteractsWithForms;
 
+	//protected $listeners = ['refreshParent' => 'refresh'];
+
 	public ?User $user = null;
 
 	public $name = '';
 	public $email = '';
 	public $date_type = '';
 	public $currency_id = '';
+	public $remember_login = false;
 
+	
 	public function mount(): void 
     {
 		$user_settings = [];
@@ -72,28 +76,36 @@ class SettingsModal extends Modal implements HasForms
 		$user_id = (auth()->user() ? auth()->user()->id : 4);
  
         // Execution doesn't reach here if validation fails. 
-        Account::updateOrCreate(
+        User::updateOrCreate(
 			[
-				'user_id' => $user_id,
+				'id' => $user_id,
 			],
 			[
 				'name' => $this->name,            
-				'email' => $this->icon,
+				'email' => $this->email,
 				'date_type' => $this->date_type,
 				'currency_id' => $this->currency_id,
-				'remember_login' => $this->remember_login
+				'remember_login' => intval($this->remember_login)
 			]
 		);
+		
+		$this->reset();
 
-		$this->emit('showMessage');
-
-		session()->flash('message', 'Nastavenia boli ulozene.');
+		$message = 'Nastavenia boli ulozene';
 
 		$this->dispatchBrowserEvent('settingsStore',
 		[
             'type' => 'success',
-            'message' => 'Nastavenia boli ulozene'
+            'message' => $message
         ]);
+
+		$this->emit('refreshParent');
+
+		$this->emit('showMessage');
+
+		session()->flash('message', $message);	
+
+		return redirect()->to('settings'); 
     }
 
 }
