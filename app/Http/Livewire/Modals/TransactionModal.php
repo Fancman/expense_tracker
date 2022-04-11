@@ -173,7 +173,7 @@ class TransactionModal extends Modal implements HasForms
 					}
 				)->label('Mena')->nullable(),
 			Select::make('category_id')
-				->options(Category::all()->pluck('name', 'id'))
+				->options(Category::where("user_id", (auth()->user() ? auth()->user()->id : 4))->pluck('name', 'id'))
 				->label('Kategoria')->nullable(),
 			Select::make('address_book_id')
 				->options(AddressBook::all()->pluck('name', 'id'))
