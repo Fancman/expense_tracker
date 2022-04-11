@@ -19,6 +19,7 @@ class TransactionsChart extends Component
         'NAKUP' => '#90cdf4',
         'PREDAJ' => '#66DA26',
         'DLZOBA' => '#cbd5e0',
+        'TRANSFER' => '#b8469a',
     ];
 
 	public $firstRun = true;
