@@ -17,7 +17,7 @@
 			ease-in-out
 			m-0
 			focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" aria-label="Default select example" wire:model="filterCategory" >
-				<option selected>Filtruj podla kategorie</option>
+				<option value="null" selected>Filtruj podla kategorie</option>
 				@foreach($categories as $category)
 					<option value="{{ $category->id }}">{{ $category->name }}</option>
 				@endforeach
@@ -39,7 +39,7 @@
 			ease-in-out
 			m-0
 			focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" aria-label="Default select example" wire:model="filterTransactionType" >
-				<option selected>Filtruj podla typu transakcie</option>
+				<option value="null" selected>Filtruj podla typu transakcie</option>
 				@foreach($transaction_types as $transaction_type)
 					<option value="{{ $transaction_type->id }}">{{ $transaction_type->name }}</option>
 				@endforeach

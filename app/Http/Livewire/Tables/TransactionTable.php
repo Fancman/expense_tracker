@@ -30,7 +30,7 @@ class TransactionTable extends Component
 				->where(function($sub_query){
 					$sub_query->where('name', 'like', '%'.$this->searchTerm.'%');
 
-					if( !is_null($this->filterCategory) ){
+					if( !is_null($this->filterCategory) && $this->filterCategory != "null" ){
 						$sub_query->where('category_id', $this->filterCategory);
 					}
 
@@ -42,7 +42,7 @@ class TransactionTable extends Component
 						$sub_query->whereDate('transaction_time', '<=' , $this->toDate);
 					}
 
-					if( !is_null($this->filterTransactionType) ){
+					if( !is_null($this->filterTransactionType) && $this->filterTransactionType != "null"){
 						$sub_query->where('transaction_type_id', '=' , $this->filterTransactionType);
 					}
 
