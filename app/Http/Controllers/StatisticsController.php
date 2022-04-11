@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class StatisticsController extends Controller
 {
-    protected $title = 'Statistika';
+    protected $title = 'Štatistika';
 
 	public function index()
     {

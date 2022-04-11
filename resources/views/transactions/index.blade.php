@@ -5,7 +5,7 @@
 
 	<div class="flex items-center">
 
-		<button x-data="{}" x-on:click="window.livewire.emitTo('modals.transaction-modal', 'show')" class="bg-navy-blue text-white px-3 py-2 rounded">Zapisat transakciu</button>
+		<button x-data="{}" x-on:click="window.livewire.emitTo('modals.transaction-modal', 'show')" class="bg-navy-blue text-white px-3 py-2 rounded">Zapísať transakciu</button>
 		
 	</div>
 

@@ -3175,11 +3175,11 @@ select{
 .w-full{
   width: 100%;
 }
-.w-96{
-  width: 24rem;
+.w-56{
+  width: 14rem;
 }
-.w-\[calc\(100\%-32rem\)\]{
-  width: calc(100% - 32rem);
+.w-\[calc\(100\%-14rem\)\]{
+  width: calc(100% - 14rem);
 }
 .w-64{
   width: 16rem;
@@ -3231,12 +3231,6 @@ select{
 }
 .w-52{
   width: 13rem;
-}
-.w-56{
-  width: 14rem;
-}
-.w-\[calc\(100\%-14rem\)\]{
-  width: calc(100% - 14rem);
 }
 .min-w-full{
   min-width: 100%;
@@ -5347,10 +5341,6 @@ body{
 
   .xl\:w-96{
     width: 24rem;
-  }
-
-  .xl\:w-full{
-    width: 100%;
   }
 
   .xl\:grid-cols-1{

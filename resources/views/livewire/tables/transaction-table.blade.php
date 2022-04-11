@@ -1,6 +1,6 @@
 <div>
 	<div class="flex">
-		<input type="text"  class="mb-5 mr-5" placeholder="Hladat v nazve" wire:model="searchTerm" />
+		<input type="text"  class="mb-5 mr-5" placeholder="Hľadať v názve" wire:model="searchTerm" />
 		<div class="ml-5 mb-3 xl:w-96">
 			<select class="form-select appearance-none
 			block

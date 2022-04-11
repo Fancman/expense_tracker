@@ -21,7 +21,7 @@
 </head>
 
 <body class="antialiased">
-	<div class="flex h-screen">
+	<div class="flex h-full">
 		<aside class="flex flex-col items-center w-56 2xl:w-96 z-20 bg-cod-grey overflow-y-auto pt-14">
 			<div class="text-4xl font-medium text-white text-center">Expense Tracker</div>
 			<div class="py-10 px-5">
