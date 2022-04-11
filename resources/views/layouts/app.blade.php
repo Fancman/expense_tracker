@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ config('app.locale') }}">
+<html lang="{{ config('app.locale') }}" style="height:100%;">
 
 <head>
     <meta charset="UTF-8">
@@ -20,7 +20,7 @@
 	<script src="{{ asset('vendor/livewire-charts/app.js') }}" defer></script>
 </head>
 
-<body class="antialiased">
+<body class="antialiased h-full">
 	<div class="flex h-full">
 		<aside class="flex flex-col items-center w-56 2xl:w-96 z-20 bg-cod-grey overflow-y-auto pt-14">
 			<div class="text-4xl font-medium text-white text-center">Expense Tracker</div>
