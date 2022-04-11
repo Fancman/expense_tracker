@@ -42,7 +42,7 @@ class TransactionModal extends Modal implements HasForms
 	public $transaction_type_id = '';
 	public $name = '';
 	public $value = '';
-	public $transaction_time = '';
+	public $transaction_time = 'Apr 11, 2022 00:00:00';
 	public $currency_id = '';
 	public $category_id = '';
 	public $address_book_id = '';
@@ -53,11 +53,30 @@ class TransactionModal extends Modal implements HasForms
 	public $attachments = [];
 	public $paid = false;
 
-	//public $showMessage = false;
+	public function show()
+	{
+		$this->reset();
+		$this->show = true;
+	}
 
 	public function mount(): void 
     {
-        $this->form->fill();
+		$this->reset();
+
+		$transaction_data = [
+			'transaction_type_id' => $this->transaction_type_id,
+			'name' => $this->name,
+			'value' => $this->value,
+			'transaction_time' => $this->transaction_time,
+			'currency_id' => $this->currency_id,
+			'category_id' => $this->category_id,
+			'address_book_id' => $this->address_book_id,
+			'source_account_id' => $this->source_account_id,
+			'end_account_id' => $this->end_account_id,	
+			'paid' => $this->paid,	
+		];
+
+        $this->form->fill($transaction_data);
     } 
 
 	public function delete($id){

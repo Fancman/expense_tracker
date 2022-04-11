@@ -33,6 +33,7 @@ class AccountModal extends Modal implements HasForms
 	public $currency_id = '';
 	public $account_items = [];
 	public $finance_items = [];
+	
 	protected function getFormSchema(): array 
     {
         return [            
