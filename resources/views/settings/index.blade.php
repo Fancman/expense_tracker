@@ -30,7 +30,7 @@
 							transition
 							ease-in-out
 							m-0
-							focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"  wire:model="name" value="{{ $user->name }}"/>
+							focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"  value="{{ $user->name }}"/>
 						</div>
 					</div>
 
@@ -52,7 +52,7 @@
 							transition
 							ease-in-out
 							m-0
-							focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"  wire:model="name" value="{{ $user->email }}"/>
+							focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" value="{{ $user->email }}"/>
 						</div>
 					</div>
 
@@ -73,7 +73,7 @@
 							transition
 							ease-in-out
 							m-0
-							focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"  wire:model="name" value="{{ $user->date_type }}"/>
+							focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" value="{{ $user->date_type }}"/>
 						</div>
 					</div>
 				</div>
@@ -104,7 +104,7 @@
 							transition
 							ease-in-out
 							m-0
-							focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" aria-label="Default select example" wire:model="filterTransactionType" >
+							focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" aria-label="Default select example">
 								<option>NULL</option>
 								@foreach($currencies as $currency)
 									<option {{ $user->currency_id == $currency->id ? 'selected' : '' }} value="{{ $currency->id }}">{{ $currency->name }}</option>
