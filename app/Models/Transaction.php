@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Transaction extends Model
 {
@@ -83,6 +85,22 @@ class Transaction extends Model
 	public function transactionItems()
     {
         return $this->hasMany(TransactionItem::class);
+    }
+
+	protected function transactionTime(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+				try {
+					$user_date_type = (auth()->user() ? auth()->user()->date_type : 'j. m. Y, G:i');
+					$formated_date_time = Carbon::parse($value)->format($user_date_type);
+					return $formated_date_time;
+				} catch (\Throwable $th) {
+					$formated_date_time = Carbon::parse($value)->format('j. m. Y, G:i');
+					return $formated_date_time;
+				}
+			},
+        );
     }
 
 	public function deleteTransaction($type){
