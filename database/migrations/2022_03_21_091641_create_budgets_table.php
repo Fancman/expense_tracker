@@ -23,6 +23,8 @@ return new class extends Migration
 			$table->timestamp('start_time', $precision = 0);
 			$table->string('budget_period', 50);
             $table->decimal('amount', $precision = 8, $scale = 2)->nullable();
+			$table->boolean('reached')->default(false)->nullable();
+			$table->timestamps();
         });
     }
 

@@ -54,7 +54,7 @@ class ImportModal extends Modal implements HasForms
 
 		$this->reset();
 
-		$message = 'Transkacie zo súbora boli nahrané';
+		$message = 'Transakcie zo súbora boli nahrané';
 
 		$this->dispatchBrowserEvent('transactionsStore',
 		[

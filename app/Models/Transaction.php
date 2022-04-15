@@ -92,11 +92,11 @@ class Transaction extends Model
         return Attribute::make(
             get: function ($value) {
 				try {
-					$user_date_type = (auth()->user() ? auth()->user()->date_type : 'j. m. Y, G:i');
+					$user_date_type = (auth()->user() ? auth()->user()->date_type : 'Y-m-d H:i:s');
 					$formated_date_time = Carbon::parse($value)->format($user_date_type);
 					return $formated_date_time;
 				} catch (\Throwable $th) {
-					$formated_date_time = Carbon::parse($value)->format('j. m. Y, G:i');
+					$formated_date_time = Carbon::parse($value)->format('Y-m-d H:i:s');
 					return $formated_date_time;
 				}
 			},
