@@ -6,6 +6,7 @@
 	<div class="flex items-center">
 
 		<button x-data="{}" x-on:click="window.livewire.emitTo('modals.transaction-modal', 'show')" class="bg-navy-blue text-white px-3 py-2 rounded">Zapísať transakciu</button>
+		<button x-data="{}" x-on:click="window.livewire.emitTo('modals.import-modal', 'show')" class="bg-light-blue text-white px-3 py-2 rounded ml-5">Importovať VUB výpis</button>
 		
 	</div>
 
@@ -23,4 +24,5 @@
 
 @section('livewire-custom-scripts')
 	@livewire('modals.transaction-modal')
+	@livewire('modals.import-modal')
 @endsection
