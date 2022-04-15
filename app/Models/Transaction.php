@@ -100,6 +100,10 @@ class Transaction extends Model
 					return $formated_date_time;
 				}
 			},
+			set: function($value){
+				$formated_date_time = Carbon::parse($value);
+				return $formated_date_time;
+			}
         );
     }
 
