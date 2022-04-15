@@ -176,65 +176,42 @@ class Transaction extends Model
 		
 	}
 
-	public function increaseAccountValue($account_id, $amout){
+	/**
+	 * Increase overal account value
+	 * 
+	 * @param int $account_id Account id of account from which we want to subtract value
+	 * @param int $amout Amout of money we are decreasing
+	 * @return void Saves new value
+	 */
+	public function increaseAccountValue($account_id){
+		$transaction_currency_name = $this->currency->name;
+
 		$account = Account::where('id', $account_id)->latest()->first();
-		$account->value = (floatval($account->value) + floatval($amout));
-		$account->save();
-	}
-
-	public function decreaseAccountValue($account_id, $amout){
-		$account = Account::where('id', $account_id)->latest()->first();
-		$account->value = (floatval($account->value) - floatval($amout));
-		$account->save();
-	}
-
-	public function deleteTransactionDlzoba(){
-		$this->increaseCash($this->sourceAccount, $this->currency->id, $this->value, 1);
-		$this->increaseAccountValue($this->sourceAccount->id, $this->value);
-
-		$this->delete();
-	}
-
-	public function createTransactionDlzoba(){
-		$this->decreaseCash($this->sourceAccount, $this->currency->id, $this->value, 1);
-		$this->decreaseAccountValue($this->sourceAccount->id, $this->value);
-
-		$this->paid = true;
-		$this->save();
-	}
-
-	public function createTransactionTransfer(){
-		$this->decreaseCash($this->sourceAccount, $this->currency->id, $this->value, 1);	
-		$this->increaseCash($this->endAccount, $this->currency->id, $this->value, 1);	
-
-		$this->decreaseAccountValue($this->sourceAccount->id, $this->value);
-		$this->increaseAccountValue($this->endAccount->id, $this->value);
-	}
-
-	public function deleteTransactionTransfer(){
-		$this->increaseCash($this->sourceAccount, $this->currency->id, $this->value, 1);	
-		$this->decreaseCash($this->endAccount, $this->currency->id, $this->value, 1);
 		
-		$this->increaseAccountValue($this->sourceAccount->id, $this->value);
-		$this->decreaseAccountValue($this->endAccount->id, $this->value);
-
-		$this->delete();
+		$transaction_value_converted = $this->convertCurrency($this->value, $transaction_currency_name, $account->currency->name);
+		
+		$account->value = (floatval($account->value) + floatval($transaction_value_converted));
+		$account->save();
 	}
 
-	public function deleteTransactionItems(){
-		$transaction_items = $this->transactionItems();
+	public function decreaseAccountValue($account_id){
+		$transaction_currency_name = $this->currency->name;
 
-		if( $transaction_items ){
-			$transaction_items->delete();
-		}
+		$account = Account::where('id', $account_id)->latest()->first();
+		
+		$transaction_value_converted = $this->convertCurrency($this->value, $transaction_currency_name, $account->currency->name);
+		
+		$account->value = (floatval($account->value) - floatval($transaction_value_converted));
+		$account->save();
 	}
 
-	public function increaseCash($account, $currency_id, $quantity, $price){
+	public function increaseCash($account, $quantity, $price){
 		$total_cash = floatval($quantity) * floatval($price);
+		$transaction_currency_id = $this->currency->id;
 
 		$finance_item = AccountItem::where('account_id', $account->id)
 		->where('item_type_id', 3)
-		->where('currency_id', intval($currency_id))
+		->where('currency_id', intval($transaction_currency_id))
 		->latest()->first();
 
 		if( !isset($finance_item) ){
@@ -243,7 +220,7 @@ class Transaction extends Model
 				[
 					'account_id' => $account->id,
 					'item_type_id' => 3,
-					'currency_id' => intval($currency_id)
+					'currency_id' => intval($transaction_currency_id)
 				],
 				[
 					'name' => 'Peniaze',
@@ -262,12 +239,13 @@ class Transaction extends Model
 		}
 	}
 
-	public function decreaseCash($account, $currency_id, $quantity, $price){
+	public function decreaseCash($account, $quantity, $price){
 		$total_cash = floatval($quantity) * floatval($price);
+		$transaction_currency_id = $this->currency->id;
 
 		$finance_item = AccountItem::where('account_id', $account->id)
 		->where('item_type_id', 3)
-		->where('currency_id', intval($currency_id))
+		->where('currency_id', intval($transaction_currency_id))
 		->latest()->first();
 
 		if( !isset($finance_item) ){
@@ -276,7 +254,7 @@ class Transaction extends Model
 				[
 					'account_id' => $account->id,
 					'item_type_id' => 3,
-					'currency_id' => intval($currency_id)
+					'currency_id' => intval($transaction_currency_id)
 				],
 				[
 					'name' => 'Peniaze',
@@ -295,6 +273,47 @@ class Transaction extends Model
 		}
 	}
 
+	public function deleteTransactionDlzoba(){
+		$this->increaseCash($this->sourceAccount, $this->value, 1);
+		$this->increaseAccountValue($this->sourceAccount->id);
+
+		$this->delete();
+	}
+
+	public function createTransactionDlzoba(){
+		$this->decreaseCash($this->sourceAccount, $this->value, 1);
+		$this->decreaseAccountValue($this->sourceAccount->id);
+
+		$this->paid = true;
+		$this->save();
+	}
+
+	public function createTransactionTransfer(){
+		$this->decreaseCash($this->sourceAccount, $this->currency->id, $this->value, 1);	
+		$this->increaseCash($this->endAccount, $this->currency->id, $this->value, 1);	
+
+		$this->decreaseAccountValue($this->sourceAccount->id);
+		$this->increaseAccountValue($this->endAccount->id);
+	}
+
+	public function deleteTransactionTransfer(){
+		$this->increaseCash($this->sourceAccount, $this->value, 1);	
+		$this->decreaseCash($this->endAccount, $this->value, 1);
+		
+		$this->increaseAccountValue($this->sourceAccount->id);
+		$this->decreaseAccountValue($this->endAccount->id);
+
+		$this->delete();
+	}
+
+	public function deleteTransactionItems(){
+		$transaction_items = $this->transactionItems();
+
+		if( $transaction_items ){
+			$transaction_items->delete();
+		}
+	}
+
 	public function createAccountItemsVydaj(){
 		$finance_item = AccountItem::where('account_id', $this->sourceAccount->id)
 		->where('item_type_id', 3)
@@ -306,11 +325,7 @@ class Transaction extends Model
 			$finance_item->quantity = (floatval($finance_item->quantity) - floatval($this->value));
 			$finance_item->save();
 
-			$transaction_value_converted = $this->convertCurrency($this->value, $this->currency->name, $finance_item->account->currency->name);
-
-			$account = Account::where('id', $this->sourceAccount->id)->latest()->first();
-			$account->value = (floatval($account->value) - $transaction_value_converted);
-			$account->save();
+			$this->decreaseAccountValue($this->sourceAccount->id);
 		}
 	}
 
@@ -319,8 +334,6 @@ class Transaction extends Model
 		->where('item_type_id', 3)
 		->where('currency_id', intval($this->currency->id))
 		->latest()->first();
-
-		$transaction_value_converted = $this->convertCurrency($this->value, $this->currency->name, $finance_item->account->currency->name);
 
 		if ( !isset($finance_item) ){
 			$finance_item = AccountItem::firstOrNew(
@@ -345,9 +358,7 @@ class Transaction extends Model
 			$finance_item->save();
 		}
 
-		$account = Account::where('id', $this->endAccount->id)->latest()->first();
-		$account->value = (floatval($account->value) + $transaction_value_converted);
-		$account->save();
+		$this->increaseAccountValue($this->endAccount->id);
 	}
 
 	public function processTransactionItemData($transaction_item, $type, $default_currency){
@@ -456,7 +467,7 @@ class Transaction extends Model
 			// Increase cash on account
 			$source_account = $this->sourceAccount;
 			
-			$this->increaseCash($source_account, $this->currency->id, $transaction_item_price, 1);		
+			$this->increaseCash($source_account, $transaction_item_price, 1);		
 
 			$price_sum += $this->convertCurrency($transaction_item_price, $currency->name, $account_item->account->currency->name);
 		}
@@ -521,10 +532,12 @@ class Transaction extends Model
 
 			// Decrease cash
 			$source_account = $this->endAccount;
-			
-			$this->decreaseCash($source_account, $this->currency->id, $transaction_item_price, 1);	
 
-			$price_sum += $this->convertCurrency($transaction_item_price, $currency->name, $account_item->account->currency->name);
+			$converted_transaction_price = $this->convertCurrency($transaction_item_price, $currency->name, $account_item->account->currency->name);
+			
+			$this->decreaseCash($source_account, $transaction_item_price, 1);	
+
+			$price_sum += $converted_transaction_price;
 		}
 
 		if( $price_sum > 0 ){
@@ -547,7 +560,7 @@ class Transaction extends Model
 	public function deleteTransactionVydaj(){
 		$source_account = $this->sourceAccount;
 
-		$this->increaseCash($source_account, $this->currency->id, $this->value, 1);		
+		$this->increaseCash($source_account, $this->value, 1);		
 
 		$converted_price = $this->convertCurrency($this->value, $source_account->currency->name, $this->currency->name);
 
@@ -601,7 +614,7 @@ class Transaction extends Model
 				$source_account->value = floatval($source_account->value) + ($converted_price * floatval($quantity));
 				$source_account->save();
 
-				$this->decreaseCash($this->sourceAccount, $currency_id, $quantity, $price);	
+				$this->decreaseCash($this->sourceAccount, $quantity, $price);	
 			}
 		}
 	}
@@ -645,7 +658,7 @@ class Transaction extends Model
 					$source_account->save();
 				}
 
-				$this->increaseCash($this->sourceAccount, $currency_id, $quantity, $price);	
+				$this->increaseCash($this->sourceAccount, $quantity, $price);	
 			}
 		}
 	}
