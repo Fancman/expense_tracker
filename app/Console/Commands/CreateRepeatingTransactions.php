@@ -15,7 +15,7 @@ class CreateRepeatingTransactions extends Command
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'command:create_repeating_transactions';
 
     /**
      * The console command description.
@@ -40,9 +40,12 @@ class CreateRepeatingTransactions extends Command
 			'ročne',			
 		];
 
+		//$prefered_date = auth()->user()->date_type;
+
 		foreach ($transactions as $transaction) {
 
-			if( in_array($transaction->repeating, $repeats) ){				
+			if( in_array($transaction->repeating, $repeats) ){
+
 				$transaction_time = Carbon::parse($transaction->transaction_time);
 				$now_time = Carbon::now();
 
@@ -120,6 +123,8 @@ class CreateRepeatingTransactions extends Command
 				}
 			}
 		}
+
+		$this->info('The command was successful!');
 
         return 0;
     }
