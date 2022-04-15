@@ -124,6 +124,7 @@ class Transaction extends Model
 		}
 		else if($type === 'VYDAJ'){
 			$this->deleteTransactionVydaj();
+			$this->decreaseCategoryBudget();
 			$this->delete();
 		}
 		else if($type == 'DLZOBA'){
@@ -175,6 +176,85 @@ class Transaction extends Model
 			if( $dept_paid && !$this->paid )
 			{
 				$this->createTransactionDlzoba();
+			}
+		}
+		
+	}
+
+	public function increaseCategoryBudget(){
+		if(!isset($this->category->id) ){
+			return;
+		}
+
+		$budgets = Budget::where('user_id', $this->user_id)
+		->where('category_id', $this->category->id)
+		->whereDate('start_time', '<=', Carbon::parse($this->getRawOriginal('transaction_time')))
+		->get();
+
+		foreach ($budgets as $budget) {
+			$start_time = Carbon::parse($budget->start_time);
+
+			if( $budget->budget_period === 'deň' )
+			{
+				$start_time = $start_time->addDay();
+			}
+			else if( $budget->budget_period === 'týždeň' )
+			{
+				$start_time = $start_time->addWeek();
+			}
+			else if( $budget->budget_period === 'mesiac' )
+			{
+				$start_time = $start_time->addMonth();
+			}
+			else if( $budget->budget_period === 'rok' )
+			{
+				$start_time = $start_time->addYear();
+			}
+
+			$transaction_time = Carbon::parse($this->getRawOriginal('transaction_time'));
+
+			if($start_time->gte($transaction_time)){
+				$budget->reached = $budget->reached + $this->value;
+				$budget->save();
+			}
+		}
+	}
+
+	public function decreaseCategoryBudget(){
+		if(!isset($this->category->id) ){
+			return;
+		}
+
+		$budgets = Budget::where('user_id', $this->user_id)
+		->where('category_id', $this->category->id)
+		->whereDate('start_time', '<=', Carbon::parse($this->getRawOriginal('transaction_time')))
+		->get();
+
+		foreach ($budgets as $budget) {
+			$start_time = Carbon::parse($budget->start_time);
+
+			if( $budget->budget_period === 'deň' )
+			{
+				$start_time = $start_time->addDay();
+			}
+			else if( $budget->budget_period === 'týždeň' )
+			{
+				$start_time = $start_time->addWeek();
+			}
+			else if( $budget->budget_period === 'mesiac' )
+			{
+				$start_time = $start_time->addMonth();
+			}
+			else if( $budget->budget_period === 'rok' )
+			{
+				$start_time = $start_time->addYear();
+			}
+
+			$transaction_time = Carbon::parse($this->getRawOriginal('transaction_time'));
+
+			if($start_time->gte($transaction_time)){
+				$budget->reached = $budget->reached - $this->value;
+				$budget->save();
 			}
 		}
 		
@@ -322,8 +402,7 @@ class Transaction extends Model
 		$finance_item = AccountItem::where('account_id', $this->sourceAccount->id)
 		->where('item_type_id', 3)
 		->where('currency_id', $this->currency->id)
-		->latest()->first();
-				
+		->latest()->first();				
 
 		if( isset($finance_item) ){
 			$finance_item->quantity = (floatval($finance_item->quantity) - floatval($this->value));
@@ -331,6 +410,8 @@ class Transaction extends Model
 
 			$this->decreaseAccountValue($this->sourceAccount->id);
 		}
+
+		$this->increaseCategoryBudget();
 	}
 
 	public function createAccountItemsPrijem(){
