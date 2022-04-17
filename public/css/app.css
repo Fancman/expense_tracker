@@ -3658,6 +3658,10 @@ select{
   --tw-bg-opacity: 1;
   background-color: rgb(209 250 229 / var(--tw-bg-opacity));
 }
+.bg-light-blue{
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 117 221 / var(--tw-bg-opacity));
+}
 .bg-purple{
   --tw-bg-opacity: 1;
   background-color: rgb(99 102 241 / var(--tw-bg-opacity));
@@ -3814,6 +3818,9 @@ select{
 .pt-14{
   padding-top: 3.5rem;
 }
+.pl-\[14rem\]{
+  padding-left: 14rem;
+}
 .pl-4{
   padding-left: 1rem;
 }
@@ -3870,15 +3877,6 @@ select{
 }
 .pr-4{
   padding-right: 1rem;
-}
-.pl-56{
-  padding-left: 14rem;
-}
-.pl-\[56px\]{
-  padding-left: 56px;
-}
-.pl-\[14rem\]{
-  padding-left: 14rem;
 }
 .text-left{
   text-align: left;
@@ -5509,14 +5507,6 @@ body{
 
   .\32xl\:grid-cols-12{
     grid-template-columns: repeat(12, minmax(0, 1fr));
-  }
-
-  .\32xl\:pl-96{
-    padding-left: 24rem;
-  }
-
-  .\32xl\:pl-\[96px\]{
-    padding-left: 96px;
   }
 
   .\32xl\:pl-\[24rem\]{

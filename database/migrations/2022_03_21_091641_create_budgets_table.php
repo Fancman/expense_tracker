@@ -22,7 +22,9 @@ return new class extends Migration
 			$table->foreignIdFor(Category::class);
 			$table->timestamp('start_time', $precision = 0);
 			$table->string('budget_period', 50);
-            $table->decimal('amount', $precision = 8, $scale = 2)->nullable();
+            $table->decimal('amount', $precision = 8, $scale = 2)->default(0)->nullable();
+			$table->decimal('reached', $precision = 8, $scale = 2)->default(0)->nullable();
+			$table->timestamps();
         });
     }
 

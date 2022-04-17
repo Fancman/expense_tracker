@@ -52,6 +52,7 @@ class TransactionModal extends Modal implements HasForms
 	public $transaction_sell_items = [];
 	public $attachments = [];
 	public $paid = false;
+	public $repeating = null;
 
 	public function show()
 	{
@@ -74,6 +75,7 @@ class TransactionModal extends Modal implements HasForms
 			'source_account_id' => $this->source_account_id,
 			'end_account_id' => $this->end_account_id,	
 			'paid' => $this->paid,	
+			'repeating' => $this->repeating,
 		];
 
         $this->form->fill($transaction_data);
@@ -140,6 +142,7 @@ class TransactionModal extends Modal implements HasForms
 			'source_account_id' => $this->transaction->source_account_id,
 			'end_account_id' => $this->transaction->end_account_id,	
 			'paid' => $this->transaction->paid,	
+			'repeating' => $this->transaction->repeating,
 		];
 
 		//dd($this->transaction->file);
@@ -172,6 +175,14 @@ class TransactionModal extends Modal implements HasForms
         return [
 			Select::make('transaction_type_id')
 				->options(TransactionType::all()->pluck('name', 'id'))->label('Typ transakcie')->required()->reactive(),
+			Select::make('repeating')
+				->options([
+					'denne' => 'denne',
+					'týždenne' => 'týždenne',
+					'mesačne' => 'mesačne',
+					'ročne' => 'ročne',
+				]
+			)->label('Opakovanie'),
 			TextInput::make('name')
 				->label('Nazov')->nullable(),
 			Checkbox::make('paid')->label('Zaplatene')
@@ -405,6 +416,7 @@ class TransactionModal extends Modal implements HasForms
 			'source_account_id' => $this->source_account_id,
 			'end_account_id' => $this->end_account_id,
 			'transaction_time' => $this->transaction_time,
+			'repeating' => (empty($this->repeating) ? null : $this->repeating),
 			'name' => $this->name,			
         ];
 
