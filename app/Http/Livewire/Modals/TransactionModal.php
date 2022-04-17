@@ -135,7 +135,7 @@ class TransactionModal extends Modal implements HasForms
 			'transaction_type_id' => $this->transaction->transaction_type_id,
 			'name' => $this->transaction->name,
 			'value' => $this->transaction->value,
-			'transaction_time' => $this->transaction->transaction_time,
+			'transaction_time' => $this->transaction->getRawOriginal('transaction_time'),
 			'currency_id' => $this->transaction->currency_id,
 			'category_id' => $this->transaction->category_id,
 			'address_book_id' => $this->transaction->address_book_id,
