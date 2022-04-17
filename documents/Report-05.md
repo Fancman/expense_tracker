@@ -42,6 +42,8 @@ URL: https://www.polkadot-hub.eu/public
 
 ### Zhrnutie
 
-Spravil som vytváranie a kontrolu budgetov, import csv je pripraveny ale nie dokončený lebo som za víkend nevykonal žiadnu transakciu kartou, čiže mi nedošlo csv na email. Spravil som prikazy ktore budu fungovat na kontrolu budgetov a opakovanie transkacie. Vyladil som frontend aby sa zobrazoval spravne na menšom rozlišení
+Spravil som vytváranie a kontrolu budgetov, import csv je pripraveny ale nie dokončený lebo som za víkend nevykonal žiadnu transakciu kartou, čiže mi nedošlo csv na email. Spravil som prikazy ktore budu fungovat na kontrolu budgetov a opakovanie transkacie. Vyladil som frontend aby sa zobrazoval spravne na menšom rozlišení.
+
+Vytvoril som nový branch deploy, po zmene ktorého za updatne live verzia na stránke. Vyvíjať budem na branchi master a na konci týžňa ho mergnem do deployu.
 
 Problémy som nemal žiadne a na riešení som strávil 8h 15min
