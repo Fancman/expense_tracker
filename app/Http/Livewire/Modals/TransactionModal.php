@@ -42,7 +42,7 @@ class TransactionModal extends Modal implements HasForms
 	public $transaction_type_id = '';
 	public $name = '';
 	public $value = '';
-	public $transaction_time = 'Apr 11, 2022 00:00:00';
+	public $transaction_time = '';
 	public $currency_id = '';
 	public $category_id = '';
 	public $address_book_id = '';
@@ -133,7 +133,7 @@ class TransactionModal extends Modal implements HasForms
 			'transaction_type_id' => $this->transaction->transaction_type_id,
 			'name' => $this->transaction->name,
 			'value' => $this->transaction->value,
-			'transaction_time' => $this->transaction->transaction_time,
+			'transaction_time' => $this->transaction->getRawOriginal('transaction_time'),
 			'currency_id' => $this->transaction->currency_id,
 			'category_id' => $this->transaction->category_id,
 			'address_book_id' => $this->transaction->address_book_id,
