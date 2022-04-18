@@ -493,6 +493,7 @@ class Transaction extends Model
 
 		return $amout;
 	}
+	
 	public function createAccountItemsPredaj($transaction_items, $default_currency){
 		$price_sum = 0;
 

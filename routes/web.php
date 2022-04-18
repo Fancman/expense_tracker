@@ -43,6 +43,7 @@ Route::get('/address-book', function(){
 })->name('address-book');
 
 Route::get('/accounts', [AccountController::class, 'index'])->name('accounts');
+Route::get('/accounts/refresh_prices', [AccountController::class, 'refresh_prices'])->name('refresh_prices');
 
 Route::get('/statistics', [StatisticsController::class, 'index'])->name('statistics');
 
