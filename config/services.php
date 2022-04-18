@@ -37,4 +37,8 @@ return [
 		'redirect' => env('APP_URL') . 'google/google-callback',
 	],
 
+	'polygon' => [
+		'key' => env('POLYGON_API_KEY'),
+	],
+
 ];
