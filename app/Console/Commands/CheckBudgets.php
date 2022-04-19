@@ -48,24 +48,24 @@ class CheckBudgets extends Command
 				$start_time = Carbon::parse($budget->start_time);
 				$now_time = Carbon::now();
 
-				if( $budget->repeating === 'deň' )
+				if( $budget->budget_period === 'deň' )
 				{
 					$end_start_time = $start_time->addDay();
 				}
-				else if( $budget->repeating === 'týždeň' )
+				else if( $budget->budget_period === 'týždeň' )
 				{
 					$end_start_time = $start_time->addWeek();
 				}
-				else if( $budget->repeating === 'mesiac' )
+				else if( $budget->budget_period === 'mesiac' )
 				{
 					$end_start_time = $start_time->addMonth();
 				}
-				else if( $budget->repeating === 'rok' )
+				else if( $budget->budget_period === 'rok' )
 				{
 					$end_start_time = $start_time->addYear();
 				}
 
-				if( $now_time->gte($end_start_time) ){
+				if( isset($end_start_time) && $now_time->gte($end_start_time) ){
 					$budget->start_time = $end_start_time;
 					$budget->reached = 0;
 					
