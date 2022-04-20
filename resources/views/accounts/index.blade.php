@@ -5,7 +5,7 @@
 	<div class="flex items-center">
 
 		<button x-data="{}" x-on:click="window.livewire.emitTo('modals.account-modal', 'show')" class="bg-navy-blue text-white px-3 py-2 rounded">Vytvorit ucet</button>
-		<button x-data="{}" x-on:click="window.livewire.emitTo('refresh-prices', 'index')" class="bg-navy-blue text-white px-3 py-2 rounded  ml-5">Obnovit ceny</button>
+		<button x-data="{}" x-on:click="window.livewire.emitTo('modals.account-modal', 'refresh_prices')" class="bg-navy-blue text-white px-3 py-2 rounded  ml-5">Obnovit ceny</button>
 		
 	</div>
 
@@ -24,5 +24,4 @@
 
 @section('livewire-custom-scripts')
 	@livewire('modals.account-modal')
-	@livewire('refresh-prices')
 @endsection

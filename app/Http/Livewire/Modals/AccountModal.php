@@ -7,9 +7,10 @@ use App\Models\Account;
 use App\Models\Currency;
 use App\Models\ItemType;
 
+use App\Jobs\UpdatePrices;
+use App\Models\AccountItem;
 use App\Models\Transaction;
 use App\Http\Livewire\Modal;
-use App\Models\AccountItem;
 use Illuminate\Contracts\View\View;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Contracts\HasForms;
@@ -90,6 +91,14 @@ class AccountModal extends Modal implements HasForms
     {
         return view('livewire.account-modal');
     }
+
+	public function refresh_prices() {
+		$user_id = (auth()->user() ? auth()->user()->id : null);
+
+		UpdatePrices::dispatch($user_id);
+
+		$this->emit('refreshParent');
+	}
 
 	public function submit()
     {

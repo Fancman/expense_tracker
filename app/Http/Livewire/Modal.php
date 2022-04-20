@@ -14,6 +14,7 @@ class Modal extends Component
 		'show' => 'show',
 		'edit' => 'edit',
 		'delete' => 'delete',
+		'refresh_prices' => 'refresh_prices',
 	];
 	
 	public function show()
