@@ -16,7 +16,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         //$schedule->command('check_budgets')->everyFiveMinutes();
-		$schedule->exec('/usr/lib64/php8.0/bin/php /var/www5/p5673/polkadot-hub.eu/web/current/public/current/artisan command:check_budgets')->everyMinute();
+		$schedule->exec('/usr/lib64/php8.0/bin/php /var/www5/p5673/polkadot-hub.eu/web/current/public/current/artisan command:check_budgets')->everyFiveMinutes();
+		$schedule->exec('/usr/lib64/php8.0/bin/php /var/www5/p5673/polkadot-hub.eu/web/current/public/current/artisan command:create_repeating_transactions')->everyFiveMinutes();
         // $schedule->command('inspire')->hourly();
     }
 
