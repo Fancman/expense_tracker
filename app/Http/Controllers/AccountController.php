@@ -20,6 +20,7 @@ class AccountController extends Controller
 	public function refresh_prices()
     {
 		$user_id = (auth()->user() ? auth()->user()->id : 4);
-        UpdatePrices::dispatch($user_id)->onQueue('host-laravel-d13296:worker_0');
+        //UpdatePrices::dispatch($user_id)->onQueue('host-laravel-d13296:worker_0');
+        UpdatePrices::dispatch($user_id);
     }
 }
