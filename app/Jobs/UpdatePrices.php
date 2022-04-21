@@ -74,5 +74,6 @@ class UpdatePrices implements ShouldQueue, ShouldBeUnique
 
 		$user = User::find($user_id);
 		$user->fetching_prices = false;
+		$user->save();
     }
 }
