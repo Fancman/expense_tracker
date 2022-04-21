@@ -1,6 +1,6 @@
 <div wire:poll.20000ms.keep-alive>
 	@if ($refreshing_prices == false)
-	<button x-data="{}" wire:click="refreshing()" x-on:click="window.livewire.emitTo('modals.account-modal', 'refresh_prices')" class="bg-navy-blue text-white px-3 py-2 rounded  ml-5">Obnovit ceny</button>
+	<button x-data="{}" wire:click="refreshing()" class="bg-navy-blue text-white px-3 py-2 rounded  ml-5">Obnovit ceny</button>
 	@else
 	<button disabled type="button" class="bg-navy-blue text-white px-3 py-2 rounded  ml-5">
 		<svg role="status" class="inline mr-3 w-4 h-4 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -11,7 +11,3 @@
 	</button>
 	@endif
 </div>
-
-@section('livewire-custom-scripts')
-	@livewire('modals.account-modal')
-@endsection

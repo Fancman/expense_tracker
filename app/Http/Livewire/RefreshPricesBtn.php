@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use App\Models\User;
 use Livewire\Component;
+use App\Jobs\UpdatePrices;
 
 class RefreshPricesBtn extends Component
 {
@@ -11,6 +12,19 @@ class RefreshPricesBtn extends Component
 
 	public function refreshing(){
 		$this->refreshing_prices = true;
+		
+		$user_id = (auth()->user() ? auth()->user()->id : null);
+
+		if($user_id){
+			$user = User::find($user_id);
+			$user->fetching_prices = true;
+			$user->save();
+
+			UpdatePrices::dispatch($user);
+		}		
+
+		//$this->emit('refreshParent');
+
 		return view('livewire.refresh-prices-btn');
 	}
 
