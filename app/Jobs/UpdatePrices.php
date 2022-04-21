@@ -2,14 +2,15 @@
 
 namespace App\Jobs;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-
+use App\Models\User;
 use App\Models\AccountItem;
+use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 
 class UpdatePrices implements ShouldQueue, ShouldBeUnique
 {
@@ -70,5 +71,8 @@ class UpdatePrices implements ShouldQueue, ShouldBeUnique
 			$account_item->updateCryptoItemPriceFromAPI();		
 			$this->job_tries_count++;	
 		}
+
+		$user = User::find($user_id);
+		$user->fetching_prices = false;
     }
 }

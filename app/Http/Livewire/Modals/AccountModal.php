@@ -3,10 +3,11 @@
 namespace App\Http\Livewire\Modals;
 
 use Closure;
+use App\Models\User;
 use App\Models\Account;
 use App\Models\Currency;
-use App\Models\ItemType;
 
+use App\Models\ItemType;
 use App\Jobs\UpdatePrices;
 use App\Models\AccountItem;
 use App\Models\Transaction;
@@ -94,6 +95,12 @@ class AccountModal extends Modal implements HasForms
 
 	public function refresh_prices() {
 		$user_id = (auth()->user() ? auth()->user()->id : null);
+
+		if($user_id){
+			$user = User::find($user_id);
+			$user->fetching_prices = true;
+			$user->save();
+		}
 
 		UpdatePrices::dispatch($user_id);
 
