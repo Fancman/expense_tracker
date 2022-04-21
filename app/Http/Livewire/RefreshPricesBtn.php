@@ -11,6 +11,7 @@ class RefreshPricesBtn extends Component
 
 	public function refreshing(){
 		$this->refreshing_prices = true;
+		return view('livewire.refresh-prices-btn');
 	}
 
 	public function mount()
