@@ -12,7 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class UpdatePrices implements ShouldQueue, ShouldBeUnique
+class UpdatePrices implements ShouldQueue//, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -30,10 +30,10 @@ class UpdatePrices implements ShouldQueue, ShouldBeUnique
     }
 
 
-	public function uniqueId()
+	/*public function uniqueId()
     {
         return $this->user->id;
-    }
+    }*/
 
     /**
      * Execute the job.
