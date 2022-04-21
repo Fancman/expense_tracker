@@ -100,9 +100,9 @@ class AccountModal extends Modal implements HasForms
 			$user = User::find($user_id);
 			$user->fetching_prices = true;
 			$user->save();
-		}
 
-		UpdatePrices::dispatch($user_id);
+			UpdatePrices::dispatch($user);
+		}		
 
 		$this->emit('refreshParent');
 	}

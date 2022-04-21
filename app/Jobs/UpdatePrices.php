@@ -16,7 +16,7 @@ class UpdatePrices implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-	protected $user_id;
+	protected $user;
 	protected $job_tries_count = 0;
 
     /**
@@ -24,9 +24,15 @@ class UpdatePrices implements ShouldQueue, ShouldBeUnique
      *
      * @return void
      */
-    public function __construct(int $user_id)
+    public function __construct(User $user)
     {
-        $this->user_id = $user_id;
+        $this->user = $user->withoutRelations();
+    }
+
+
+	public function uniqueId()
+    {
+        return $this->user->id;
     }
 
     /**
@@ -72,8 +78,13 @@ class UpdatePrices implements ShouldQueue, ShouldBeUnique
 			$this->job_tries_count++;	
 		}
 
-		$user = User::find($user_id);
-		$user->fetching_prices = false;
-		$user->save();
+		if($user_id){
+			$user = User::find($user_id);
+			$user->fetching_prices = false;
+			$user->save();
+		}else{
+			User::all()->update(['fetching_prices' => false]);
+		}
+		
     }
 }
