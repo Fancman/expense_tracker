@@ -42,7 +42,7 @@ class UpdatePrices implements ShouldQueue, ShouldBeUnique
      */
     public function handle()
     {
-		$user_id = $this->user_id;
+		$user_id = $this->user->id;
 
         $account_items = AccountItem::with('itemType')
 		->when($user_id, function($query, $user_id) {
