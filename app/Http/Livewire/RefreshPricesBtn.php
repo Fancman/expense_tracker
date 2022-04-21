@@ -17,14 +17,21 @@ class RefreshPricesBtn extends Component
     {
 		$user_id = (auth()->user() ? auth()->user()->id : null);
 
-		if($user_id){
+		if($user_id){			
+
 			$user = User::find($user_id);
+
+			if($this->refreshing_prices == true && $user->fetching_prices == false){
+				$this->emitTo('tables.account-table', 'refreshParent');
+			}
+
 			$this->refreshing_prices = $user->fetching_prices;
 		}
     }
 
     public function render()
     {
+		$this->mount();
         return view('livewire.refresh-prices-btn');
     }
 }
