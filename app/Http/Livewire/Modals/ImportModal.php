@@ -41,7 +41,7 @@ class ImportModal extends Modal implements HasForms
 			Select::make('account_id')
 				->options(Account::where("user_id", (auth()->user() ? auth()->user()->id : 4))->pluck('name', 'id'))
 				->label('Účet')->required(),	
-			FileUpload::make('files')->label('Subor')->acceptedFileTypes(['text/csv'])->required(),	
+			FileUpload::make('files')->label('Subor')->required(),	
         ];
     } 
 
