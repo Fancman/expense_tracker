@@ -35,6 +35,8 @@ class Transaction extends Model
         'value',
 		'repeating',
 		'transaction_type_id',
+		'note',
+		'note_number'
     ];
 
 	public function __construct()

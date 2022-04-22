@@ -41,6 +41,7 @@ class TransactionModal extends Modal implements HasForms
 
 	public $transaction_type_id = '';
 	public $name = '';
+	public $note = '';
 	public $value = '';
 	public $transaction_time = '';
 	public $currency_id = '';
@@ -53,6 +54,7 @@ class TransactionModal extends Modal implements HasForms
 	public $attachments = [];
 	public $paid = false;
 	public $repeating = null;
+	public $showMessage = false;
 
 	public function show()
 	{
@@ -75,6 +77,7 @@ class TransactionModal extends Modal implements HasForms
 			'source_account_id' => $this->source_account_id,
 			'end_account_id' => $this->end_account_id,	
 			'paid' => $this->paid,	
+			'note' => $this->note,	
 			'repeating' => $this->repeating,
 		];
 
@@ -84,16 +87,21 @@ class TransactionModal extends Modal implements HasForms
 	public function delete($id){
 		$this->transaction = Transaction::find($id);
 
+		if(!$this->transaction){
+			$this->emit('refreshParent');
+			return;
+		}
+
 		$transaction_type = $this->transaction->transactionType;
 
 		$this->transaction->deleteTransaction($transaction_type->code);
-
-		$this->reset();
+		
+		//$this->reset();
 
 		$this->emit('refreshParent');
 
-		$this->emit('showMessage');
-
+		$this->emit('showMessage');	
+		
 		session()->flash('message', 'Transakcia bola uspesne vymazana.');	
 	}
 
@@ -142,6 +150,7 @@ class TransactionModal extends Modal implements HasForms
 			'source_account_id' => $this->transaction->source_account_id,
 			'end_account_id' => $this->transaction->end_account_id,	
 			'paid' => $this->transaction->paid,	
+			'note' => $this->transaction->note,
 			'repeating' => $this->transaction->repeating,
 		];
 
@@ -185,6 +194,8 @@ class TransactionModal extends Modal implements HasForms
 			)->label('Opakovanie'),
 			TextInput::make('name')
 				->label('Nazov')->nullable(),
+			TextInput::make('note')
+				->label('Poznamka')->nullable(),
 			Checkbox::make('paid')->label('Zaplatene')
 				->hidden(function (Closure $get) {
 						$transaction_type =  $get('transaction_type_id');	
@@ -394,10 +405,9 @@ class TransactionModal extends Modal implements HasForms
         $this->validate();
 
 		if( isset($this->transaction) ){
-			$transaction_type = $this->transaction->transactionType;
-
+			
 			if( !in_array($this->transaction->transactionType->id, [5])){
-				$this->transaction->deleteTransaction($transaction_type->code);
+				$this->transaction->deleteTransaction($this->transaction->transactionType->code);
 			}
 
 			$updating = true;
@@ -415,9 +425,9 @@ class TransactionModal extends Modal implements HasForms
 			'address_book_id' => $this->address_book_id,
 			'source_account_id' => $this->source_account_id,
 			'end_account_id' => $this->end_account_id,
-			'transaction_time' => $this->transaction_time,
+			'transaction_time' => $this->note,
+			'note' => $this->transaction_time,
 			'repeating' => (empty($this->repeating) ? null : $this->repeating),
-			'name' => $this->name,			
         ];
 
 		if( $this->paid && !$this->transaction->paid ){
@@ -483,19 +493,21 @@ class TransactionModal extends Modal implements HasForms
 
 		$this->transaction->createTransactionItems($transaction_type->code, $default_currency, $this->transaction_sell_items, $this->transaction_items, $dept_paid);
 		
-		$this->reset();
-
 		$message = ($updating ? 'Transakcia bola uspesne upravena' : 'Transakcia bola uspesne vytvorena');
+	
+		$this->reset();
 
 		$this->dispatchBrowserEvent('transactionStore',
 		[
             'type' => 'success',
             'message' => $message
         ]);
+		
 
 		$this->emit('refreshParent');
 
-		$this->emit('showMessage');
+		$this->emit('showMessage');			
+		
 
 		session()->flash('message', $message);	
     }
