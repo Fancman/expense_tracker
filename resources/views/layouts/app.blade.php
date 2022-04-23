@@ -66,7 +66,7 @@
 			</div>
 		</aside>
 
-		<div class="flex flex-col flex-1 w-[calc(100%-14rem)] 2xl:w-full pl-[14rem] 2xl:pl-[24rem] bg-light-gray">
+		<div class="flex flex-col flex-1 w-[calc(100%-14rem)] 2xl:w-full pl-[14rem] 2xl:pl-[24rem] bg-light-gray overflow-y-auto">
 			<header class="px-8 border-b">
 				<div class="flex items-center justify-between h-16">
 					@auth

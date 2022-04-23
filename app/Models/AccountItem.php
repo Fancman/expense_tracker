@@ -10,6 +10,8 @@ class AccountItem extends Model
 {
     use HasFactory;
 
+	//protected $appends = ['total_value'];
+
 	protected $fillable = [
         'name',
 		'account_id',
@@ -38,6 +40,11 @@ class AccountItem extends Model
     {
         return $this->belongsTo(ItemType::class, 'item_type_id');
     }
+
+	public function getTotalValueAttribute():  float
+	{
+		return floatval(floatval($this->current_price) * floatval($this->quantity));
+	}
 
 	public function currency()
     {

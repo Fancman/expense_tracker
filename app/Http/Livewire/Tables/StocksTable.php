@@ -4,7 +4,7 @@ namespace App\Http\Livewire\Tables;
 
 use App\Models\Account;
 use App\Models\User;
-use App\Models\AccountItems;
+use App\Models\AccountItem;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -18,14 +18,16 @@ class StocksTable extends Component
     {
 		$user_id = (auth()->user() ? auth()->user()->id : 4);
 
-		$user = User::find($user_id)->latest()->first();
+		/*$account_items = AccountItem::with('account')->with('account.user')
+		->whereRelation('account.user', 'id', $user_id)
+		->whereRelation('account.user', 'id', $user_id)
+		->get();*/
 
-		$accounts = $user->accounts();
-
-		$account_items = $accounts->accountItems()
-		->whereRelation(
-			'itemType', 'code', '=', 'AKCIA'
-		)->get();
+		$account_items = AccountItem::whereRelation('account.user', 'id', $user_id)
+		->whereRelation('account.user', 'id', $user_id)
+		->whereRelation('itemType', 'code', 'AKCIA')
+		->get()
+		->sortByDesc('total_value', SORT_NATURAL);
 
         return view('livewire.tables.stocks-table', [
 			'account_items' => $account_items
