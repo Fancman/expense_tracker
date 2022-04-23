@@ -48,4 +48,9 @@ class User extends Authenticatable
         return $this->hasOne(Currency::class);
     }
 
+    public function accounts()
+    {
+        return $this->hasMany(Account::class);
+    }
+
 }

@@ -25,6 +25,11 @@ class Account extends Model
 		'user_id',
     ];
 
+    public function accountItems()
+    {
+        return $this->hasMany(AccountItem::class);
+    }
+
 
     public function currency()
     {

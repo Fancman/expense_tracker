@@ -12,13 +12,26 @@
 	<div class="flex items-center">
 
 		<!-- Table -->
-		<div class="bg-white w-full mx-auto py-6">
+		<div class="bg-white w-full mx-auto my-6">
 			<div class="overflow-x-auto">
 				@livewire('tables.account-table')
 			</div>
 		</div>
-	
 		
+	</div>
+
+	<div class="grid grid-cols-2 gap-4">
+		<div class="shadow-black bg-white border-slate-200 border rounded-sm">
+			<header class="py-4 px-5 border-b">
+				<h2 class="font-semibold text-lg">Akcie</h2>
+			</header>
+			<div class="p-3">
+				<div class="overflow-x-auto">
+					@livewire('tables.stocks-table')
+				</div>
+			</div>
+		</div>
+		<div>09</div>
 	</div>
 @endsection
 

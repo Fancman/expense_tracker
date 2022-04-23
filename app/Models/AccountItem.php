@@ -42,7 +42,7 @@ class AccountItem extends Model
 	public function currency()
     {
         return $this->belongsTo(Currency::class, 'currency_id');
-    }
+    }	
 
 	public function getStock(){
 		$api_key = config('services.polygon.key');
