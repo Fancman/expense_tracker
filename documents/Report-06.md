@@ -1,6 +1,6 @@
 # Report 5.
 
-Týždeň 8. (12.4 - 18.4.2022)
+Týždeň 9. (19.4 - 15.4.2022)
 
 Meno: Tomáš Figura
 
@@ -8,42 +8,44 @@ Názov projekt: Expense Tracker
 URL: https://www.polkadot-hub.eu/public
 
 ### Týždenný plán
-- Odhlasovanie sa - Dokončené v predošlom týždni
-- Nastavenie preferovaného zobrazovania času a následná aplikácia na stránkach - 45min
-- Opakujúce sa transakcie - 2h
-- Import excelu z VÚB exportu a vytvorenie transakcií k jednotlivým položkám - 1h 30m
-- Vyladenie Frontendu - 1h
-- Nastavenie budgetov a ich kontrola - 3h
+- Implementácia načítania údajov o akciách z API - 1h 
+- Implementácia načítania údajov o kryptomenách z API - 1h
+- Implementácia spustenia asynchrónneho procesu na získanie údajov po kliknutí používateľom - 5 h
+- Zobrazenie položiek akcií, kryptomien a financií pri zobrazení účtov - 3h
+- Import VUB .csv exportu ako transakcií - 3h
 
 ### Týždenné zhotovenie
 
-- Fixol som aby sa frontend zobrazoval správne aj na menších rozlíšeniach a zmenil som menu na fixed ab84d64402339ecd6a265b13b7695151627d3201, a47c4ff3499cf717f7da8ed0929d1db782ebc529 
-
-- Zobrazovanie času podľa toho aké si používateľ nastavil - 1cf99b05b8e967c8c1878f51545d26d46857a9c0 
-
-- Vytvoril som command ktory bude cronjob spúštať v intervaloch a bude kontrolovať či prešiel dostatočne dlhý čas na replikovanie transakcie beca073c52184743d8983b468b98e576eee205d8 
-
-- Pri vytváraní transakcie výdaju som pridal možnosť opakovania transakcie s výberom 0e7baabdbc556f769ad63b25e5bb8a8cf443d4f2 
-
-- Modálové okno a logika na import .csv súboru exportu z VUB 6a3c6b0d09a8178783611c2b7193d6e812882a61 
-
-- Vytvoril som možnosť vytvorenia budgetov na podstránke Kategórií, po vytvorení sa zobrazujú v tabuľke pričom sa dajú aj mazať - a12a0c0af13fa86230fcf143603f169e6ac8929d 
-
-- Command ktorý bude spúštať cron job a kontroluje či aktivý budget neprekročil dlžku intervalu. V takom pripade sa vynuluje dosiahnutá hodnota kategórie a nastaví sa začiatočný čas nového intervalu - 3774f6c4f546628131edc3f4c75732d64de67e53 
-
-- Pri výtváraní a mazaní transakcie výdaju sa zvačšuje/zmenšuje dosiahnutá hodnota budgetu 3774f6c4f546628131edc3f4c75732d64de67e53 
+- Získavanie cien kryptomien a akcií z API pomocou príkazu e76ccdd45ec457a1e96c518dd3e8931389c2cabb
+- Spúšťanie commandu na kontrolu budgetov každých 5 min 2535bccf4a9445610b097a63afcf82d522a77883
+- Nastavenie aby bežal na hostingu task scheduler
+- Vytvorenie Job-u pre queue ktorý bude získavať aktuálne hodnoty položiek 757578132c8b7b6d50d796767a4c62548efc7982, 51e88f82f9d68e28bf4a5687dcf541454dbeff24, dffc16e952e41ba432618df4d2829a205107c8cd
+- Pridanie tlačítka do sekcie účtov ktoré dispatchne job a pridanie poľa do tabuľky na indikáciu či sa získavaju ceny akurát d6020c86a57e37c236e2e8a55348c5afed55c0b8, d4582d68569697bc3940128deda78e7bc85ebdf3,
+a296529e006a9da6900c112547b7a035625f5722
+- CSV import dokončenie 9bd121cfafdeb2eea1105aa5969924b2bf2bc668
+- Zobrazenie položiek účtov pre používateľa v tabuľkach a zoradenie od najväčšej hodnoty
+2e3be273e201e8a31bff21d2ad724189d653e205, 36d3b024e2b457743d72b68cdb7514f5e3c266a0
 
 
 ### Plány na ďalší týždeň
-- Implementácia načítania údajov o akciách z API - 3h 
-- Implementácia načítania údajov o kryptomenách z API - 3h
-- Implementácia spustenia asynchrónneho procesu na získanie údajov po kliknutí používateľom - 1 h
-- Odosielanie e-mailových reportov - 2h
+- Responzivita a doladiť frontend - 3h
+- Testovanie - 3 hodín
+- Získavanie cien položiek pravidelne každý deň aby sa dal vytvoriť graf vývoja hodnoty celkoveho majetku - 2h
+
 
 ### Zhrnutie
 
-Spravil som vytváranie a kontrolu budgetov, import csv je pripraveny ale nie dokončený lebo som za víkend nevykonal žiadnu transakciu kartou, čiže mi nedošlo csv na email. Spravil som prikazy ktore budu fungovat na kontrolu budgetov a opakovanie transkacie. Vyladil som frontend aby sa zobrazoval spravne na menšom rozlišení.
+Používateľ može naimportovať príjmi a výdaje z .csv exportu VUB banky. 
 
-Vytvoril som nový branch deploy, po zmene ktorého za updatne live verzia na stránke. Vyvíjať budem na branchi master a na konci týžňa ho mergnem do deployu.
+Vie si pozrieť zoznam všetkých svojich položiek a ich hodnoty (sú podľa nej zoradené).
 
-Problémy som nemal žiadne a na riešení som strávil 8h 15min
+Po stlačení tlačítka sa vytvorí job ktorý po spracovaní workerom získa aktuálne ceny akcií a kryptomien ktoré vlastní, pričom podľa toho zmení celkovú hodnotu účtov.
+
+Je nastavený taskc scheduler ktorý kontroluje budgety
+
+
+### Problémy
+
+Hlavne s nastavovaním workerov na hostinguu, následne keď sa mi to podarilo tak som zistil že vykonanie jobu je limitované na 60 sekund čo nie je dostatočné, lebo cez API mam povolených iba 5 requestov za minútu.
+
+Potom som mal problém so zobrazovaním správy po úspešnom vytvorení transakcie alebo importe transakcií.
