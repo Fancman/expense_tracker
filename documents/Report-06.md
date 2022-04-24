@@ -1,6 +1,6 @@
-# Report 5.
+# Report 6.
 
-Týždeň 9. (19.4 - 15.4.2022)
+Týždeň 9. (19.4 - 25.4.2022)
 
 Meno: Tomáš Figura
 
@@ -31,6 +31,7 @@ a296529e006a9da6900c112547b7a035625f5722
 - Responzivita a doladiť frontend - 3h
 - Testovanie - 3 hodín
 - Získavanie cien položiek pravidelne každý deň aby sa dal vytvoriť graf vývoja hodnoty celkoveho majetku - 2h
+- Dokončovanie 3h
 
 
 ### Zhrnutie
