@@ -41,11 +41,12 @@ Vie si pozrieť zoznam všetkých svojich položiek a ich hodnoty (sú podľa ne
 
 Po stlačení tlačítka sa vytvorí job ktorý po spracovaní workerom získa aktuálne ceny akcií a kryptomien ktoré vlastní, pričom podľa toho zmení celkovú hodnotu účtov.
 
-Je nastavený taskc scheduler ktorý kontroluje budgety
-
+Je nastavený task scheduler ktorý kontroluje budgety a opakujúce sa transakcie.
 
 ### Problémy
 
-Hlavne s nastavovaním workerov na hostinguu, následne keď sa mi to podarilo tak som zistil že vykonanie jobu je limitované na 60 sekund čo nie je dostatočné, lebo cez API mam povolených iba 5 requestov za minútu.
+Hlavne s nastavovaním workerov na hostingu, následne keď sa mi to podarilo tak som zistil že vykonanie jobu je limitované na 60 sekund čo nie je dostatočné, lebo cez API mam povolených iba 5 requestov za minútu.
 
 Potom som mal problém so zobrazovaním správy po úspešnom vytvorení transakcie alebo importe transakcií.
+
+Na zadaní som strávil 13 hodín tento týždeň.

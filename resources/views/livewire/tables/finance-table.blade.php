@@ -20,7 +20,7 @@
                     <tr>
                         <td class="p-2">
                             <div class="flex items-center"> 
-                                <div class="text-slate-800">{{ $account_item->name }}</div>
+                                <div class="text-slate-800">{{ $account_item->currency->name }}</div>
                             </div>
                         </td>
                         <td class="p-2">

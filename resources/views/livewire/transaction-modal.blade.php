@@ -2,7 +2,7 @@
 	@if (session()->has('message'))
 		<div 
 		x-data="{ showMessage: false }"
-		x-init="@this.on('showAndHide', () => {
+		x-init="@this.on('showMessage', () => {
 			showMessage = true;
 			setTimeout(() => showMessage = false, 5000);
 		})"
