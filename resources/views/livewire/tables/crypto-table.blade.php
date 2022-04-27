@@ -18,14 +18,14 @@
                 <tbody class="font-medium text-sm" >
                     @foreach($account_items as $account_item)
                     <tr>
-                        <td class="p-2">
+						<td class="p-2">
                             <div class="flex items-center"> 
                                 <div class="text-slate-800">{{ $account_item->name }}</div>
                             </div>
                         </td>
                         <td class="p-2">
                             <div class="flex items-center"> 
-                                <div class="text-slate-800">{{ $account_item->quantity }}</div>
+                                <div class="text-slate-800">{{ $account_item->total_quantity }}</div>
                             </div>
                         </td>
                         <td class="p-2">
@@ -38,9 +38,14 @@
                                 <div class="text-slate-800">{{ $account_item->current_price }}</div>
                             </div>
                         </td>
+						<td class="p-2">
+                            <div class="flex items-center"> 
+                                <div class="text-slate-800">{{ $account_item->currency_name }}</div>
+                            </div>
+                        </td>
                         <td class="p-2">
                             <div class="flex items-center"> 
-                                <div class="text-slate-800">{{ $account_item->total_value }}</div>
+                                <div class="text-slate-800">{{ $account_item->total_value_sum }}</div>
                             </div>
                         </td>
                     </tr>

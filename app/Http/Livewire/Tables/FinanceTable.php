@@ -2,11 +2,12 @@
 
 namespace App\Http\Livewire\Tables;
 
-use App\Models\Account;
 use App\Models\User;
-use App\Models\AccountItem;
+use App\Models\Account;
 use Livewire\Component;
+use App\Models\AccountItem;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\DB;
 
 class FinanceTable extends Component
 {
@@ -19,11 +20,13 @@ class FinanceTable extends Component
 		$user_id = (auth()->user() ? auth()->user()->id : 4);
 
 
-		$account_items = AccountItem::with('currency')
+		$account_items = AccountItem::select(DB::raw('currencies.name AS name, SUM(quantity) as total_quantity'))
+		->join('currencies', 'account_items.currency_id', '=', 'currencies.id')
 		->whereRelation('account.user', 'id', $user_id)
 		->whereRelation('itemType', 'code', 'PENIAZE')
+		->groupBy('currencies.name')
 		->get()
-		->sortByDesc('total_value', SORT_NATURAL);
+		->sortByDesc('total_quantity', SORT_NATURAL);
 
 		/*$test = $account_items->groupBy('currency.name')->map(function ($row) {
 			return [
