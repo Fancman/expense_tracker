@@ -2993,6 +2993,10 @@ select{
   margin-top: 0.25rem;
   margin-bottom: 0.25rem;
 }
+.my-5{
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
 .ml-1{
   margin-left: 0.25rem;
 }
@@ -3438,6 +3442,9 @@ select{
 .justify-between{
   justify-content: space-between;
 }
+.gap-4{
+  gap: 1rem;
+}
 .gap-6{
   gap: 1.5rem;
 }
@@ -3449,9 +3456,6 @@ select{
 }
 .gap-2{
   gap: 0.5rem;
-}
-.gap-4{
-  gap: 1rem;
 }
 .space-y-2 > :not([hidden]) ~ :not([hidden]){
   --tw-space-y-reverse: 0;
@@ -4185,12 +4189,6 @@ select{
 .ease-out{
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
-.masonry {
-            -moz-column-gap: 1.5em;
-                 column-gap: 1.5em;
-            -moz-column-count: 1;
-                 column-count: 1;
-        }
 
 body{
 	font-family: 'Source Sans Pro', sans-serif;
@@ -5014,12 +5012,6 @@ body{
   .sm\:text-right{
     text-align: right;
   }
-        .sm\:masonry-sm {
-            -moz-column-gap: 1.5em;
-                 column-gap: 1.5em;
-            -moz-column-count: 2;
-                 column-count: 2;
-        }
 }
 
 @media (min-width: 768px){
@@ -5188,12 +5180,6 @@ body{
     padding-top: 6rem;
     padding-bottom: 6rem;
   }
-        .md\:masonry-md {
-            -moz-column-gap: 1.5em;
-                 column-gap: 1.5em;
-            -moz-column-count: 3;
-                 column-count: 3;
-        }
 }
 
 @media (min-width: 1024px){

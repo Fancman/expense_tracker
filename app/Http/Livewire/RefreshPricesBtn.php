@@ -17,13 +17,11 @@ class RefreshPricesBtn extends Component
 
 		if($user_id){
 			$user = User::find($user_id);
-			
-			UpdatePrices::dispatch($user);
 
 			$user->fetching_prices = true;
 			$user->save();
-
 			
+			UpdatePrices::dispatch($user);	
 		}		
 
 		//$this->emit('refreshParent');

@@ -12,7 +12,7 @@
 	<div class="flex items-center">
 
 		<!-- Table -->
-		<div class="bg-white w-full mx-auto py-6">
+		<div class="bg-white w-full mx-auto px-5 my-5 shadow-black border-slate-200 border rounded-sm">
 			<div class="overflow-x-auto">
 				@livewire('tables.category-table')
 			</div>
@@ -23,7 +23,7 @@
 	<div class="flex flex-col">
 		<h1 class="text-4xl font-semibold">Budgety</h1>
 		<!-- Table -->
-		<div class="bg-white w-full mx-auto py-6">
+		<div class="bg-white w-full mx-auto px-5 my-5 shadow-black border-slate-200 border rounded-sm">
 			<div class="overflow-x-auto">
 				@livewire('tables.budget-table')
 			</div>

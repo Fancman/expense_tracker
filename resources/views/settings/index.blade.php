@@ -10,7 +10,7 @@
 
 	<div class="flex items-center">
 
-		<div class="bg-white w-full mx-auto py-6">
+		<div class="bg-white w-full mx-auto p-6 my-5 shadow-black border-slate-200 border rounded-sm">
 			<div class="overflow-x-auto">
 				<div class="flex">
 					<div class="mb-3 xl:w-64">
@@ -80,7 +80,7 @@
 
 				<div class="flex">					
 
-					<div class="mb-3 xl:w-125 ml-5">
+					<div class="mb-3 xl:w-125">
 						<div class="flex items-center">
 							<span class="text-sm border-2 rounded-l px-4 py-2 bg-gray-100 whitespace-no-wrap w-64 mr-4">Zapamatat prihlasenie:</span>
 							<input class="w-5 h-5 form-check-input appearance-none border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer" type="checkbox" value="" {{ $user->remember_login ? 'checked' : ''}}>

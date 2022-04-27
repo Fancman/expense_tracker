@@ -13,7 +13,7 @@
 	<div class="flex items-center">
 
 		<!-- Table -->
-		<div class="bg-white w-full mx-auto py-6">
+		<div class="bg-white w-full mx-auto py-6 px-5 mt-5 shadow-black border-slate-200 border rounded-sm">
 			<div class="overflow-x-auto">
 				@livewire('tables.transaction-table')
 			</div>
