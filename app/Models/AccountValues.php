@@ -21,4 +21,9 @@ class AccountValues extends Model
         'value'
     ];
 
+	public function getValueDateAttribute()
+	{
+		return $this->created_at->format('d.m.Y');
+	}
+
 }

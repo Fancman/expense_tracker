@@ -36,7 +36,6 @@ class StocksTable extends Component
 		)
 		->join('currencies', 'account_items.currency_id', '=', 'currencies.id')
 		->whereRelation('account.user', 'id', $user_id)
-		->whereRelation('account.user', 'id', $user_id)
 		->whereRelation('itemType', 'code', 'AKCIA')
 		->groupBy('account_items.name','currencies.name')
 		->get()

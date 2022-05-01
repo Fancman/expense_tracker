@@ -44,9 +44,7 @@ class SaveAccountValue extends Command
 			$account_value->user_id = $user_id;
 			$account_value->value = $total_account_value;
 			$account_value->save();
-		}
-
-		
+		}		
 
         return 0;
     }

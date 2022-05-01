@@ -14,6 +14,17 @@
 		<!-- Table -->
 		<div class="bg-white w-full mx-auto my-6">
 			<div class="overflow-x-auto">
+				@livewire('stats.account-values-chart')
+			</div>
+		</div>
+		
+	</div>
+
+	<div class="flex items-center">
+
+		<!-- Table -->
+		<div class="bg-white w-full mx-auto my-6">
+			<div class="overflow-x-auto">
 				@livewire('tables.account-table')
 			</div>
 		</div>
