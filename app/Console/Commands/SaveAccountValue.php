@@ -40,6 +40,17 @@ class SaveAccountValue extends Command
 			$total_account_value = $account_value->total_account_value;
 			$user_id = $account_value->id;
 
+			$previous_account_value_record = AccountValues::where('user_id', $user_id)->latest()->first();
+
+			// Hodnota ucutu je 0 a pre
+			if( $previous_account_value_record == null && $total_account_value == 0 ){
+				continue;
+			}
+
+			/*if( $previous_account_value_record != null && $total_account_value == $previous_account_value_record->value ){
+				continue;
+			}*/
+
 			$account_value = new AccountValues;
 			$account_value->user_id = $user_id;
 			$account_value->value = $total_account_value;

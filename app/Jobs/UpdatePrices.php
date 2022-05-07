@@ -12,7 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class UpdatePrices implements ShouldQueue//, ShouldBeUnique
+class UpdatePrices implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -30,10 +30,10 @@ class UpdatePrices implements ShouldQueue//, ShouldBeUnique
     }
 
 
-	/*public function uniqueId()
+	public function uniqueId()
     {
         return $this->user->id;
-    }*/
+    }
 
     /**
      * Execute the job.
@@ -45,6 +45,7 @@ class UpdatePrices implements ShouldQueue//, ShouldBeUnique
 		$user_id = $this->user->id;
 
         $account_items = AccountItem::with('itemType')
+		->where('invalid_name', '!=', 1)
 		->when($user_id, function($query, $user_id) {
 			return $query->whereRelation('account', 'user_id', $user_id);
 		})
@@ -57,11 +58,20 @@ class UpdatePrices implements ShouldQueue//, ShouldBeUnique
 				$this->job_tries_count = 0;
 			}
 
-			$account_item->updateStockItemPriceFromAPI();
+			$result = $account_item->updateStockItemPriceFromAPI();
+
+			if( $result == null ){
+				$account_item->invalid_name = true;
+				$account_item->save();
+				
+				continue;
+			}
+
 			$this->job_tries_count++;	
 		}
 
 		$account_items = AccountItem::with('itemType')
+		->where('invalid_name', '!=', 1)
 		->when($user_id, function($query, $user_id) {
 			return $query->whereRelation('account', 'user_id', $user_id);
 		})
@@ -74,7 +84,15 @@ class UpdatePrices implements ShouldQueue//, ShouldBeUnique
 				$this->job_tries_count = 0;
 			}
 
-			$account_item->updateCryptoItemPriceFromAPI();		
+			$result = $account_item->updateCryptoItemPriceFromAPI();	
+			
+			if( $result == null ){
+				$account_item->invalid_name = true;
+				$account_item->save();
+
+				continue;
+			}
+
 			$this->job_tries_count++;	
 		}
 

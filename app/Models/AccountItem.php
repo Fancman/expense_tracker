@@ -124,7 +124,7 @@ class AccountItem extends Model
 		$stock_data_error = $stock_data['error'];
 
 		if( is_null($stock_data_response) ){
-			return;
+			return null;
 		}
 
 		if( isset($stock_data_response['resultsCount']) && intval($stock_data_response['resultsCount']) > 0 ){
@@ -139,9 +139,10 @@ class AccountItem extends Model
 			$this->current_price = floatval($float_price);
 			$this->save();
 
-			$this->updateStockWithSameName($float_price);
-			
+			$this->updateStockWithSameName($float_price);		
 		}
+
+		return $this;
 	}
 
 	public function updateCryptoItemPriceFromAPI(){
@@ -151,7 +152,7 @@ class AccountItem extends Model
 		$stock_data_error = $stock_data['error'];
 
 		if( is_null($stock_data_response) ){
-			return;
+			return null;
 		}
 
 		if( isset($stock_data_response['resultsCount']) && intval($stock_data_response['resultsCount']) > 0 ){
@@ -168,6 +169,8 @@ class AccountItem extends Model
 
 			$this->updateCryptoWithSameName($float_price);
 		}
+
+		return $this;
 	}
 
 	public function updateAccountValue($value, $currency_name = 'USD'){
