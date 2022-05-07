@@ -20,7 +20,6 @@ class Kernel extends ConsoleKernel
 		$schedule->exec('/usr/lib64/php8.0/bin/php /var/www5/p5673/polkadot-hub.eu/web/current/artisan command:create_repeating_transactions')->everyFiveMinutes();
 		$schedule->exec('/usr/lib64/php8.0/bin/php /var/www5/p5673/polkadot-hub.eu/web/current/artisan command:command:save_account_values')->dailyAt('22:00');
 		$schedule->exec('/usr/lib64/php8.0/bin/php /var/www5/p5673/polkadot-hub.eu/web/current/artisan command:command:command:recount_account_values')->dailyAt('24:00');
-        // $schedule->command('inspire')->hourly();
     }
 
     /**
