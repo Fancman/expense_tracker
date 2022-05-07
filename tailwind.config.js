@@ -1,6 +1,6 @@
 const colors = require('tailwindcss/colors')
 const forms = require('@tailwindcss/forms');
-const typography =require('@tailwindcss/typography'); 
+const typography = require('@tailwindcss/typography'); 
 
 module.exports = {
 	darkMode: 'class',
@@ -15,7 +15,7 @@ module.exports = {
 			'slate': '#708090',
 			'light-blue': '#42b3e52b',
 			'navy-blue': '#4551e5',
-			'red': '#EA4335',
+			'red': colors.red,
 			'blue': '#1D4ED8',
 			'light-blue': '#0075DD',
 			'white': '#ffff',

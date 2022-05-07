@@ -27,6 +27,7 @@ class User extends Authenticatable
 		'date_type',
 		'google_id',
 		'remember_login',
+		'password',
 		'currency_id',
 		'fetching_prices'
     ];

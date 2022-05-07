@@ -59,9 +59,16 @@
 				</ul>
 				@endauth
 				@guest
-					<a href="{{ route('google.login') }}" type="button" class="text-center mt-16 px-6 py-4 bg-blue font-semibold text-2xl rounded-md text-white">
-						Prihlásiť sa pomocou Google
-					</a>
+					<div class="flex flex-col">
+						<a href="{{ route('google.login') }}" type="button" class="text-center mt-16 px-6 py-4 bg-blue font-semibold text-2xl rounded-md text-white">
+							Prihlásiť sa pomocou Google
+						</a>
+
+						<button x-data="{}" x-on:click="window.livewire.emitTo('modals.login-modal', 'show')" class="bg-light-blue text-white px-3 py-2 rounded mt-5">Prihlásiť sa pomocou emailu a hesla</button>
+					
+						<button x-data="{}" x-on:click="window.livewire.emitTo('modals.register-modal', 'show')" class="bg-light-blue text-white px-3 py-2 rounded mt-5">Registrácia</button>
+					</div>				
+
 				@endguest
 			</div>
 		</aside>
@@ -115,7 +122,10 @@
 	@stack('scripts')
 
 	@yield('livewire-custom-scripts')
-	
+
+	@livewire('modals.register-modal')
+	@livewire('modals.login-modal')
+
 </body>
 
 </html>
