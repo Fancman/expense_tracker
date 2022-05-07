@@ -54,4 +54,16 @@ class User extends Authenticatable
         return $this->hasMany(Account::class);
     }
 
+
+	public function calculate_user_value(){
+		$total_value = 0;
+
+		foreach ($this->accounts as $account) {
+			$calc = $account->calculate_current_value();
+			$total_value += $calc['current_value'];
+		}
+
+		return $total_value;
+	}
+
 }

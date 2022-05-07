@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\User;
 use App\Models\AccountItem;
 use App\Models\AccountValues;
 use Illuminate\Console\Command;
@@ -30,32 +31,22 @@ class SaveAccountValue extends Command
      */
     public function handle()
     {
-		$account_values = AccountItem::select(DB::raw('users.id, SUM(quantity * current_price) as total_account_value'))
-		->join('accounts', 'account_items.account_id', '=', 'accounts.id')
-		->join('users', 'accounts.user_id', '=', 'users.id')
-		->groupBy('users.id')
-		->get();
+		$users = User::all();
+		
+		foreach ($users as $user) {
+			$user_value = $user->calculate_user_value();
 
-		foreach($account_values as $account_value){
-			$total_account_value = $account_value->total_account_value;
-			$user_id = $account_value->id;
+			$previous_account_value_record = AccountValues::where('user_id', $user->id)->latest()->first();
 
-			$previous_account_value_record = AccountValues::where('user_id', $user_id)->latest()->first();
-
-			// Hodnota ucutu je 0 a pre
-			if( $previous_account_value_record == null && $total_account_value == 0 ){
+			if( $previous_account_value_record == null && $user_value == 0 ){
 				continue;
 			}
 
-			/*if( $previous_account_value_record != null && $total_account_value == $previous_account_value_record->value ){
-				continue;
-			}*/
-
 			$account_value = new AccountValues;
-			$account_value->user_id = $user_id;
-			$account_value->value = $total_account_value;
+			$account_value->user_id = $user->id;
+			$account_value->value = $user_value;
 			$account_value->save();
-		}		
+		}
 
         return 0;
     }

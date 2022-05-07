@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-use App\Models\Currency;
 use App\Models\User;
+use App\Models\Currency;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Account extends Model
 {
@@ -23,6 +24,7 @@ class Account extends Model
 		'icon',
 		'currency_id',
 		'user_id',
+		'current_value'
     ];
 
     public function accountItems()
@@ -40,4 +42,39 @@ class Account extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+	public function calculate_current_value(){
+		$account_items = AccountItem::select(
+			DB::raw('
+			currencies.name as currency_name,
+			SUM(quantity * account_items.average_buy_price) as total_account_value,
+			SUM(quantity * account_items.current_price) as current_total_account_value')
+		)
+		->join('currencies', 'account_items.currency_id', '=', 'currencies.id')
+		->where('account_items.account_id', $this->id)
+		->groupBy('currencies.name')
+		->get();
+
+		$total_value = 0;
+		$total_current_value = 0;
+
+		foreach($account_items as $account_item){	
+			$total_account_value = $account_item->total_account_value;
+			$current_total_account_value = $account_item->current_total_account_value;
+			$currency_name = $account_item->currency_name;
+
+			if($currency_name != $this->currency->name){
+				$current_total_account_value = $account_item->convertCurrency($current_total_account_value, $currency_name, $this->currency->name);
+				$total_account_value = $account_item->convertCurrency($total_account_value, $currency_name, $this->currency->name);				
+			}
+
+			$total_current_value += $current_total_account_value;
+			$total_value += $total_account_value;
+		}
+
+		return [
+			'total_value' => $total_value,
+			'current_value' => $total_current_value,
+		];
+	}
 }
