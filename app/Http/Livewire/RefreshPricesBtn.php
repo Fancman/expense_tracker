@@ -39,6 +39,8 @@ class RefreshPricesBtn extends Component
 
 			if($this->refreshing_prices == true && $user->fetching_prices == false){
 				$this->emitTo('tables.account-table', 'refreshParent');
+				$this->emitTo('tables.stocks-table', 'refreshParent');
+				$this->emitTo('tables.crypto-table', 'refreshParent');
 			}
 
 			$this->refreshing_prices = $user->fetching_prices;
