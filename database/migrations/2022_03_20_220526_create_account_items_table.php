@@ -22,7 +22,7 @@ return new class extends Migration
 			$table->foreignIdFor(ItemType::class);
 			$table->foreignIdFor(Currency::class);
 			$table->string('name', 50);
-			$table->integer('quantity')->default(1);
+			$table->decimal('quantity', $precision = 8, $scale = 2)->default(1);
 			$table->decimal('average_buy_price', $precision = 8, $scale = 2)->nullable();
 			$table->decimal('current_price', $precision = 8, $scale = 2)->nullable();
 			$table->timestamps();
