@@ -6,6 +6,7 @@
 			<th class="font-semibold uppercase text-sm text-left py-3">Aktualna hodnota</th>							
 			<th class="font-semibold uppercase text-sm text-left py-3">Rast portfolia</th>							
 			<th class="font-semibold uppercase text-sm text-left py-3">Datum vytvorenia</th>
+			<th class="font-semibold uppercase text-sm text-left py-3">Akcie</th>
 		</tr>
 	</thead>
 	<tbody class="text-sm border-b">
@@ -31,6 +32,9 @@
 			</td>
 			<td class="px-2 py-3 whitespace-nowrap">
 				<div class="text-left">{{ $account->created_at }}</div>
+			</td>
+			<td class="px-2 py-3 whitespace-nowrap">
+				<button x-data="{}" x-on:click="window.livewire.emitTo('modals.account-modal', 'delete', {{ $account->id }})" class="bg-red-500 text-white mr-1 px-3 py-2 rounded">Vymazat</button>
 			</td>
 		</tr>
 		@endforeach

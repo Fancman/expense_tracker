@@ -277,6 +277,7 @@ class Transaction extends Model
 		$transaction_value_converted = $this->convertCurrency($this->value, $transaction_currency_name, $account->currency->name);
 		
 		$account->value = (floatval($account->value) + floatval($transaction_value_converted));
+		$account->current_value = (floatval($account->value) + floatval($transaction_value_converted));
 		$account->save();
 	}
 
@@ -288,6 +289,7 @@ class Transaction extends Model
 		$transaction_value_converted = $this->convertCurrency($this->value, $transaction_currency_name, $account->currency->name);
 		
 		$account->value = (floatval($account->value) - floatval($transaction_value_converted));
+		$account->current_value = (floatval($account->value) - floatval($transaction_value_converted));
 		$account->save();
 	}
 
@@ -642,6 +644,7 @@ class Transaction extends Model
 		$converted_price = $this->convertCurrency($this->value, $end_account->currency->name, $this->currency->name);
 
 		$end_account->value = floatval($end_account->value) - $converted_price;
+		$end_account->current_value = floatval($end_account->value) - $converted_price;
 		$end_account->save();
 	}
 
@@ -653,6 +656,7 @@ class Transaction extends Model
 		$converted_price = $this->convertCurrency($this->value, $source_account->currency->name, $this->currency->name);
 
 		$source_account->value = floatval($source_account->value) + $converted_price;
+		$source_account->current_value = floatval($source_account->value) + $converted_price;
 		$source_account->save();
 	}
 
@@ -700,6 +704,7 @@ class Transaction extends Model
 				$converted_price = $this->convertCurrency($price, $source_account->currency->name, $account_item->account->currency->name);
 
 				$source_account->value = floatval($source_account->value) + ($converted_price * floatval($quantity));
+				$source_account->current_value = floatval($source_account->value) + ($converted_price * floatval($quantity));
 				$source_account->save();
 
 				$this->decreaseCash($this->sourceAccount, $quantity, $price);	
@@ -743,6 +748,7 @@ class Transaction extends Model
 					$converted_price = $this->convertCurrency($price, $source_account->currency->name, $account_item->account->currency->name);
 
 					$source_account->value = floatval($source_account->value) - ($converted_price * floatval($quantity));
+					$source_account->current_value = floatval($source_account->value) - ($converted_price * floatval($quantity));
 					$source_account->save();
 				}
 

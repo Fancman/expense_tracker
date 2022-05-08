@@ -35,6 +35,28 @@ class AccountModal extends Modal implements HasForms
 	public $currency_id = '';
 	public $account_items = [];
 	public $finance_items = [];
+
+	public function delete($id){
+		$account = Account::find($id);
+
+		$account_items = $account->accountItems;
+
+		foreach($account_items as $account_item) {
+			$account_item->delete();
+		}
+
+		$account->delete_transactions();
+
+		$account->delete();
+
+		$this->reset();
+
+		$this->emit('refreshParent');
+
+		$this->emit('showMessage');
+
+		session()->flash('message', 'Ucet bol uspesne vymazany.');	
+	}
 	
 	protected function getFormSchema(): array 
     {
@@ -191,6 +213,7 @@ class AccountModal extends Modal implements HasForms
 
 		if( $price_sum > 0 ){
 			$account->value = $price_sum;				
+			$account->current_value = $price_sum;				
 			$account->save();
 		}
 

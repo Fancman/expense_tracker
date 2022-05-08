@@ -179,11 +179,13 @@ class AccountItem extends Model
 		if($value_converted > 0)
 		{
 			$this->account->value = floatval($this->account->value) - $value_converted;
+			$this->account->current_value = floatval($this->account->value) - $value_converted;
 			$this->account->save();
 		}
 		else if($value_converted < 0)
 		{
 			$this->account->value = floatval($this->account->value) + $value_converted;
+			$this->account->current_value = floatval($this->account->value) + $value_converted;
 			$this->account->save();
 		}
 	}

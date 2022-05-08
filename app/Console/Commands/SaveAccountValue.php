@@ -45,6 +45,7 @@ class SaveAccountValue extends Command
 			$account_value = new AccountValues;
 			$account_value->user_id = $user->id;
 			$account_value->value = $user_value;
+			$account_value->current_value = $user_value;
 			$account_value->save();
 		}
 

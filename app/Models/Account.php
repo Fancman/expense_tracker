@@ -32,6 +32,34 @@ class Account extends Model
         return $this->hasMany(AccountItem::class);
     }
 
+	public function sourceAccountTransactions()
+    {
+		return $this->hasMany(Transaction::class, 'source_account_id', 'id');
+        //return Transaction::where('source_account_id', $this->id)->get();
+    }
+
+	public function endAccountTransactions()
+    {
+		return $this->hasMany(Transaction::class, 'end_account_id', 'id');
+        //return Transaction::where('end_account_id', $this->id)->get();
+    }
+
+	public function delete_transactions()
+    {
+        $source_transactions = $this->sourceAccountTransactions;
+        $end_transactions = $this->sourceAccountTransactions;
+
+		foreach($source_transactions as $transaction) {
+			$transaction_type = $transaction->transactionType;
+			$transaction->deleteTransaction($transaction_type->code);
+		}
+
+		foreach($end_transactions as $transaction) {
+			$transaction_type = $transaction->transactionType;
+			$transaction->deleteTransaction($transaction_type->code);
+		}
+    }
+
 
     public function currency()
     {

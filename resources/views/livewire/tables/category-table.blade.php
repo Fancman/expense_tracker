@@ -17,7 +17,7 @@
 			</td>
 			<td class="px-2 py-3 whitespace-nowrap w-1/4">
 				<button x-data="{}" x-on:click="window.livewire.emitTo('modals.category-modal', 'edit', {{ $category->id }})" class="bg-purple text-white mr-1 px-3 py-2 rounded">Upravit</button>
-				<button x-data="{}" x-on:click="window.livewire.emitTo('modals.category-modal', 'delete', {{ $category->id }})" class="bg-red text-white mr-1 px-3 py-2 rounded">Vymazat</button>
+				<button x-data="{}" x-on:click="window.livewire.emitTo('modals.category-modal', 'delete', {{ $category->id }})" class="bg-red-500 text-white mr-1 px-3 py-2 rounded">Vymazat</button>
 			</td>
 		</tr>
 		@endforeach
