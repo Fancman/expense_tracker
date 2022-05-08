@@ -25,9 +25,9 @@
 				@if (($account->current_value / $account->value * 100) == 100)
 					<div class="text-left">0 %</div>
 				@elseif (($account->current_value / $account->value * 100) > 100)
-					<div class="text-left font-semibold">{{ $account->current_value - $account->value }} {{ $account->currency->name }} <span class="text-green-500 ml-2">({{ round(($account->current_value / $account->value * 100) - 100, 2) }} %)</span></div>
+					<div class="text-left font-semibold">{{ round($account->current_value - $account->value, 2) }} {{ $account->currency->name }} <span class="text-green-500 ml-2">({{ round(($account->current_value / $account->value * 100) - 100, 2) }} %)</span></div>
 				@elseif (($account->current_value / $account->value * 100) < 100)
-					<div class="text-left font-semibold">{{ $account->current_value - $account->value }} {{ $account->currency->name }} <span class="text-red-500 ml-2">({{ round(($account->current_value / $account->value * 100) - 100, 2) }} %)</span></div>
+					<div class="text-left font-semibold">{{ round($account->current_value - $account->value, 2) }} {{ $account->currency->name }} <span class="text-red-500 ml-2">({{ round(($account->current_value / $account->value * 100) - 100, 2) }} %)</span></div>
 				@endif				
 			</td>
 			<td class="px-2 py-3 whitespace-nowrap">

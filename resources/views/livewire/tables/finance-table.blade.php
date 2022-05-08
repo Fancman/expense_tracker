@@ -22,7 +22,7 @@
                         </td>
                         <td class="p-2">
                             <div class="flex items-center"> 
-                                <div class="text-slate-800">{{ $account_item->total_quantity }}</div>
+                                <div class="text-slate-800">{{ round($account_item->total_quantity, 2) }}</div>
                             </div>
                         </td>
                     </tr>
