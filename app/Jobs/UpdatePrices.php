@@ -38,7 +38,7 @@ class UpdatePrices implements ShouldQueue//, ShouldBeUnique
 	 */
 	public function middleware()
 	{
-		return [(new WithoutOverlapping('fetching_polygon_prices'))->releaseAfter(60)];
+		return [new WithoutOverlapping($this->user->id)];
 	}
 
 
@@ -55,6 +55,7 @@ class UpdatePrices implements ShouldQueue//, ShouldBeUnique
      */
     public function handle()
     {
+
 		$user_id = $this->user->id;
 
         $account_items = AccountItem::with('itemType')

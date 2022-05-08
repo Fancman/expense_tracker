@@ -22,6 +22,6 @@ class AccountController extends Controller
 		$user_id = (auth()->user() ? auth()->user()->id : null);
 		echo 'User_id: ' . $user_id;
         //UpdatePrices::dispatch($user_id)->onQueue('host-laravel-d13296:worker_0');
-        UpdatePrices::dispatch($user_id);
+        //UpdatePrices::dispatch($user_id);
     }
 }
