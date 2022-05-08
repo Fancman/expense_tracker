@@ -38,7 +38,7 @@ Tento týždeň som strávil na projekte 9 hodín.
 
 ### Celkové zhrnutie 
 
-Implementované fetures:
+#### Implementované fetures:
 
 - Prihlasovanie/registrácia s menom a heslom
 - Prihlasovanie pomocou Google účtu
@@ -50,8 +50,29 @@ Implementované fetures:
 - Hodnota účtov a zisk/strata
 - Zoznam položie a percentuálny rozdiel aktualnej ceny a nákupnej
 - Vytváranie, mazanie a úprava kategórií
-- Vyvtváranie a mazanie budgetov a ich kontrola pri vytváraní transakcie
+- Vytváranie a mazanie budgetov a ich kontrola pri vytváraní transakcie
 - Graf výdajov a pomer typov transakcií
 - Vytváranie, mazanie záznamov do adresára
 - Nastavovanie user settings
 - Získavanie aktuálnych cien položiek z API a výpočet hodnôt účtov
+
+#### Neimplementované fetures:
+
+- Posielanie email reportov - Správy by aj tak išli do spamu a táto funckionalita mi neprišla nevyhnutná
+- Výber ikon pri kategóriach - Obyčajný select option element nemôže mať v sebe obrázok musel by som hladať náhradu elementu alebo ho sám naštýlovať
+
+#### Čas:
+
+Na projekte som dokopy strávil približne 70 hodín.
+
+#### Problémy:
+
+Problémy som mal hlavne s deployovanim a nastavovaním workera a taskov. Ďalej s rozbehanim apache php na raspberry pi.
+
+#### Čo by som robil ináč:
+
+Naplánoval by som si menej funkcionalít v špecifikácií. Vytváranie transakcií by som dal do SQL transakcií kde by v prípade zlyhania jednej časti prebehol rollback
+
+#### Na čo som hrdý:
+
+Stránka funguje podľa mojej počiatočnej predstavy
