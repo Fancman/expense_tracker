@@ -8,7 +8,7 @@ use App\Models\AccountItem;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class SaveAccountValue extends Command
+class FetchAccountItemsPrices extends Command
 {
     /**
      * The name and signature of the console command.

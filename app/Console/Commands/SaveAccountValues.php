@@ -8,7 +8,7 @@ use App\Models\AccountValues;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class SaveAccountValue extends Command
+class SaveAccountValues extends Command
 {
     /**
      * The name and signature of the console command.
