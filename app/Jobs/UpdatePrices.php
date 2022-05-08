@@ -117,9 +117,7 @@ class UpdatePrices implements ShouldQueue//, ShouldBeUnique
 			User::all()->update(['fetching_prices' => false]);
 		}
 
-		Artisan::queue('command:recount_account_values', [
-			'--queue' => 'default'
-		]);
+		Artisan::queue('command:recount_account_values');
 
 		sleep(60);		
     }
