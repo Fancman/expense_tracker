@@ -77,7 +77,6 @@ class UpdatePrices implements ShouldQueue//, ShouldBeUnique
 			if( $result == null ){
 				$account_item->invalid_name = true;
 				$account_item->save();
-				
 				continue;
 			}
 
