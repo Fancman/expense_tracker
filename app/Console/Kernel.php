@@ -16,11 +16,11 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         //$schedule->command('check_budgets')->everyFiveMinutes();
-		$schedule->exec('/usr/lib64/php8.0/bin/php /var/www5/p5673/polkadot-hub.eu/web/current/artisan command:check_budgets')->everyFiveMinutes();
-		$schedule->exec('/usr/lib64/php8.0/bin/php /var/www5/p5673/polkadot-hub.eu/web/current/artisan command:create_repeating_transactions')->everyFiveMinutes();
-		$schedule->exec('/usr/lib64/php8.0/bin/php /var/www5/p5673/polkadot-hub.eu/web/current/artisan command:fetch_prices')->dailyAt('22:00');
-		$schedule->exec('/usr/lib64/php8.0/bin/php /var/www5/p5673/polkadot-hub.eu/web/current/artisan command:save_account_values')->dailyAt('23:00');
-		$schedule->exec('/usr/lib64/php8.0/bin/php /var/www5/p5673/polkadot-hub.eu/web/current/artisan command:recount_account_values')->dailyAt('23:15');
+		$schedule->exec('/usr/lib64/php8.0/bin/php /var/www5/p5673/polkadot-hub.eu/web/current/artisan command:check_budgets')->cron('*/5 * * * *');
+		$schedule->exec('/usr/lib64/php8.0/bin/php /var/www5/p5673/polkadot-hub.eu/web/current/artisan command:create_repeating_transactions')->cron('*/5 * * * *');
+		$schedule->exec('/usr/lib64/php8.0/bin/php /var/www5/p5673/polkadot-hub.eu/web/current/artisan command:fetch_prices')->cron('0 22 * * *');
+		$schedule->exec('/usr/lib64/php8.0/bin/php /var/www5/p5673/polkadot-hub.eu/web/current/artisan command:save_account_values')->cron('0 24 * * *');
+		$schedule->exec('/usr/lib64/php8.0/bin/php /var/www5/p5673/polkadot-hub.eu/web/current/artisan command:recount_account_values')->cron('15 22 * * *');
     }
 
     /**
