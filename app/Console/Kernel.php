@@ -19,8 +19,8 @@ class Kernel extends ConsoleKernel
 		$schedule->exec('/usr/bin/php8.1 /var/www/html/expense-tracker/artisan command:check_budgets')->cron('*/5 * * * *');
 		$schedule->exec('/usr/bin/php8.1 /var/www/html/expense-tracker/artisan command:create_repeating_transactions')->cron('*/5 * * * *');
 		$schedule->exec('/usr/bin/php8.1 /var/www/html/expense-tracker/artisan command:fetch_prices')->cron('0 22 * * *');
-		$schedule->exec('/usr/bin/php8.1 /var/www/html/expense-tracker/artisan command:save_account_values')->cron('0 24 * * *');
-		$schedule->exec('/usr/bin/php8.1 /var/www/html/expense-tracker/artisan command:recount_account_values')->cron('15 22 * * *');
+		$schedule->exec('/usr/bin/php8.1 /var/www/html/expense-tracker/artisan command:save_account_values')->cron('0 23 * * *');
+		$schedule->exec('/usr/bin/php8.1 /var/www/html/expense-tracker/artisan command:recount_account_values')->cron('15 23 * * *');
     }
 
     /**

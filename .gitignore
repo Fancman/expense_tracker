@@ -13,3 +13,6 @@ yarn-error.log
 /.idea
 /.vscode
 .env.local
+
+/storage/app/files/*
+!/storage/app/files/.gitkeep
