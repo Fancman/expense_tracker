@@ -12,8 +12,9 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Queue\Middleware\WithoutOverlapping;
 
-class UpdatePrices implements ShouldQueue, ShouldBeUnique
+class UpdatePrices implements ShouldQueue//, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -30,11 +31,22 @@ class UpdatePrices implements ShouldQueue, ShouldBeUnique
         $this->user = $user->withoutRelations();
     }
 
+	/**
+	 * Get the middleware the job should pass through.
+	 *
+	 * @return array
+	 */
+	public function middleware()
+	{
+		return [(new WithoutOverlapping('fetching_polygon_prices'))->releaseAfter(60)];
+	}
 
-	public function uniqueId()
+
+	/*public function uniqueId()
     {
         return $this->user->id;
-    }
+    }*/
+	
 
     /**
      * Execute the job.
@@ -105,9 +117,10 @@ class UpdatePrices implements ShouldQueue, ShouldBeUnique
 			User::all()->update(['fetching_prices' => false]);
 		}
 
-		Artisan::queue('recount_account_values', [
+		Artisan::queue('command:recount_account_values', [
 			'--queue' => 'default'
 		]);
-		
+
+		sleep(60);		
     }
 }

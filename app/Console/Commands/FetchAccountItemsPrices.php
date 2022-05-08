@@ -4,7 +4,9 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use App\Jobs\UpdatePrices;
+use App\Models\AccountItem;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class SaveAccountValue extends Command
 {
@@ -32,6 +34,14 @@ class SaveAccountValue extends Command
 		$users = User::all();
 		
 		foreach ($users as $user) {
+
+			$account_items = AccountItem::whereRelation('account.user', 'id', $user->id)->get();
+
+			$count = $account_items->count();
+
+			if($count == 0){
+				continue;
+			}
 
 			$user->fetching_prices = true;
 			$user->save();
