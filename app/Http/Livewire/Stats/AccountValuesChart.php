@@ -21,7 +21,7 @@ class AccountValuesChart extends Component
 
 	public function render()
     {
-		$account_values = AccountValues::get();
+		$account_values = AccountValues::orderBy('created_at', 'ASC')->get();
 
 		$user_id = (auth()->user() ? auth()->user()->id : 4);
 
