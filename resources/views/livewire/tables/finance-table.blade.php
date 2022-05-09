@@ -1,5 +1,5 @@
 @if(count($account_items) > 0)
-<div class="shadow-black bg-white border-slate-200 border rounded-sm">
+<div class="shadow-black bg-white border-slate-200 border rounded-sm w-3/12">
     <header class="py-4 px-5 border-b">
         <h2 class="font-semibold text-lg">Peniaze</h2>
     </header>

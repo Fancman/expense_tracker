@@ -31,7 +31,7 @@
 		
 	</div>
 
-	<div class="grid grid-cols-2 gap-4">
+	<div class="flex flex-wrap flex-row gap-10">
 		@livewire('tables.stocks-table')
 		@livewire('tables.crypto-table')
 		@livewire('tables.finance-table')
